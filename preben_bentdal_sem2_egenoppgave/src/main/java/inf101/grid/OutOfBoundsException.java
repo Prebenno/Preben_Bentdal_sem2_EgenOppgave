@@ -1,4 +1,4 @@
-package Inf101_Pbe027_sem2.grid;
+package inf101.grid;
 
 public class OutOfBoundsException extends Exception {
     String msg;

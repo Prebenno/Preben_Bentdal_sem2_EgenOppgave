@@ -1,0 +1,81 @@
+package inf101.grid;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class GridTest {
+    
+        @Test
+        void gridTestGetRowsAndCols() throws OutOfBoundsException {
+        
+            IGrid<Integer> grid = new Grid<Integer>(3,2);
+            assertEquals(3, grid.getRows());
+            assertEquals(2, grid.getColumns());
+        }
+
+        @Test
+        void gridTrowsOutOfBoundsException() {
+            try {
+                IGrid<Integer> grid = new Grid<Integer>(3,0);
+                fail();
+            } catch (OutOfBoundsException e) {
+                //Test passed
+            }try {
+                IGrid<Integer> grid = new Grid<Integer>(0,3);
+                fail();
+            } catch (OutOfBoundsException e) {
+                //Test passed
+            }
+        }
+        @Test
+        void coordinateOnBoardTest() throws OutOfBoundsException{
+            IGrid<Integer> grid = new Grid<Integer>(2,3);
+            assertTrue(grid.coordinateOnBoard(new Coordinate(1,2)));
+            assertTrue(grid.coordinateOnBoard(new Coordinate(1,0)));
+            assertTrue(grid.coordinateOnBoard(new Coordinate(1,1)));
+
+            assertFalse(grid.coordinateOnBoard(new Coordinate(3,3)));
+            assertFalse(grid.coordinateOnBoard(new Coordinate(0,9)));
+            assertFalse(grid.coordinateOnBoard(new Coordinate(9,0)));
+        }
+
+        @Test
+        void setAndGetTest() throws OutOfBoundsException{
+            IGrid<Boolean> grid = new Grid<Boolean>(6,6,false);
+            assertFalse(grid.getElement(new Coordinate(3,4)));
+            assertFalse(grid.getElement(new Coordinate(1,3)));
+            assertFalse(grid.getElement(new Coordinate(3,1)));
+
+            grid.setElement(new Coordinate(3,4),true);
+            grid.setElement(new Coordinate(1,3),true);
+            grid.setElement(new Coordinate(3,1),true);
+
+            assertTrue(grid.getElement(new Coordinate(4,3)));
+            assertTrue(grid.getElement(new Coordinate(3,1)));
+            assertTrue(grid.getElement(new Coordinate(1,3)));
+            
+
+        }
+        public static void main(String[] args) throws OutOfBoundsException {
+            IGrid<Boolean> grid = new Grid<Boolean>(6,6,false);
+            grid.setElement(new Coordinate(3,4),true);
+            grid.setElement(new Coordinate(1,3),true);
+            grid.setElement(new Coordinate(3,1),true);
+            boolean x = grid.getElement(new Coordinate(4,3));
+            System.out.println(x);
+            
+        }
+}
+
+    
+        
+    
+    

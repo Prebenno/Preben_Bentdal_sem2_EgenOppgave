@@ -1,6 +1,7 @@
-package Inf101_Pbe027_sem2.grid;
+package inf101.grid;
 
 public class Coordinate {
+    
     public final int row;
     public final int column;
 
@@ -14,12 +15,12 @@ public class Coordinate {
     }
 
 
-    public int getCol() {
+    public int getColumn() {
         return this.column;
     }
     
     public boolean equals(Coordinate cord1, Coordinate cord2) {
-        return ((cord1.getRow() == cord2.getRow()) && (cord1.getCol() == cord2.getCol()));
+        return ((cord1.getRow() == cord2.getRow()) && (cord1.getColumn() == cord2.getColumn()));
 
     }
 
