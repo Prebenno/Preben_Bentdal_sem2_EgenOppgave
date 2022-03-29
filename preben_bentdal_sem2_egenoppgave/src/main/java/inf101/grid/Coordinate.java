@@ -1,5 +1,7 @@
 package inf101.grid;
 
+import java.util.Objects;
+
 public class Coordinate {
     
     public final int row;
@@ -19,10 +21,31 @@ public class Coordinate {
         return this.column;
     }
     
-    public boolean equals(Coordinate cord1, Coordinate cord2) {
-        return ((cord1.getRow() == cord2.getRow()) && (cord1.getColumn() == cord2.getColumn()));
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Coordinate)) {
+            return false;
+        }
+        Coordinate coordinate = (Coordinate) o;
+        return row == coordinate.row && column == coordinate.column;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " row='" + getRow() + "'" +
+            ", column='" + getColumn() + "'" +
+            "}";
+    }
+    
 
     
 }

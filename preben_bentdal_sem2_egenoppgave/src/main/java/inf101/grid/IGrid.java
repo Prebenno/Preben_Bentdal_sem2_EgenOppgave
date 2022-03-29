@@ -1,6 +1,8 @@
 package inf101.grid;
 
-public interface IGrid<E> {
+
+
+public interface IGrid<E> extends Iterable<itemWithCoordinate<E>> {
 
 
     /**

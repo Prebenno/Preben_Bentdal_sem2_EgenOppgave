@@ -58,21 +58,32 @@ public class GridTest {
             grid.setElement(new Coordinate(1,3),true);
             grid.setElement(new Coordinate(3,1),true);
 
-            assertTrue(grid.getElement(new Coordinate(4,3)));
+            assertTrue(grid.getElement(new Coordinate(3,4)));
             assertTrue(grid.getElement(new Coordinate(3,1)));
             assertTrue(grid.getElement(new Coordinate(1,3)));
             
+        }
+        @Test
+        void iteratorTest() throws OutOfBoundsException{
+            IGrid<Boolean> grid = new Grid<Boolean>(3,3,false);
+            grid.setElement(new Coordinate(1, 0), true);
+            grid.setElement(new Coordinate(2, 1), true);
+            
+
+            ArrayList<itemWithCoordinate<Boolean>> testList = new ArrayList<>();
+            for (itemWithCoordinate<Boolean> itemWithCoordinate : grid) {
+                testList.add(itemWithCoordinate);
+            }
+            assertTrue(testList.size() == 3*3);
+            
+            assertTrue(testList.contains(new itemWithCoordinate<Boolean>(new Coordinate(1, 0), (Boolean) true)));
+            assertTrue(testList.contains(new itemWithCoordinate<Boolean>(new Coordinate(2, 1), true)));
+            assertTrue(testList.contains(new itemWithCoordinate<Boolean>(new Coordinate(1, 2), false)));
+
 
         }
-        public static void main(String[] args) throws OutOfBoundsException {
-            IGrid<Boolean> grid = new Grid<Boolean>(6,6,false);
-            grid.setElement(new Coordinate(3,4),true);
-            grid.setElement(new Coordinate(1,3),true);
-            grid.setElement(new Coordinate(3,1),true);
-            boolean x = grid.getElement(new Coordinate(4,3));
-            System.out.println(x);
-            
-        }
+  
+      
 }
 
     

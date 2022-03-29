@@ -1,6 +1,7 @@
 package inf101.grid;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Grid<E> implements IGrid<E> {
@@ -29,6 +30,7 @@ public class Grid<E> implements IGrid<E> {
     public Grid(int rows, int columns) throws OutOfBoundsException{
         this(rows,columns,null);
     }
+    
 
     @Override
     public E getElement(Coordinate cord) {
@@ -65,6 +67,21 @@ public class Grid<E> implements IGrid<E> {
             return  (cord.getColumn() < this.getColumns()) && (cord.getRow() < this.getRows());
         }
         return false;
+    }
+
+    @Override
+    public Iterator<itemWithCoordinate<E>> iterator() { //Code gotten from https://stackoverflow.com/questions/5849154/can-we-write-our-own-iterator-in-java
+        ArrayList<itemWithCoordinate<E>> IteratorList = new ArrayList<itemWithCoordinate<E>>();
+        
+        for (int row = 0; row < this.getRows(); row++) {
+            for (int column = 0; column < this.getColumns(); column++) {
+                Coordinate coordinate = new Coordinate(row,column);
+                E elem = this.getElement(coordinate);
+                itemWithCoordinate<E> itemWithCoordinate = new itemWithCoordinate<E>(coordinate,elem);
+                IteratorList.add(itemWithCoordinate);
+            }
+        }
+        return IteratorList.iterator();
     }
 
     
