@@ -17,6 +17,9 @@ public class Roomview extends JComponent {
     public Roomview(iRoomview myfloor){
         this.view = myfloor;
     }
+    {
+        this.setFocusable(true);
+    }
 
 
     @Override
@@ -39,15 +42,15 @@ public class Roomview extends JComponent {
         int x = 0;
         int y = 0;
         canvas.setColor(Color.RED); // check if whole backround is drawn
-        canvas.fillRect(x, y, width, height);
+        canvas.fillRect(x, y, height, width);
         for (itemWithCoordinate<Pixel> pixel : view.getPixels()) {
             int row = pixel.getCoordinate().getRow();
             int col = pixel.getCoordinate().getColumn();
             Color PixelColor = pixel.getItem().getColor();
-            int tileX = x + row * width / this.view.getRows() ; //inspired by sampleview
-            int tileY = y + col * height / this.view.getColumns();
-            int nextTileX = x + (row + 1) * width /this.view.getRows();
-            int nextTileY = y + (col + 1) * height / this.view.getColumns();
+            int tileX = x + col * width / this.view.getColumns() ; //inspired by sampleview
+            int tileY = y + row * height / this.view.getRows();
+            int nextTileX = x + (col + 1) * width /this.view.getColumns();
+            int nextTileY = y + (row + 1) * height / this.view.getRows();
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
             this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor);
@@ -60,16 +63,14 @@ public class Roomview extends JComponent {
     public void drawPlayer(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
-        int width2 = this.view.getWidth();
-        int height2 = this.view.getHeight();
         for (itemWithCoordinate<Pixel> pixel : this.view.getSpritePixels()) {
             int row = pixel.getCoordinate().getRow();
             int col = pixel.getCoordinate().getColumn();
             Color PixelColor = pixel.getItem().getColor();
-            int tileX = x_Position + row * width / this.view.getRows() ; //inspired by sampleview
-            int tileY = y_Position + col * height / this.view.getColumns();
-            int nextTileX = x_Position + (row + 1) * width /this.view.getRows();
-            int nextTileY = y_Position + (col + 1) * height / this.view.getColumns();
+            int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+            int tileY = y_Position + row * height / this.view.getRows() ;
+            int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+            int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
             this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 

@@ -10,6 +10,7 @@ import inf101.model.Sprite.CoordinateSprite;
 import inf101.model.Sprite.SpriteSpawner;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class GameModel implements iRoomview ,IGameController {
     Floor myfloor;
@@ -58,11 +59,13 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public boolean movePlayer(int deltaRow, int deltaColumn) {
+        
         for (itemWithCoordinate<Pixel> coordItem : this.PlayerSprite) { //Checks if all coordinates is on grid
-            int col = coordItem.getCoordinate().getColumn();
+            int col= coordItem.getCoordinate().getColumn();
             int row = coordItem.getCoordinate().getRow();
-            Coordinate testcord = new Coordinate(row + deltaRow, col+ deltaColumn);
+            Coordinate testcord = new Coordinate(row + deltaRow, col + deltaColumn);
             if ((!(myroom.coordinateOnBoard(testcord))) ){  // if coordinate is not on grid or if colour is not black
+                System.out.println("yey");
                 return false;
             }   
         }
@@ -71,6 +74,7 @@ public class GameModel implements iRoomview ,IGameController {
         
      
     }
+   
     
     
 }

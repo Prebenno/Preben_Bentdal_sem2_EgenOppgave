@@ -10,7 +10,7 @@ public class Floor {
     public Room room;
 
     public Floor() throws OutOfBoundsException{
-        this.room = new Room(640,360, new Pixel(Color.WHITE,false));
+        this.room = new Room(200,200, new Pixel(Color.WHITE,false));
 
     }
     

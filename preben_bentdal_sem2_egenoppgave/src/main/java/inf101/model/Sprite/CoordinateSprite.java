@@ -50,8 +50,8 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         return coordinates.iterator();
     }
     public CoordinateSprite move(int deltaRow, int deltaCol){
-        int oldRow = this.getCoordinate().getRow();
-        int oldCol = this.getCoordinate().getColumn();
+        int oldRow = getCoordinate().getRow();
+        int oldCol = getCoordinate().getColumn();
         CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol));
         return copy;
 

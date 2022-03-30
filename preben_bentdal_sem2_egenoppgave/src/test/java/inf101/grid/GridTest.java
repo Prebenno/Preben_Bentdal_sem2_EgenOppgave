@@ -45,6 +45,10 @@ public class GridTest {
             assertFalse(grid.coordinateOnBoard(new Coordinate(3,3)));
             assertFalse(grid.coordinateOnBoard(new Coordinate(0,9)));
             assertFalse(grid.coordinateOnBoard(new Coordinate(9,0)));
+
+            assertFalse(grid.coordinateOnBoard(new Coordinate(0,-1)));
+            assertFalse(grid.coordinateOnBoard(new Coordinate(-1,0)));
+            assertTrue(grid.coordinateOnBoard(new Coordinate(0,0)));
         }
 
         @Test

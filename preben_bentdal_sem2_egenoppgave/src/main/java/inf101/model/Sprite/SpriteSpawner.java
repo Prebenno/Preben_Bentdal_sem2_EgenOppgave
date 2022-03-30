@@ -7,7 +7,7 @@ public class SpriteSpawner {
     
 
     public void setSenterColumn(){
-        this.center = new Coordinate(165,110);
+        this.center = new Coordinate(0,0);
 
     }
 
