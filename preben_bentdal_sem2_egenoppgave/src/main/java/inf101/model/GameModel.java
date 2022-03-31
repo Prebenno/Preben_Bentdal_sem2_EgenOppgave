@@ -3,6 +3,8 @@ package inf101.model;
 import inf101.backround.Floor;
 import inf101.game.controller.IGameController;
 import inf101.game.view.iRoomview;
+import inf101.game.view.States.FootType;
+import inf101.game.view.States.PlayerDirection;
 import inf101.grid.Coordinate;
 import inf101.grid.OutOfBoundsException;
 import inf101.grid.itemWithCoordinate;
@@ -17,11 +19,15 @@ public class GameModel implements iRoomview ,IGameController {
     Room myroom;
     CoordinateSprite PlayerSprite;
     public SpriteSpawner spawner;
+    public PlayerDirection direction;
+    public FootType footType;
 
     public GameModel() throws OutOfBoundsException {
+        this.direction = PlayerDirection.RIGHT;
+        this.footType = FootType.WALK;
         this.spawner = new SpriteSpawner();
         this.spawner.setSenterColumn();
-        this.PlayerSprite = spawner.getPlayerSprite();
+        this.PlayerSprite = spawner.getStarterSprite();
         this.myfloor = new Floor();
         this.myroom = myfloor.room;
         
@@ -71,10 +77,65 @@ public class GameModel implements iRoomview ,IGameController {
         }
         this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);      
         return true;
-        
-     
     }
-   
+
+    @Override
+    public CoordinateSprite getPlayerSprite() {
+        
+        return this.PlayerSprite;
+    }
+
+    @Override
+    public PlayerDirection getPlayerDirection() {
+        
+        return this.direction;
+    }
+
+    @Override
+    public FootType getWalkingType() {
+        return this.footType;
+    }
+    
+    @Override
+    public void changeWalkingDirection(PlayerDirection direction){
+        this.direction = direction;
+        switch(direction){
+            case LEFT:
+                this.PlayerSprite = spawner.getLeftWalkingPlayerPos(this.PlayerSprite.getCoordinate());
+                break;
+            default:
+                this.PlayerSprite = spawner.getRightWalkingPlayerPos(this.PlayerSprite.getCoordinate());
+                break;
+        }
+    }
+    @Override
+    public void changeFootType(FootType walking){
+        this.footType = walking;
+        switch(walking){
+            case WALK:
+                switch(this.direction){
+                    case LEFT:
+                        this.PlayerSprite = spawner.getLeftWalkingPlayerPos(this.PlayerSprite.getCoordinate());
+                        break;
+                    default:
+                        this.PlayerSprite = spawner.getRightWalkingPlayerPos(this.PlayerSprite.getCoordinate());
+                        break;
+                }
+                break;
+            default:
+                switch(this.direction){
+                    case LEFT:
+                        this.PlayerSprite = spawner.getLeftStandingPlayerPos(this.PlayerSprite.getCoordinate());
+                        break;
+                    default:
+                        this.PlayerSprite = spawner.getRightStandingPlayerPos(this.PlayerSprite.getCoordinate());
+                        break;
+                }
+                break;
+        }
+
+    }
+    
     
     
 }

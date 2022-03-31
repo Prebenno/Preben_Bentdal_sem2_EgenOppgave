@@ -2,10 +2,19 @@ package inf101.game.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.geom.Line2D;
+import javax.swing.*;
 
 import inf101.backround.Floor;
+import inf101.game.view.States.FootType;
+import inf101.game.view.States.PlayerDirection;
+
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
 
@@ -23,13 +32,14 @@ public class Roomview extends JComponent {
 
 
     @Override
-    public void paint(Graphics canvas) {
-        super.paint(canvas);
+    public void paint(Graphics canvas1) {
+        super.paintComponent(canvas1);
+        Graphics2D canvas = (Graphics2D) canvas1.create();
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
         this.drawRoom(canvas, componentWidth, componentHeight);
         this.drawPlayer(canvas,componentWidth,componentHeight);
-        
+        this.paintplayer(canvas,componentWidth,componentHeight);
     }
     @Override
     public Dimension getPreferredSize() {
@@ -80,6 +90,50 @@ public class Roomview extends JComponent {
     private void drawPixel(Graphics canvas, int tileX, int tileY, int tileHeight, int tileWidth, Color PixelColor) {
         canvas.setColor(PixelColor);
         canvas.fillRect(tileX, tileY, tileWidth, tileHeight);
+    }
+    
+    protected void paintplayer(Graphics g, int width, int height) {
+    int y_cord = view.getPlayerSprite().getCoordinate().getRow();
+    int x_cord = view.getPlayerSprite().getCoordinate().getColumn();
+    int y_position = (int) (y_cord*3.75); //x position, board is 3.5 times smaller than width
+    int x_position = (int) (x_cord*3.5); //y position, board is 3,75 times smaller than height
+    Graphics2D canvas = (Graphics2D)g;
+    x_position+=50; // +10 To move sprite over hitbox
+    canvas.setStroke(new BasicStroke(5));
+    //draw the head
+    canvas.drawOval(x_position,y_position, width/35, height/35);
+    // draw the body
+    canvas.setStroke(new BasicStroke(5));
+    canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+20);
+    //draws legs
+    FootType walking = view.getWalkingType();
+    switch(walking){
+        case STAND:
+            canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+65);
+            break;
+        default:
+            canvas.drawLine(x_position+10, y_position+45, x_position+20, y_position+65);
+            canvas.drawLine(x_position+10, y_position+45, x_position, y_position+65);
+            break;         
+    }
+    PlayerDirection direction = view.getPlayerDirection();
+    switch (direction){
+        case RIGHT:
+        // draw the hand
+        canvas.drawLine(x_position+10, y_position+30, x_position+20, y_position+30);
+        //draw gun
+        canvas.drawLine(x_position+20, y_position+30, x_position+20, y_position+25);
+        canvas.drawLine(x_position+20, y_position+25, x_position+25, y_position+25);
+        break;
+        default:
+            canvas.drawLine(x_position+10, y_position+30, x_position, y_position+30);
+            //draw gun
+            canvas.drawLine(x_position+0, y_position+30, x_position+0, y_position+25);
+            canvas.drawLine(x_position+0, y_position+25, x_position-5, y_position+25);
+            break;
+    }
+    
+
     }
 
     
