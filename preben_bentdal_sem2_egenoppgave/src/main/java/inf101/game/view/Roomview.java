@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import inf101.backround.Floor;
@@ -152,8 +153,12 @@ public class Roomview extends JComponent {
         Graphics2D canvas = (Graphics2D)g;
         BufferedImage floor1;
         try {
-            java.net.URL fileUrl = getClass().getResource("floor.png");
-            floor1 = ImageIO.read(fileUrl);
+            System.out.println("Working Directory = " + System.getProperty("user.dir"));
+            
+            File file = new File("preben_bentdal_sem2_egenoppgave/src/main/java/inf101/game/view/Sprites/floor_1.png");
+            System.out.println(file.exists());
+            FileInputStream fis = new FileInputStream(file);
+            floor1 = ImageIO.read(fis);
             canvas.drawImage(floor1, 10, 50, this);
         } catch (IOException e) {
             // TODO Auto-generated catch block
