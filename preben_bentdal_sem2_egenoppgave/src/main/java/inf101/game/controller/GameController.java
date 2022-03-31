@@ -61,8 +61,11 @@ public class GameController implements KeyListener,ActionListener {
     
     
     @Override
-    public void keyReleased(KeyEvent arg0) {
-        //nothing
+    public void keyReleased(KeyEvent event) {
+        controller.changeFootType(FootType.STAND);
+        view.repaint();
+
+
         
     }
 

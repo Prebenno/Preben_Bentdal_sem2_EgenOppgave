@@ -9,7 +9,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.Line2D;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import inf101.backround.Floor;
 import inf101.game.view.States.FootType;
@@ -124,6 +129,7 @@ public class Roomview extends JComponent {
         //draw gun
         canvas.drawLine(x_position+20, y_position+30, x_position+20, y_position+25);
         canvas.drawLine(x_position+20, y_position+25, x_position+25, y_position+25);
+        //draw eye
         break;
         default:
             canvas.drawLine(x_position+10, y_position+30, x_position, y_position+30);
@@ -136,5 +142,16 @@ public class Roomview extends JComponent {
 
     }
 
+    protected void drawFloor(Graphics g,int width,int height) throws IOException{
+        Graphics2D canvas = (Graphics2D)g;
+        BufferedImage floor1 = ImageIO.read(getClass().getResource("/Sprites/floor_1.png"));
+        AffineTransform at = new AffineTransform();
+        at.translate(floor1.getWidth(), floor1.getHeight());
+        canvas.drawImage(floor1, at, null);
+
+    }
     
+
 }
+
+    
