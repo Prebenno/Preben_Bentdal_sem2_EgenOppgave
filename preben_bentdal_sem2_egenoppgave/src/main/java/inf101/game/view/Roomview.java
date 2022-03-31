@@ -11,15 +11,16 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 
 import javax.imageio.ImageIO;
+import javax.print.DocFlavor.URL;
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import inf101.backround.Floor;
-import inf101.game.view.States.FootType;
-import inf101.game.view.States.PlayerDirection;
-
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
 
@@ -42,9 +43,14 @@ public class Roomview extends JComponent {
         Graphics2D canvas = (Graphics2D) canvas1.create();
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
+        
+        
+        
         this.drawRoom(canvas, componentWidth, componentHeight);
         this.drawPlayer(canvas,componentWidth,componentHeight);
         this.paintplayer(canvas,componentWidth,componentHeight);
+        this.drawFloor(canvas,componentWidth,componentHeight);
+        
     }
     @Override
     public Dimension getPreferredSize() {
@@ -142,12 +148,19 @@ public class Roomview extends JComponent {
 
     }
 
-    protected void drawFloor(Graphics g,int width,int height) throws IOException{
+    protected void drawFloor(Graphics g,int width,int height){
         Graphics2D canvas = (Graphics2D)g;
-        BufferedImage floor1 = ImageIO.read(getClass().getResource("/Sprites/floor_1.png"));
-        AffineTransform at = new AffineTransform();
-        at.translate(floor1.getWidth(), floor1.getHeight());
-        canvas.drawImage(floor1, at, null);
+        BufferedImage floor1;
+        try {
+            java.net.URL fileUrl = getClass().getResource("floor.png");
+            floor1 = ImageIO.read(fileUrl);
+            canvas.drawImage(floor1, 10, 50, this);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
 
     }
     

@@ -1,7 +1,7 @@
 package inf101.game.view;
 
-import inf101.game.view.States.FootType;
-import inf101.game.view.States.PlayerDirection;
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;

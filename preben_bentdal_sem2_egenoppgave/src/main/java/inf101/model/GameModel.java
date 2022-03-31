@@ -1,10 +1,10 @@
 package inf101.model;
 
 import inf101.backround.Floor;
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 import inf101.game.controller.IGameController;
 import inf101.game.view.iRoomview;
-import inf101.game.view.States.FootType;
-import inf101.game.view.States.PlayerDirection;
 import inf101.grid.Coordinate;
 import inf101.grid.OutOfBoundsException;
 import inf101.grid.itemWithCoordinate;

@@ -1,8 +1,8 @@
 package inf101.game.controller;
 
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 import inf101.game.view.Roomview;
-import inf101.game.view.States.FootType;
-import inf101.game.view.States.PlayerDirection;
 
 import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;

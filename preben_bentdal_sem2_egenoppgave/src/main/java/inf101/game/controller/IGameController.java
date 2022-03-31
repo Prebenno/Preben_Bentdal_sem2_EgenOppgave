@@ -1,7 +1,7 @@
 package inf101.game.controller;
 
-import inf101.game.view.States.FootType;
-import inf101.game.view.States.PlayerDirection;
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 
 public interface IGameController {
 

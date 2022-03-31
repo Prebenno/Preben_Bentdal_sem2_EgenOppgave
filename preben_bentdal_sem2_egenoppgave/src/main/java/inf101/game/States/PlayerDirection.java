@@ -1,4 +1,4 @@
-package inf101.game.view.States;
+package inf101.game.States;
 
 public enum PlayerDirection {
     UP,
