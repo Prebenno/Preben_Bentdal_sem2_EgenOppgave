@@ -33,7 +33,7 @@ public class Grid<E> implements IGrid<E> {
     }
 
     public ArrayList<E> CreateRandomColorList(E base_element,E stoneColor1, E stoneColor2, E stoneColor3,int size){
-        ArrayList<E> numbers = new ArrayList<>(Arrays.asList(base_element,stoneColor1,stoneColor3,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element));
+        ArrayList<E> numbers = new ArrayList<>(Arrays.asList(base_element,stoneColor1,stoneColor2,stoneColor3,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element));
         ArrayList<E> colors = new ArrayList<E>();
         for (int i = 0; i < size ; i++ ){
             int randomIndex = (int)(Math.random() * numbers.size());
@@ -65,7 +65,7 @@ public class Grid<E> implements IGrid<E> {
     @Override
     public E getElement(Coordinate cord) {
         if (! coordinateOnBoard(cord)){
-            throw new IndexOutOfBoundsException("coordinate not on board");
+            throw new IndexOutOfBoundsException("coordinate not on board (wrong in get element)");
         }
 
         int row = cord.getRow();
@@ -76,7 +76,7 @@ public class Grid<E> implements IGrid<E> {
     @Override
     public void setElement(Coordinate cord ,E element) {
         if (! coordinateOnBoard(cord)){
-            throw new IndexOutOfBoundsException("coordinate not on board");
+            throw new IndexOutOfBoundsException("coordinate not on board (wrong in set element)");
         }
         int row = cord.getRow();
         int column = cord.getColumn();

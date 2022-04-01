@@ -32,6 +32,15 @@ public class GameModel implements iRoomview ,IGameController {
         this.myroom = myfloor.room;
         
     }
+    public GameModel(Boolean wall) throws OutOfBoundsException{
+        this.direction = PlayerDirection.RIGHT;
+        this.footType = FootType.WALK;
+        this.spawner = new SpriteSpawner();
+        this.spawner.setSenterColumn();
+        this.PlayerSprite = spawner.getStarterSprite();
+        this.myfloor = new Floor(true);
+        this.myroom = myfloor.room;
+    }
     @Override
     public int getRows() {
         return myroom.getRows();

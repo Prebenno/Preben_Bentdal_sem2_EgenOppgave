@@ -1,10 +1,5 @@
 package inf101.game.view;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.awt.*;
@@ -25,10 +20,9 @@ import inf101.game.States.PlayerDirection;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
 
-import java.awt.Dimension;
-
 public class Roomview extends JComponent {
     public iRoomview view;
+    
     
 
     public Roomview(iRoomview myfloor){
@@ -43,13 +37,12 @@ public class Roomview extends JComponent {
     public void paint(Graphics canvas1) {
 
         super.paintComponent(canvas1);
+        this.setLayout(new BorderLayout());
         Graphics2D canvas = (Graphics2D) canvas1.create();
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
-        this.drawRoom(canvas, componentWidth, componentHeight);
-        this.drawWalls(canvas, componentWidth, componentHeight);
-        this.drawPlayer(canvas,componentWidth,componentHeight);
-        this.paintplayer(canvas,componentWidth,componentHeight);
+        this.drawBoard(canvas, 0, 0, componentWidth, componentHeight);
+
        
         
     }
@@ -58,6 +51,14 @@ public class Roomview extends JComponent {
         int width = 700;
         int height = 750;
         return new Dimension(width, height);
+    }
+
+    public void drawBoard(Graphics canvas,int x, int y,int width, int height){
+        this.drawRoom(canvas,x,y, width, height);
+        //this.drawWalls(canvas, componentWidth, componentHeight);
+        this.drawPlayer(canvas,width,height);
+        this.paintplayer(canvas,width,height);
+
     }
 
 
@@ -86,9 +87,7 @@ public class Roomview extends JComponent {
 
     }
 
-    public void drawRoom(Graphics canvas,int width, int height){
-        int x = 0;
-        int y = 0;
+    public void drawRoom(Graphics canvas,int x,int y,int width, int height){
         canvas.setColor(Color.RED); // check if whole backround is drawn
         canvas.fillRect(x, y, height, width);
         for (itemWithCoordinate<Pixel> pixel : view.getPixels()) {

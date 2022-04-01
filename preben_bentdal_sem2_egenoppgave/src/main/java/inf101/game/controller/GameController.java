@@ -34,19 +34,20 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_LEFT) {
-            controller.movePlayer(0, -4);
+            controller.movePlayer(0, -6);
             controller.changeWalkingDirection(PlayerDirection.LEFT);
+            System.out.println("lol");
             
         }
         else if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
-            controller.movePlayer(0, 4);
+            controller.movePlayer(0, 6);
             controller.changeWalkingDirection(PlayerDirection.RIGHT);
         }
         else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
-            controller.movePlayer(4, 0);
+            controller.movePlayer(6, 0);
         }
         else if (event.getKeyCode() == KeyEvent.VK_UP) {
-            controller.movePlayer(-4, 0);
+            controller.movePlayer(-6, 0);
         }
         else if (event.getKeyCode() == KeyEvent.VK_SPACE) {
             // Spacebar was pressed
