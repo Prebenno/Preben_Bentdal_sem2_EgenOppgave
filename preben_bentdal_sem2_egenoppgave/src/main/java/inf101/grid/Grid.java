@@ -1,6 +1,7 @@
 package inf101.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +11,36 @@ public class Grid<E> implements IGrid<E> {
     private final int rows;
     private final int columns;
 
+    public Grid(int rows, int columns, E base_element,E stoneColor1, E stoneColor2, E stoneColor3) throws OutOfBoundsException{
+        if ((rows<=0) || (columns<=0)){
+            throw new OutOfBoundsException("rows or cols is less than 0");
+        }
+        ArrayList<E> colors = CreateRandomColorList(base_element,stoneColor1, stoneColor2, stoneColor3,rows*columns);
+        this.rows = rows;
+        this.columns = columns;
+        this.cells = new ArrayList <ArrayList<E>>(rows*columns);
+        int color_index = 0; 
+        for(int row = 0; row < rows ; row++){
+            ArrayList<E> inner = new ArrayList<E>();
+            cells.add(inner);
+
+            for(int col = 0; col < columns ; col++){
+                cells.get(row).add(colors.get(color_index));
+                color_index++;
+            }
+        }
+        
+    }
+
+    public ArrayList<E> CreateRandomColorList(E base_element,E stoneColor1, E stoneColor2, E stoneColor3,int size){
+        ArrayList<E> numbers = new ArrayList<>(Arrays.asList(base_element,stoneColor1,stoneColor3,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element,base_element));
+        ArrayList<E> colors = new ArrayList<E>();
+        for (int i = 0; i < size ; i++ ){
+            int randomIndex = (int)(Math.random() * numbers.size());
+            colors.add(numbers.get(randomIndex));
+        }
+        return colors;
+    }
     public Grid(int rows, int columns, E base_element) throws OutOfBoundsException{
         if ((rows<=0) || (columns<=0)){
             throw new OutOfBoundsException("rows or cols is less than 0");
@@ -26,9 +57,8 @@ public class Grid<E> implements IGrid<E> {
         }
         
     }
-
     public Grid(int rows, int columns) throws OutOfBoundsException{
-        this(rows,columns,null);
+        this(rows,columns,null,null,null,null);
     }
     
 
@@ -63,7 +93,7 @@ public class Grid<E> implements IGrid<E> {
     }
     @Override
     public boolean coordinateOnBoard(Coordinate cord) {
-        if ((cord.getColumn() >= 0) && (cord.getRow() >= 0)){
+        if ((cord.getColumn() >= 0) && (cord.getRow() >= 0)){//+ to remove walls from this
             return  (cord.getColumn() < this.getColumns()) && (cord.getRow() < this.getRows());
         }
         return false;

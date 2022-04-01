@@ -29,6 +29,7 @@ import java.awt.Dimension;
 
 public class Roomview extends JComponent {
     public iRoomview view;
+    
 
     public Roomview(iRoomview myfloor){
         this.view = myfloor;
@@ -40,17 +41,16 @@ public class Roomview extends JComponent {
 
     @Override
     public void paint(Graphics canvas1) {
+
         super.paintComponent(canvas1);
         Graphics2D canvas = (Graphics2D) canvas1.create();
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
-        
-        
-        
         this.drawRoom(canvas, componentWidth, componentHeight);
+        this.drawWalls(canvas, componentWidth, componentHeight);
         this.drawPlayer(canvas,componentWidth,componentHeight);
         this.paintplayer(canvas,componentWidth,componentHeight);
-        this.drawFloor(canvas,componentWidth,componentHeight);
+       
         
     }
     @Override
@@ -58,6 +58,32 @@ public class Roomview extends JComponent {
         int width = 700;
         int height = 750;
         return new Dimension(width, height);
+    }
+
+
+    public void drawWalls(Graphics canvas,int width, int height){
+        this.test(canvas,0,0,width, height,"wall_left.png"); // upper wall
+        
+
+    }
+    public void test(Graphics canvas,int x, int y, int width, int height,String Picture){
+        int onewidth = width/5;
+        int oneheight = height/10;
+        for (int row = 0; row <5 ;row++){
+            this.drawPicture(canvas, x, y, onewidth, oneheight, Picture);
+            x+=onewidth;
+        }
+    }
+
+    public void down(Graphics canvas,int x, int y, int width, int height,String Picture){
+        int onewidth = width/10;
+        int oneheight = (int) (height/2.5);
+        for (int row = 0; row <7 ;row++){
+            this.drawPicture(canvas, x, y, onewidth, oneheight, Picture);
+            y+=onewidth;
+        }
+
+
     }
 
     public void drawRoom(Graphics canvas,int width, int height){
@@ -81,6 +107,7 @@ public class Roomview extends JComponent {
         }
 
     }
+    
 
     public void drawPlayer(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
@@ -149,17 +176,15 @@ public class Roomview extends JComponent {
 
     }
 
-    protected void drawFloor(Graphics g,int width,int height){
+    protected void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
         Graphics2D canvas = (Graphics2D)g;
         BufferedImage floor1;
         try {
-            System.out.println("Working Directory = " + System.getProperty("user.dir"));
-            
-            File file = new File("preben_bentdal_sem2_egenoppgave/src/main/java/inf101/game/view/Sprites/floor_1.png");
-            System.out.println(file.exists());
+            File file = new File("preben_bentdal_sem2_egenoppgave/src/main/java/inf101/game/view/Sprites/" + filename);
             FileInputStream fis = new FileInputStream(file);
             floor1 = ImageIO.read(fis);
-            canvas.drawImage(floor1, 10, 50, this);
+            canvas.drawImage(floor1, x_position, y_position ,width ,height, this);
+            
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

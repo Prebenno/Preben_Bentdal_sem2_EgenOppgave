@@ -70,7 +70,7 @@ public class GameModel implements iRoomview ,IGameController {
             int col= coordItem.getCoordinate().getColumn();
             int row = coordItem.getCoordinate().getRow();
             Coordinate testcord = new Coordinate(row + deltaRow, col + deltaColumn);
-            if ((!(myroom.coordinateOnBoard(testcord))) ){  // if coordinate is not on grid or if colour is not black
+            if (!(myroom.coordinateOnBoard(testcord))) {  // if coordinate is not on grid or if colour is not black
                 System.out.println("yey");
                 return false;
             }   

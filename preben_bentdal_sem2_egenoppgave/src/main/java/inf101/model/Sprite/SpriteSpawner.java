@@ -7,11 +7,11 @@ public class SpriteSpawner {
     
 
     public void setSenterColumn(){
-        this.center = new Coordinate(0,0);
+        this.center = new Coordinate(0,0); // player spawnpoint not on walls
 
     }
     public CoordinateSprite getStarterSprite(){
-        return getRightWalkingPlayerPos(center);
+        return getRightWalkingPlayerPos(new Coordinate(50,50));
     }
 
     public CoordinateSprite getRightWalkingPlayerPos(Coordinate position){
