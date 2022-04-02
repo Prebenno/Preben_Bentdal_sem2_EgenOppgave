@@ -12,7 +12,7 @@ import inf101.model.GameModel;
 //Mutch of the code here was gotten from
 //https://stackoverflow.com/questions/28809000/how-to-insert-jpanel-beside-a-grid
 public class GameMain {
-    
+    public JFrame window;
     public String WINDOW_TITLE = "INF101 Pyramid game";
     public JPanel ui;
     public JPanel gameGrid;
@@ -25,13 +25,16 @@ public class GameMain {
     }
 
     private void initUi() throws OutOfBoundsException {
+        JFrame frame = new JFrame("INF101 Pyramid game");
+        this.window = frame;
         this.ui = new JPanel(new BorderLayout(5, 5));
         ui.setBackground(Color.YELLOW);
         ui.setBorder(new EmptyBorder(4, 4, 4, 4));
         createGame();
         createWall();
-        this.ui.add(WallPanel,BorderLayout.NORTH);
+        this.window.add(WallPanel,BorderLayout.NORTH);
         this.ui.add(gameGrid,BorderLayout.CENTER);
+        
         
         
 
@@ -67,23 +70,17 @@ public class GameMain {
     private static void initGrid() throws OutOfBoundsException{
         JFrame frame = new JFrame("INF101 Pyramid game");
         
-        GameModel myfloor = new GameModel();
-        Roomview view = new Roomview(myfloor);
-        GameController gameController = new GameController(myfloor, view);
         frame.setSize(800,700);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new GameMain().getUi());
         frame.setLocationByPlatform(true);
-        frame.setVisible(true);  // should be last.
-
+        frame.setVisible(true);  // should be last
     }
 
-    public void test(){
-        
-    }
+   
     public static void main(String[] args) throws OutOfBoundsException{
-        //initGrid();
+        initGrid();
 
         
         
