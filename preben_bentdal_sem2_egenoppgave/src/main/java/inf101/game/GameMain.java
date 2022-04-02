@@ -80,38 +80,96 @@ public class GameMain {
    
     public static void main(String[] args) throws OutOfBoundsException{
 
-        JPanel container = new JPanel(new GridLayout(2,2)); //
+        GridBagLayout gridLayout = new GridBagLayout();
+        JPanel container = new JPanel(); 
+        container.setLayout(gridLayout);
+
+
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
+        JPanel panel3 = new JPanel();
+        JPanel panel4 = new JPanel();
+        JPanel panel5 = new JPanel();
+
+        panel1.setPreferredSize(new Dimension(750,700));
+        panel2.setPreferredSize(new Dimension(20,700));
+        panel3.setPreferredSize(new Dimension(20,700));
+        panel4.setPreferredSize(new Dimension(750,20));
+        panel5.setPreferredSize(new Dimension(750,20));
         JFrame frame = new JFrame("INF101 Pyramid game");
-        panel1.setBackground(Color.YELLOW);
-        panel1.setBorder(new EmptyBorder(4, 4, 4, 4));
+        
+        
+        
        
         GameModel myfloor = new GameModel();
         Roomview view = new Roomview(myfloor);
 
         GameController gameController = new GameController(myfloor, view);
         
-        panel1.add(gameController.view,BorderLayout.CENTER);
+        panel1.add(gameController.view);
 
 
         GameModel myfloor1 = new GameModel(true);
         Roomview view1 = new Roomview(myfloor1);
-        panel2.setPreferredSize(new Dimension(100,100));
-        panel2.add(view1,BorderLayout.NORTH);
+
+        GameModel myfloor2 = new GameModel(true);
+        Roomview view2 = new Roomview(myfloor2);
+
+        GameModel myfloor3 = new GameModel(true);
+        Roomview view3 = new Roomview(myfloor3);
+
+        GameModel myfloor4 = new GameModel(true);
+        Roomview view4 = new Roomview(myfloor4);
+        panel2.add(view1);
+
+        panel3.add(view2);
+
+        panel4.add(view1);
+
+        panel5.add(view1);
        
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        //gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+    
+        container.add(panel1,gbc);
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+      
+        container.add(panel2,gbc);
+        gbc.anchor = GridBagConstraints.LINE_END;
         
-        container.add(panel1);
-        container.add(panel2);
+
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+  
+        container.add(panel3,gbc);
+        gbc.anchor = GridBagConstraints.PAGE_START;
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+
+        container.add(panel4,gbc);
+        gbc.anchor = GridBagConstraints.PAGE_END;
+        
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        
+        container.add(panel5,gbc);
+
         
         
         
-        frame.setSize(800,700);
-        frame.setLayout(new BorderLayout());
+        //frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setContentPane(new GameMain().getUi());
         frame.setContentPane(container);
         frame.setLocationByPlatform(true);
+        frame.pack();
         frame.setVisible(true);  // should be last
 
         
