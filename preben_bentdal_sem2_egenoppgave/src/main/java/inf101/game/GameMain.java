@@ -53,10 +53,9 @@ public class GameMain {
         this.WallPanel = panel1;
 
     }
-    public void createGame() throws OutOfBoundsException{
+    public  void createGame() throws OutOfBoundsException{
         JPanel panel1 = new JPanel();
         GameModel myfloor = new GameModel();
-        this.gameRoom = myfloor;
         Roomview view = new Roomview(myfloor);
         GameController gameController = new GameController(myfloor, view);
         this.controller = gameController;
@@ -80,7 +79,40 @@ public class GameMain {
 
    
     public static void main(String[] args) throws OutOfBoundsException{
-        initGrid();
+
+        JPanel container = new JPanel(new GridLayout(2,2)); //
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+        JFrame frame = new JFrame("INF101 Pyramid game");
+        panel1.setBackground(Color.YELLOW);
+        panel1.setBorder(new EmptyBorder(4, 4, 4, 4));
+       
+        GameModel myfloor = new GameModel();
+        Roomview view = new Roomview(myfloor);
+
+        GameController gameController = new GameController(myfloor, view);
+        
+        panel1.add(gameController.view,BorderLayout.CENTER);
+
+
+        GameModel myfloor1 = new GameModel(true);
+        Roomview view1 = new Roomview(myfloor1);
+        panel2.setPreferredSize(new Dimension(100,100));
+        panel2.add(view1,BorderLayout.NORTH);
+       
+        
+        container.add(panel1);
+        container.add(panel2);
+        
+        
+        
+        frame.setSize(800,700);
+        frame.setLayout(new BorderLayout());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setContentPane(new GameMain().getUi());
+        frame.setContentPane(container);
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);  // should be last
 
         
         
