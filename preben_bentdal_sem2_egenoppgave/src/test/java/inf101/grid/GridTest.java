@@ -38,17 +38,17 @@ public class GridTest {
         @Test
         void coordinateOnBoardTest() throws OutOfBoundsException{
             IGrid<Integer> grid = new Grid<Integer>(2,3);
-            assertTrue(grid.coordinateOnBoard(new Coordinate(1,2)));
-            assertTrue(grid.coordinateOnBoard(new Coordinate(1,0)));
-            assertTrue(grid.coordinateOnBoard(new Coordinate(1,1)));
+            assertTrue(grid.coordinateOnGrid(new Coordinate(1,2)));
+            assertTrue(grid.coordinateOnGrid(new Coordinate(1,0)));
+            assertTrue(grid.coordinateOnGrid(new Coordinate(1,1)));
 
-            assertFalse(grid.coordinateOnBoard(new Coordinate(3,3)));
-            assertFalse(grid.coordinateOnBoard(new Coordinate(0,9)));
-            assertFalse(grid.coordinateOnBoard(new Coordinate(9,0)));
+            assertFalse(grid.coordinateOnGrid(new Coordinate(3,3)));
+            assertFalse(grid.coordinateOnGrid(new Coordinate(0,9)));
+            assertFalse(grid.coordinateOnGrid(new Coordinate(9,0)));
 
-            assertFalse(grid.coordinateOnBoard(new Coordinate(0,-1)));
-            assertFalse(grid.coordinateOnBoard(new Coordinate(-1,0)));
-            assertTrue(grid.coordinateOnBoard(new Coordinate(0,0)));
+            assertFalse(grid.coordinateOnGrid(new Coordinate(0,-1)));
+            assertFalse(grid.coordinateOnGrid(new Coordinate(-1,0)));
+            assertTrue(grid.coordinateOnGrid(new Coordinate(0,0)));
         }
 
         @Test

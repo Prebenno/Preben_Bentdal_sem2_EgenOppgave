@@ -12,6 +12,8 @@ public interface IGameController {
 
     void changeFootType(FootType walking);
 
+    void resetAcceleration();
+
     FootType getWalkingType();
 
     PlayerDirection getPlayerDirection();

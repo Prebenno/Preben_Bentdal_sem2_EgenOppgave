@@ -31,10 +31,18 @@ public interface IGrid<E> extends Iterable<itemWithCoordinate<E>> {
     int getColumns();
 
     /**
-     * @return true if coordinate is on board
+     * checks if coordinate is on grid, this includes walls
+     * @param cord coordinate to check
+     * @return true/false
      */
-    boolean coordinateOnBoard(Coordinate cord);
+    boolean coordinateOnGrid(Coordinate cord);
 
+    /**
+     * checks if coordinate is on board, this does not incude walls
+     * @param cord coordinate to check
+     * @return true/false
+     */
+    boolean coordinateOnFloor(Coordinate cord);
 
     
 }

@@ -74,18 +74,25 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public boolean movePlayer(int deltaRow, int deltaColumn) {
+        int speed = this.PlayerSprite.getEntity().getSpeed(); //getting speed and acceleration, and changingen
+        int acceleration = this.PlayerSprite.getEntity().getAcceleration();
+        this.PlayerSprite.getEntity().setAcceleration();
+        deltaRow= deltaRow *(speed + acceleration);
+        deltaColumn= deltaColumn *(speed + acceleration);
+        
         
         for (itemWithCoordinate<Pixel> coordItem : this.PlayerSprite) { //Checks if all coordinates is on grid
-            int col= coordItem.getCoordinate().getColumn();
+            int column= coordItem.getCoordinate().getColumn();
             int row = coordItem.getCoordinate().getRow();
-            Coordinate testcord = new Coordinate(row + deltaRow, col + deltaColumn);
-            if (!(myroom.coordinateOnBoard(testcord))) {  // if coordinate is not on grid or if colour is not black
-                System.out.println("yey");
-                return false;
+            Coordinate testcord = new Coordinate(row + deltaRow, column + deltaColumn);
+            if ((myroom.coordinateOnFloor(testcord))) {  // if coordinate is not on grid 
+                this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);      
+                return true;
             }   
         }
-        this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);      
-        return true;
+        System.out.println("yey");
+        return false;
+        
     }
 
     @Override
@@ -143,6 +150,10 @@ public class GameModel implements iRoomview ,IGameController {
                 break;
         }
 
+    }
+    @Override
+    public void resetAcceleration() {
+        this.PlayerSprite.getEntity().reset();
     }
     
     

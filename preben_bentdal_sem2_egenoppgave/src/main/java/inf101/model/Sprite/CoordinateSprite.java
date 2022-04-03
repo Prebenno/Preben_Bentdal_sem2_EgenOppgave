@@ -8,16 +8,16 @@ import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
 
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
-    private SpriteShapes entity;
+    private PlayerValues entity;
     private Coordinate coordinate;
 
 
-    public CoordinateSprite(SpriteShapes entity, Coordinate coordinate) {
+    public CoordinateSprite(PlayerValues entity, Coordinate coordinate) {
         this.entity = entity;
         this.coordinate = coordinate;
 
     }
-    public SpriteShapes getEntity(){
+    public PlayerValues getEntity(){
         return this.entity;
     }
     public Coordinate getCoordinate(){

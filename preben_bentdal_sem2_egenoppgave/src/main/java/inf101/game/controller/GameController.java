@@ -13,14 +13,13 @@ public class GameController implements KeyListener,ActionListener {
 
     public IGameController controller;
     public Roomview view;
-    public int speed;
     public boolean foot;
 
     public GameController(IGameController controller, Roomview view){
         this.controller = controller;
         this.view = view;
         this.view.addKeyListener(this);
-        this.speed=5;
+
         
         
     }
@@ -34,20 +33,20 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_LEFT) {
-            controller.movePlayer(0, -6);
+            controller.movePlayer(0, -1);
             controller.changeWalkingDirection(PlayerDirection.LEFT);
             System.out.println("lol");
             
         }
         else if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
-            controller.movePlayer(0, 6);
+            controller.movePlayer(0, 1);
             controller.changeWalkingDirection(PlayerDirection.RIGHT);
         }
         else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
-            controller.movePlayer(6, 0);
+            controller.movePlayer(1, 0);
         }
         else if (event.getKeyCode() == KeyEvent.VK_UP) {
-            controller.movePlayer(-6, 0);
+            controller.movePlayer(-1, 0);
         }
         else if (event.getKeyCode() == KeyEvent.VK_SPACE) {
             // Spacebar was pressed
@@ -64,6 +63,8 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyReleased(KeyEvent event) {
         controller.changeFootType(FootType.STAND);
+        controller.resetAcceleration();
+        
         view.repaint();
 
 

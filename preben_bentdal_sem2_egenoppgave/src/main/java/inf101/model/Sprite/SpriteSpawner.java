@@ -15,22 +15,22 @@ public class SpriteSpawner {
     }
 
     public CoordinateSprite getRightWalkingPlayerPos(Coordinate position){
-        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteShapes.PLAYER_RIGHT, position);
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_RIGHT, position);
         return myCordSprite;
 
     }
     public CoordinateSprite getLeftWalkingPlayerPos(Coordinate position){
-        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteShapes.PLAYER_LEFT, position);
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_LEFT, position);
         return myCordSprite;
     }
 
     public CoordinateSprite getRightStandingPlayerPos(Coordinate position){
-        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteShapes.PLAYER_STANDING_RIGHT, position);
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_STANDING_RIGHT, position);
         return myCordSprite;
 
     }
     public CoordinateSprite getLeftStandingPlayerPos(Coordinate position){
-        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteShapes.PLAYER_STANDING_LEFT, position);
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_STANDING_LEFT, position);
         return myCordSprite;
     }
 }

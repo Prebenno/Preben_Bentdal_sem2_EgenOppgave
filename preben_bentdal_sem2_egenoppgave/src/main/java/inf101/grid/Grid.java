@@ -64,7 +64,7 @@ public class Grid<E> implements IGrid<E> {
 
     @Override
     public E getElement(Coordinate cord) {
-        if (! coordinateOnBoard(cord)){
+        if (! coordinateOnGrid(cord)){
             throw new IndexOutOfBoundsException("coordinate not on board (wrong in get element)");
         }
 
@@ -75,7 +75,7 @@ public class Grid<E> implements IGrid<E> {
 
     @Override
     public void setElement(Coordinate cord ,E element) {
-        if (! coordinateOnBoard(cord)){
+        if (! coordinateOnGrid(cord)){
             throw new IndexOutOfBoundsException("coordinate not on board (wrong in set element)");
         }
         int row = cord.getRow();
@@ -92,12 +92,20 @@ public class Grid<E> implements IGrid<E> {
         return this.columns;
     }
     @Override
-    public boolean coordinateOnBoard(Coordinate cord) {
+    public boolean coordinateOnGrid(Coordinate cord) {
         if ((cord.getColumn() >= 0) && (cord.getRow() >= 0)){//+ to remove walls from this
             return  (cord.getColumn() < this.getColumns()) && (cord.getRow() < this.getRows());
         }
         return false;
     }
+    @Override
+    public boolean coordinateOnFloor(Coordinate cord){
+        if ((cord.getColumn() >= 15) && (cord.getRow() >= 35)){//+ to remove walls from this
+            return  (cord.getColumn() < this.getColumns()-15) && (cord.getRow() < this.getRows()-35);
+        }
+        return false;
+    }
+    
 
     @Override
     public Iterator<itemWithCoordinate<E>> iterator() { //Code gotten from https://stackoverflow.com/questions/5849154/can-we-write-our-own-iterator-in-java

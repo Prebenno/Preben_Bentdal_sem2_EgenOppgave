@@ -42,6 +42,7 @@ public class Roomview extends JComponent {
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
         this.drawBoard(canvas, 0, 0, componentWidth, componentHeight);
+        
 
        
         
@@ -54,39 +55,35 @@ public class Roomview extends JComponent {
     }
 
     public void drawBoard(Graphics canvas,int x, int y,int width, int height){
-        this.drawRoom(canvas,x,y, width, height);
-        //this.drawWalls(canvas, componentWidth, componentHeight);
+        
+        this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
+        this.drawWalls(canvas, width, height);
         this.drawPlayer(canvas,width,height);
         this.paintplayer(canvas,width,height);
 
     }
 
-
-    public void drawWalls(Graphics canvas,int width, int height){
-        this.test(canvas,0,0,width, height,"wall_left.png"); // upper wall
+    /**
+     * draws the walls, ive used a merged photo of 10 walls for the walls 
+     * since drawing them one by one caused to mutch strain on my computer due
+     * too resising 
+     * @param canvas canvas to draw on
+     * @param width width of canvas
+     * @param height height of canvas
+     */
+    public void drawWalls(Graphics canvas,int width, int height){ 
+        
+        this.drawPicture(canvas, 0, 0, width, 60, "10_walls_top.png");// Upper wall
+        this.drawPicture(canvas,0,0,30, height,"10_walls_left.png"); // right wall
+        this.drawPicture(canvas,width-30,0,35,height,"10_walls2.png"); // left wall
+        this.drawPicture(canvas, 0, height-50, width, 60, "10_walls_top.png");// Lower wall
         
 
     }
-    public void test(Graphics canvas,int x, int y, int width, int height,String Picture){
-        int onewidth = width/5;
-        int oneheight = height/10;
-        for (int row = 0; row <5 ;row++){
-            this.drawPicture(canvas, x, y, onewidth, oneheight, Picture);
-            x+=onewidth;
-        }
-    }
-
-    public void down(Graphics canvas,int x, int y, int width, int height,String Picture){
-        int onewidth = width/10;
-        int oneheight = (int) (height/2.5);
-        for (int row = 0; row <7 ;row++){
-            this.drawPicture(canvas, x, y, onewidth, oneheight, Picture);
-            y+=onewidth;
-        }
+    
 
 
-    }
-
+    
     public void drawRoom(Graphics canvas,int x,int y,int width, int height){
         canvas.setColor(Color.RED); // check if whole backround is drawn
         canvas.fillRect(x, y, height, width);
