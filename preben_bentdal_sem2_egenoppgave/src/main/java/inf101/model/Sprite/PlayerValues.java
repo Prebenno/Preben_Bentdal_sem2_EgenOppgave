@@ -62,8 +62,10 @@ public class PlayerValues {
         return this.acceleration;
     }
     public void setAcceleration(){
-        System.out.println("Accerelation = " + this.acceleration);
-        this.acceleration++;
+        System.out.println("acceleration = " + this.acceleration);
+        if (this.acceleration < 10){
+            this.acceleration++;
+        }
     }
 
     public void reset(){
