@@ -49,8 +49,8 @@ public class Roomview extends JComponent {
     }
     @Override
     public Dimension getPreferredSize() {
-        int width = 700;
-        int height = 750;
+        int width = 900;
+        int height = 900;
         return new Dimension(width, height);
     }
 
@@ -58,8 +58,8 @@ public class Roomview extends JComponent {
         
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
-        this.drawPlayer(canvas,width,height);
-        this.paintplayer(canvas,width,height);
+        this.drawHitBox(canvas,width,height);
+        //this.drawPlayer(canvas,width,height);
 
     }
 
@@ -104,13 +104,15 @@ public class Roomview extends JComponent {
 
     }
     
-
-    public void drawPlayer(Graphics canvas,int width,int height){
+    
+    public void drawHitBox(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
+        boolean once = true;
         for (itemWithCoordinate<Pixel> pixel : this.view.getSpritePixels()) {
             int row = pixel.getCoordinate().getRow();
             int col = pixel.getCoordinate().getColumn();
+            
             Color PixelColor = pixel.getItem().getColor();
             int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
             int tileY = y_Position + row * height / this.view.getRows() ;
@@ -118,15 +120,34 @@ public class Roomview extends JComponent {
             int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
+            if (once){
+                int height2 = height/18;  
+                int width2  = width /18;
+                this.drawPicture(canvas, tileX, tileY, width2, height2, "Skeleton_looking_left-removebg-preview.png");
+                once = false;
+            }
             this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
         }
+        
     }
-
+   
     private void drawPixel(Graphics canvas, int tileX, int tileY, int tileHeight, int tileWidth, Color PixelColor) {
         canvas.setColor(PixelColor);
         canvas.fillRect(tileX, tileY, tileWidth, tileHeight);
     }
-    
+
+    private void drawPlayer(Graphics canvas, int tileWidth, int tileHeight) {
+        int height2 = tileHeight/18;  
+        int width2  = tileWidth /18;
+        int y_cord = this.view.getPlayerSprite().getCoordinate().getColumn();
+        int x_cord = this.view.getPlayerSprite().getCoordinate().getRow();
+        int y_position = (int) (y_cord); //x position, board is 3.5 times smaller than width
+        int x_position = (int) (x_cord); //y position, board is 3,75 times smaller than height
+        this.drawPicture(canvas, y_position, x_position, width2, height2, "Skeleton_looking_left-removebg-preview.png");
+        
+
+    }
+    /*
     protected void paintplayer(Graphics g, int width, int height) {
     int y_cord = view.getPlayerSprite().getCoordinate().getRow();
     int x_cord = view.getPlayerSprite().getCoordinate().getColumn();
@@ -171,7 +192,7 @@ public class Roomview extends JComponent {
     
 
     }
-
+    */
     protected void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
         Graphics2D canvas = (Graphics2D)g;
         BufferedImage floor1;
@@ -189,7 +210,7 @@ public class Roomview extends JComponent {
         
 
     }
-    
+   
 
 }
 
