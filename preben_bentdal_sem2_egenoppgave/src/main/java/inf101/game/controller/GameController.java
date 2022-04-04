@@ -44,9 +44,11 @@ public class GameController implements KeyListener,ActionListener {
         }
         else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
             controller.movePlayer(1, 0);
+            controller.changeWalkingDirection(PlayerDirection.DOWN);
         }
         else if (event.getKeyCode() == KeyEvent.VK_UP) {
             controller.movePlayer(-1, 0);
+            controller.changeWalkingDirection(PlayerDirection.UP);
         }
         else if (event.getKeyCode() == KeyEvent.VK_SPACE) {
             // Spacebar was pressed

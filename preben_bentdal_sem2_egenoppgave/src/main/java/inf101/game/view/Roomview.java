@@ -121,9 +121,7 @@ public class Roomview extends JComponent {
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
             if (once){
-                int height2 = height/18;  
-                int width2  = width /18;
-                this.drawPicture(canvas, tileX, tileY, width2, height2, "Skeleton_looking_left-removebg-preview.png");
+                this.drawPlayer(canvas, tileX, tileY, width, height);
                 once = false;
             }
             this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
@@ -136,14 +134,38 @@ public class Roomview extends JComponent {
         canvas.fillRect(tileX, tileY, tileWidth, tileHeight);
     }
 
-    private void drawPlayer(Graphics canvas, int tileWidth, int tileHeight) {
-        int height2 = tileHeight/18;  
-        int width2  = tileWidth /18;
-        int y_cord = this.view.getPlayerSprite().getCoordinate().getColumn();
-        int x_cord = this.view.getPlayerSprite().getCoordinate().getRow();
-        int y_position = (int) (y_cord); //x position, board is 3.5 times smaller than width
-        int x_position = (int) (x_cord); //y position, board is 3,75 times smaller than height
-        this.drawPicture(canvas, y_position, x_position, width2, height2, "Skeleton_looking_left-removebg-preview.png");
+    private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight) {
+        PlayerDirection direction = this.view.getPlayerDirection();
+        int height = tileHeight/16;  
+        int width  = tileWidth /16;
+        x_position -=28;
+        String png = "";
+        switch (direction) {
+            case RIGHT:
+                png ="Skeleton_looking_right-removebg-preview.png";
+                width = tileWidth / 22;
+                x_position+=10;
+                break;
+            case UP:
+                png ="Skeleton_looking_up-removebg-preview.png";
+                width = tileWidth / 22;
+                x_position+=10;
+                break;
+                
+           
+            case DOWN:
+                png ="Skeleton_looking_down.png";
+                width = tileWidth / 22;
+                x_position+=10;
+                break;
+        
+            default:
+                png = "Skeleton_looking_left-removebg-preview.png";
+                break;
+
+        }
+        
+        this.drawPicture(canvas, x_position, y_position, width, height, png);
         
 
     }
