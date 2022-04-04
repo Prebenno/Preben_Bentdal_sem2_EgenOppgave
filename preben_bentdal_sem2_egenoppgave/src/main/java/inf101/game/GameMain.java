@@ -9,8 +9,7 @@ import inf101.game.view.Roomview;
 import inf101.grid.OutOfBoundsException;
 import inf101.model.GameModel;
 
-//Mutch of the code here was gotten from
-//https://stackoverflow.com/questions/28809000/how-to-insert-jpanel-beside-a-grid
+
 public class GameMain {
     
     public static void main(String[] args) throws OutOfBoundsException{

@@ -62,6 +62,9 @@ public class GameController implements KeyListener,ActionListener {
     
     @Override
     public void keyReleased(KeyEvent event) {
+        controller.changeFootType(FootType.WALK);
+        controller.resetAcceleration();
+        
         controller.changeFootType(FootType.STAND);
         controller.resetAcceleration();
         
