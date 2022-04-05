@@ -124,7 +124,7 @@ public class Roomview extends JComponent {
                 this.drawPlayer(canvas, tileX, tileY, width, height);
                 once = false;
             }
-            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+            //this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
         }
         
     }
