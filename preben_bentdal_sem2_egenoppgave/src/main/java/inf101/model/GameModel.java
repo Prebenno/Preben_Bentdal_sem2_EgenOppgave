@@ -19,7 +19,7 @@ public class GameModel implements iRoomview ,IGameController {
     Floor myfloor;
     Room myroom;
     CoordinateSprite PlayerSprite;
-    private List<CoordinateSprite> bullets = new ArrayList<>();
+    public CoordinateSprite bulletsprite;
     
     public SpriteSpawner spawner;
     public PlayerDirection direction;
@@ -34,6 +34,7 @@ public class GameModel implements iRoomview ,IGameController {
         this.footType = FootType.WALK;
         this.spawner = new SpriteSpawner();
         this.spawner.setSenterColumn();
+        this.bulletsprite = null;
         this.PlayerSprite = spawner.getStarterSprite();
         this.myfloor = new Floor();
         this.myroom = myfloor.room;
@@ -69,7 +70,7 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public Iterable<itemWithCoordinate<Pixel>> getBulletPixels() {
-        return bullets.get(0);
+        return bulletsprite;
     }
 
     public Coordinate getCenter(){
@@ -95,8 +96,8 @@ public class GameModel implements iRoomview ,IGameController {
                 if (object.equals(this.PlayerSprite)){
                     this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);   
                     } 
-                else if (object.equals(this.bullets.get(0))){
-                    this.bullets.add(0, this.bullets.get(0).move(deltaRow,deltaColumn));  
+                else if (object.equals(this.bulletsprite)){
+                    this.bulletsprite = this.bulletsprite.move(deltaRow,deltaColumn);  
                 }  
                 return true;
             }   
@@ -169,7 +170,7 @@ public class GameModel implements iRoomview ,IGameController {
     //
     @Override
     public CoordinateSprite getFirstBullet() {
-        return this.bullets.get(0);
+        return this.bulletsprite;
         
     }
     @Override
@@ -185,7 +186,7 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public void loadBullet(boolean shot) {
-        this.bullets.add(spawner.getBulletSprite(this.PlayerSprite.getCoordinate()));
+        this.bulletsprite = spawner.getBulletSprite(this.PlayerSprite.getCoordinate());
         
     }
     @Override
@@ -194,20 +195,22 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public CoordinateSprite getBulletSprite() {
-        if (this.bullets.size() >0){
-            return this.bullets.get(0);
-        }
         
-        return null;
+        return this.bulletsprite;
     }
     @Override
     public void bulletHit() {
-        this.bullets.remove(0);
+        this.bulletsprite = null;
+    }
+    @Override
+    public List<CoordinateSprite> getAllBullets() {
+        // TODO Auto-generated method stub
+        return null;
     }
     
-    public List<CoordinateSprite> getAllBullets(){
-        return this.bullets;
+    //public List<CoordinateSprite> getAllBullets(){
+     //   return this.bullets;
 
-    }
+   // }
     
 }
