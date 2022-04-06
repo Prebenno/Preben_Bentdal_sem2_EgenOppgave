@@ -10,7 +10,52 @@ public class hitBox {
     
     }
 
-    static final hitBox PLAYER_RIGHT = new hitBox(new boolean[][]{
+    static final hitBox PLAYER_HITBOX = new hitBox(new boolean[][]{
+    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+
+    });
+
+    static final hitBox BULLET = new hitBox(new boolean[][]{ 
+    {false,false,false,true,false,false,false},
+    {false,false,true,true,true,false,false},
+    {false,true,true,true,true,true,false},
+    {false,true,true,true,true,true,false},
+    {false,true,true,true,true,true,false},
+    {false,true,true,true,true,true,false},
+    {false,false,true,true,true,false,false},
+    {false,false,false,true,false,false,false},
+    });
+
+    /* static final hitBox PLAYER_RIGHT = new hitBox(new boolean[][]{
         {false,false,false,false,false,true,false,false,false,false,false},
         {false,false,false,false,true,true,true,false,false,false,false},
         {false,false,false,true,false,true,false,true,false,false,false},
@@ -29,7 +74,9 @@ public class hitBox {
         {false,false,false,true,false,false,false,true,false,false,false},
         {false,false,true,true ,false,false,false,true,true,false,false},
         {false,true,true,false,false,false,false,false,true,true,false},
+        
         });
+        */
 
     static final hitBox PLAYER_LEFT = new hitBox(new boolean[][]{
         {false,false,false,false,false,true,false,false,false,false,false},

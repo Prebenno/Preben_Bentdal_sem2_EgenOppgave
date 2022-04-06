@@ -100,8 +100,8 @@ public class Grid<E> implements IGrid<E> {
     }
     @Override
     public boolean coordinateOnFloor(Coordinate cord){
-        if ((cord.getColumn() >= 15) && (cord.getRow() >= 35)){//+ to remove walls from this
-            return  (cord.getColumn() < this.getColumns()-15) && (cord.getRow() < this.getRows()-35);
+        if ((cord.getColumn() >= 25) && (cord.getRow() >= 40)){//+ to remove walls from this
+            return  (cord.getColumn() < this.getColumns()-25) && (cord.getRow() < this.getRows()-70);
         }
         return false;
     }

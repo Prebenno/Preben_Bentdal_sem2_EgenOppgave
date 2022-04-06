@@ -2,6 +2,7 @@ package inf101.model.Sprite;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
@@ -29,6 +30,22 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     }
     public int getHeight(){
         return entity.getHeight();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof CoordinateSprite)) {
+            return false;
+        }
+        CoordinateSprite coordinateSprite = (CoordinateSprite) o;
+        return Objects.equals(entity, coordinateSprite.entity) && Objects.equals(coordinate, coordinateSprite.coordinate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entity, coordinate);
     }
 
 

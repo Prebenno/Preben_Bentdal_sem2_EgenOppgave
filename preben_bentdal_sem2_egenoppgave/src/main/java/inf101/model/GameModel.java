@@ -13,14 +13,21 @@ import inf101.model.Sprite.SpriteSpawner;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameModel implements iRoomview ,IGameController {
     Floor myfloor;
     Room myroom;
     CoordinateSprite PlayerSprite;
+    private List<CoordinateSprite> bullets = new ArrayList<>();
+    
     public SpriteSpawner spawner;
     public PlayerDirection direction;
     public FootType footType;
+
+    public boolean bulletShoot = false;
+
+    
 
     public GameModel() throws OutOfBoundsException {
         this.direction = PlayerDirection.RIGHT;
@@ -60,33 +67,37 @@ public class GameModel implements iRoomview ,IGameController {
         
         return PlayerSprite;
     }
+    @Override
+    public Iterable<itemWithCoordinate<Pixel>> getBulletPixels() {
+        return bullets.get(0);
+    }
+
     public Coordinate getCenter(){
         return spawner.center;
     }
 
-    public int getWidth(){
+    public int getPlayerWidth(){
         return PlayerSprite.getWidth();
 
     }
-    public int getHeight(){
+    public int getPlayerHeight(){
         return PlayerSprite.getHeight();
 
     }
     @Override
-    public boolean movePlayer(int deltaRow, int deltaColumn) {
-        int speed = this.PlayerSprite.getEntity().getSpeed(); //getting speed and acceleration, and changingen
-        int acceleration = this.PlayerSprite.getEntity().getAcceleration();
-        this.PlayerSprite.getEntity().setAcceleration();
-        deltaRow= deltaRow *(speed + acceleration);
-        deltaColumn= deltaColumn *(speed + acceleration);
-        
-        
-        for (itemWithCoordinate<Pixel> coordItem : this.PlayerSprite) { //Checks if all coordinates is on grid
+    public boolean moveObject(int deltaRow, int deltaColumn, CoordinateSprite object) {
+        System.out.println("moved");
+        for (itemWithCoordinate<Pixel> coordItem : object ) { //Checks if all coordinates is on grid
             int column= coordItem.getCoordinate().getColumn();
             int row = coordItem.getCoordinate().getRow();
             Coordinate testcord = new Coordinate(row + deltaRow, column + deltaColumn);
             if ((myroom.coordinateOnFloor(testcord))) {  // if coordinate is not on grid 
-                this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);      
+                if (object.equals(this.PlayerSprite)){
+                    this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);   
+                    } 
+                else if (object.equals(this.bullets.get(0))){
+                    this.bullets.add(0, this.bullets.get(0).move(deltaRow,deltaColumn));  
+                }  
                 return true;
             }   
         }
@@ -155,7 +166,48 @@ public class GameModel implements iRoomview ,IGameController {
     public void resetAcceleration() {
         this.PlayerSprite.getEntity().reset();
     }
+    //
+    @Override
+    public CoordinateSprite getFirstBullet() {
+        return this.bullets.get(0);
+        
+    }
+    @Override
+    public CoordinateSprite getPlayer() {
+        
+        return this.PlayerSprite;
+    }
+
+
+    @Override
+    public boolean isBulletGonnaShoot() {
+        return (getFirstBullet() != null);
+    }
+    @Override
+    public void loadBullet(boolean shot) {
+        this.bullets.add(spawner.getBulletSprite(this.PlayerSprite.getCoordinate()));
+        
+    }
+    @Override
+    public boolean bulletInChaimber() {
+        return isBulletGonnaShoot();
+    }
+    @Override
+    public CoordinateSprite getBulletSprite() {
+        if (this.bullets.size() >0){
+            return this.bullets.get(0);
+        }
+        
+        return null;
+    }
+    @Override
+    public void bulletHit() {
+        this.bullets.remove(0);
+    }
     
-    
+    public List<CoordinateSprite> getAllBullets(){
+        return this.bullets;
+
+    }
     
 }

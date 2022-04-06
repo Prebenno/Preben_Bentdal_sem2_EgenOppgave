@@ -1,5 +1,6 @@
 package inf101.model;
 import java.awt.Color;
+import java.util.Objects;
 
 public class Pixel {
     private Color color; // color of pixel
@@ -31,4 +32,21 @@ public class Pixel {
         return this.sprite;
     
 }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Pixel)) {
+            return false;
+        }
+        Pixel pixel = (Pixel) o;
+        return Objects.equals(color, pixel.color) && sprite == pixel.sprite;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, sprite);
+    }
+
 }

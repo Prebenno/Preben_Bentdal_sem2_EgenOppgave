@@ -59,6 +59,8 @@ public class Roomview extends JComponent {
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
         this.drawHitBox(canvas,width,height);
+        if (view.getBulletSprite() != null){
+            this.drawBulletHitBox(canvas,width,height);}
         //this.drawPlayer(canvas,width,height);
 
     }
@@ -123,10 +125,32 @@ public class Roomview extends JComponent {
             if (once){
                 this.drawPlayer(canvas, tileX, tileY, width, height);
                 once = false;
+                
             }
-            //this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
         }
         
+    }
+    //private void drawBullet(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight) {
+
+    
+    public void drawBulletHitBox(Graphics canvas, int width,int height){
+            int x_Position = view.getCenter().getRow();
+            int y_Position = view.getCenter().getColumn();
+            for (itemWithCoordinate<Pixel> pixel : this.view.getBulletPixels()){ 
+                int row = pixel.getCoordinate().getRow();
+                int col = pixel.getCoordinate().getColumn();
+                Color PixelColor = pixel.getItem().getColor();
+                int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+                int tileY = y_Position + row * height / this.view.getRows() ;
+                int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+                int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
+                int tileWidth = nextTileX - tileX;
+                int tileHeight = nextTileY - tileY;
+                this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+
+            }
+
     }
    
     private void drawPixel(Graphics canvas, int tileX, int tileY, int tileHeight, int tileWidth, Color PixelColor) {
@@ -138,7 +162,8 @@ public class Roomview extends JComponent {
         PlayerDirection direction = this.view.getPlayerDirection();
         int height = tileHeight/16;  
         int width  = tileWidth /16;
-        x_position -=28;
+        x_position -=13;
+        
         String png = "";
         switch (direction) {
             case RIGHT:

@@ -10,26 +10,36 @@ import inf101.model.Sprite.CoordinateSprite;
 public interface iRoomview {
 
     /** @return number of rows in grid */
-   int getRows();
+    int getRows();
 
-   /** @return number of columns in grid */
-   int getColumns();
+    /** @return number of columns in grid */
+    int getColumns();
 
-   Iterable<itemWithCoordinate<Pixel>> getPixels();
+    Iterable<itemWithCoordinate<Pixel>> getPixels();
 
-   Iterable<itemWithCoordinate<Pixel>> getSpritePixels();
+    Iterable<itemWithCoordinate<Pixel>> getSpritePixels();
 
-   Coordinate getCenter();
+    Iterable<itemWithCoordinate<Pixel>> getBulletPixels();
 
-   int getHeight();
+    Coordinate getCenter();
 
-   int getWidth();
+    int getPlayerHeight();
 
-   CoordinateSprite getPlayerSprite();
+    int getPlayerWidth();
 
-   PlayerDirection getPlayerDirection();
+    CoordinateSprite getPlayerSprite();
 
-   FootType getWalkingType();
+    CoordinateSprite getBulletSprite();
+
+    PlayerDirection getPlayerDirection();
+
+    FootType getWalkingType();
+
+    boolean isBulletGonnaShoot();
+
+
+
+   
 
    
     

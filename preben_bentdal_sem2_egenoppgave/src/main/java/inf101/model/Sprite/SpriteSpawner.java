@@ -7,7 +7,7 @@ public class SpriteSpawner {
     
 
     public void setSenterColumn(){
-        this.center = new Coordinate(0,0); // player spawnpoint not on walls
+        this.center = new Coordinate(50,50); // player spawnpoint not on walls
 
     }
     public CoordinateSprite getStarterSprite(){
@@ -32,5 +32,10 @@ public class SpriteSpawner {
     public CoordinateSprite getLeftStandingPlayerPos(Coordinate position){
         CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_STANDING_LEFT, position);
         return myCordSprite;
+    }
+
+    public CoordinateSprite getBulletSprite(Coordinate position){
+        CoordinateSprite myBullet = new CoordinateSprite (PlayerValues.BULLET, position);
+        return myBullet;
     }
 }

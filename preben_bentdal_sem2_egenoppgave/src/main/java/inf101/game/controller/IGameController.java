@@ -1,12 +1,17 @@
 package inf101.game.controller;
 
+import java.util.List;
+
 import inf101.game.States.FootType;
 import inf101.game.States.PlayerDirection;
+import inf101.model.Sprite.CoordinateSprite;
 
 public interface IGameController {
 
 
-    boolean movePlayer(int deltaRow,int  deltaColumn);
+    boolean moveObject(int deltaRow,int  deltaColumn, CoordinateSprite object);
+
+    CoordinateSprite getPlayer();
 
     void changeWalkingDirection(PlayerDirection direction);
 
@@ -17,6 +22,20 @@ public interface IGameController {
     FootType getWalkingType();
 
     PlayerDirection getPlayerDirection();
+
+    CoordinateSprite getFirstBullet();
+
+    void loadBullet(boolean shot);
+
+    boolean bulletInChaimber();
+
+    void bulletHit();
+
+    List<CoordinateSprite> getAllBullets();
+
+
+
+    
 
     
     

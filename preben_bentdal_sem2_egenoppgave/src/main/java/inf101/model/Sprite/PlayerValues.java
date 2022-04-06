@@ -1,6 +1,7 @@
 package inf101.model.Sprite;
 
 import java.awt.Color;
+import java.util.Objects;
 
 import inf101.model.Pixel;
 import inf101.model.Sprite.hitBox;
@@ -13,17 +14,19 @@ public class PlayerValues {
     private int acceleration;
 
     static final PlayerValues PLAYER_RIGHT = 
-    new PlayerValues(new Pixel(Color.BLACK, true), hitBox.PLAYER_RIGHT ,1,1);
+    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX ,1,1);
 
     static final PlayerValues PLAYER_LEFT = 
-    new PlayerValues(new Pixel(Color.BLACK, true), hitBox.PLAYER_LEFT,1,1);
+    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
 
 
     static final PlayerValues PLAYER_STANDING_RIGHT = 
-    new PlayerValues(new Pixel(Color.BLACK, true), hitBox.PLAYER_STANDING_RIGHT,1,1);
+    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
     
     static final PlayerValues PLAYER_STANDING_LEFT = 
-    new PlayerValues(new Pixel(Color.BLACK, true), hitBox.PLAYER_STANDING_LEFT,1,1);
+    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
+
+    static final PlayerValues BULLET = new PlayerValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,1);
         
     
 
@@ -55,6 +58,7 @@ public class PlayerValues {
         return playerHitBox.getValues().length;
     }
 
+    // TODO old system under here
     public int getSpeed(){
         return this.speed;
     }
@@ -71,4 +75,22 @@ public class PlayerValues {
     public void reset(){
         this.acceleration = 1;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof PlayerValues)) {
+            return false;
+        }
+        PlayerValues playerValues = (PlayerValues) o;
+        return Objects.equals(pixels, playerValues.pixels) && Objects.equals(playerHitBox, playerValues.playerHitBox) && speed == playerValues.speed && acceleration == playerValues.acceleration;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pixels, playerHitBox, speed, acceleration);
+    }
+
 }
