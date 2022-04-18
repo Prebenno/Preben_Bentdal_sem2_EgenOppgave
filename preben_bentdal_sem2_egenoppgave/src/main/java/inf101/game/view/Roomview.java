@@ -18,6 +18,7 @@ import inf101.backround.Floor;
 import inf101.game.States.FootType;
 import inf101.game.States.PlayerDirection;
 import inf101.grid.itemWithCoordinate;
+import inf101.model.Bullet;
 import inf101.model.Pixel;
 
 public class Roomview extends JComponent {
@@ -59,7 +60,7 @@ public class Roomview extends JComponent {
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
         this.drawHitBox(canvas,width,height);
-        if (view.getBulletSprite() != null){
+        if (view.getBulletSprite()){
             this.drawBulletHitBox(canvas,width,height);}
         //this.drawPlayer(canvas,width,height);
 
@@ -137,18 +138,22 @@ public class Roomview extends JComponent {
     public void drawBulletHitBox(Graphics canvas, int width,int height){
             int x_Position = view.getCenter().getRow();
             int y_Position = view.getCenter().getColumn();
-            for (itemWithCoordinate<Pixel> pixel : this.view.getBulletPixels()){ 
-                int row = pixel.getCoordinate().getRow();
-                int col = pixel.getCoordinate().getColumn();
-                Color PixelColor = pixel.getItem().getColor();
-                int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
-                int tileY = y_Position + row * height / this.view.getRows() ;
-                int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
-                int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
-                int tileWidth = nextTileX - tileX;
-                int tileHeight = nextTileY - tileY;
-                this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+            for (Bullet bullet : this.view.getAllBullets()) {
+                
+            
+                for (itemWithCoordinate<Pixel> pixel : bullet.getShape()){ 
+                    int row = pixel.getCoordinate().getRow();
+                    int col = pixel.getCoordinate().getColumn();
+                    Color PixelColor = pixel.getItem().getColor();
+                    int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+                    int tileY = y_Position + row * height / this.view.getRows() ;
+                    int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+                    int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
+                    int tileWidth = nextTileX - tileX;
+                    int tileHeight = nextTileY - tileY;
+                    this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
 
+                }
             }
 
     }

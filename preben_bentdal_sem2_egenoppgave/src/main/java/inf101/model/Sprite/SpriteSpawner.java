@@ -3,11 +3,11 @@ package inf101.model.Sprite;
 import inf101.grid.Coordinate;
 
 public class SpriteSpawner {
-    public Coordinate center;
+    public Coordinate startPos;
     
 
     public void setSenterColumn(){
-        this.center = new Coordinate(50,50); // player spawnpoint not on walls
+        this.startPos = new Coordinate(0,0); // player spawnpoint not on walls
 
     }
     public CoordinateSprite getStarterSprite(){

@@ -4,12 +4,15 @@ import java.util.List;
 
 import inf101.game.States.FootType;
 import inf101.game.States.PlayerDirection;
+import inf101.grid.Coordinate;
+import inf101.model.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
 
 public interface IGameController {
 
-
     boolean moveObject(int deltaRow,int  deltaColumn, CoordinateSprite object);
+
+    boolean moveBullet(int deltaRow,int  deltaColumn, Bullet object);
 
     CoordinateSprite getPlayer();
 
@@ -23,15 +26,15 @@ public interface IGameController {
 
     PlayerDirection getPlayerDirection();
 
-    CoordinateSprite getFirstBullet();
-
     void loadBullet(boolean shot);
 
     boolean bulletInChaimber();
 
-    void bulletHit();
+    void bulletHit(Bullet object);
 
-    List<CoordinateSprite> getAllBullets();
+    List<Bullet> getAllBullets();
+
+    void loadBullet(boolean b, int movementx, int movementy);
 
 
 

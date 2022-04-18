@@ -19,7 +19,7 @@ public class GameModel implements iRoomview ,IGameController {
     Floor myfloor;
     Room myroom;
     CoordinateSprite PlayerSprite;
-    public CoordinateSprite bulletsprite;
+    private List<Bullet> bullets = new ArrayList<>();
     
     public SpriteSpawner spawner;
     public PlayerDirection direction;
@@ -34,10 +34,10 @@ public class GameModel implements iRoomview ,IGameController {
         this.footType = FootType.WALK;
         this.spawner = new SpriteSpawner();
         this.spawner.setSenterColumn();
-        this.bulletsprite = null;
         this.PlayerSprite = spawner.getStarterSprite();
         this.myfloor = new Floor();
         this.myroom = myfloor.room;
+       
         
     }
     public GameModel(Boolean wall) throws OutOfBoundsException{
@@ -70,11 +70,11 @@ public class GameModel implements iRoomview ,IGameController {
     }
     @Override
     public Iterable<itemWithCoordinate<Pixel>> getBulletPixels() {
-        return bulletsprite;
+        return bullets.get(0).getShape();
     }
 
     public Coordinate getCenter(){
-        return spawner.center;
+        return spawner.startPos;
     }
 
     public int getPlayerWidth(){
@@ -85,9 +85,29 @@ public class GameModel implements iRoomview ,IGameController {
         return PlayerSprite.getHeight();
 
     }
+
+    @Override
+    public boolean moveBullet(int deltaRow, int deltaColumn, Bullet object) {
+            for (itemWithCoordinate<Pixel> coordItem : object.getShape() ) { //Checks if all coordinates is on grid
+                int column= coordItem.getCoordinate().getColumn();
+                int row = coordItem.getCoordinate().getRow();
+                Coordinate testcord = new Coordinate(row + deltaRow, column + deltaColumn);
+                if ((myroom.coordinateOnFloor(testcord))) {  // if coordinate is not on grid 
+                    this.bullets.remove(object);
+                    this.bullets.add(new Bullet(object.getXspeed(), object.getYspped(), object.getShape().move(deltaRow, deltaColumn)));
+                    return true;
+                }   
+            }
+            System.out.println("yey");
+            return false;
+            
+        }
+        
+    
+    
     @Override
     public boolean moveObject(int deltaRow, int deltaColumn, CoordinateSprite object) {
-        System.out.println("moved");
+       
         for (itemWithCoordinate<Pixel> coordItem : object ) { //Checks if all coordinates is on grid
             int column= coordItem.getCoordinate().getColumn();
             int row = coordItem.getCoordinate().getRow();
@@ -96,9 +116,6 @@ public class GameModel implements iRoomview ,IGameController {
                 if (object.equals(this.PlayerSprite)){
                     this.PlayerSprite = this.PlayerSprite.move(deltaRow, deltaColumn);   
                     } 
-                else if (object.equals(this.bulletsprite)){
-                    this.bulletsprite = this.bulletsprite.move(deltaRow,deltaColumn);  
-                }  
                 return true;
             }   
         }
@@ -167,12 +184,9 @@ public class GameModel implements iRoomview ,IGameController {
     public void resetAcceleration() {
         this.PlayerSprite.getEntity().reset();
     }
-    //
-    @Override
-    public CoordinateSprite getFirstBullet() {
-        return this.bulletsprite;
+
         
-    }
+    
     @Override
     public CoordinateSprite getPlayer() {
         
@@ -180,37 +194,44 @@ public class GameModel implements iRoomview ,IGameController {
     }
 
 
+    
     @Override
-    public boolean isBulletGonnaShoot() {
-        return (getFirstBullet() != null);
-    }
-    @Override
-    public void loadBullet(boolean shot) {
-        this.bulletsprite = spawner.getBulletSprite(this.PlayerSprite.getCoordinate());
+    public void loadBullet(boolean shot,int Xspeed, int Yspeed) {
+        this.bullets.add(new Bullet(Xspeed,Yspeed,spawner.getBulletSprite(this.PlayerSprite.getCoordinate())));
         
     }
+    
+    
+    @Override
+    public void bulletHit(Bullet bullet) {
+        this.bullets.remove(bullet);
+        
+    }
+
+    @Override
+    public List<Bullet> getAllBullets() {
+        
+        return this.bullets;
+    }
+    
+    @Override
+    public void loadBullet(boolean shot) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public boolean getBulletSprite() {
+        
+        return isBulletGonnaShoot();
+    }
+ 
+    @Override
+    public boolean isBulletGonnaShoot() {
+        return bullets.size() > 0;
+    }
+
     @Override
     public boolean bulletInChaimber() {
         return isBulletGonnaShoot();
     }
-    @Override
-    public CoordinateSprite getBulletSprite() {
-        
-        return this.bulletsprite;
-    }
-    @Override
-    public void bulletHit() {
-        this.bulletsprite = null;
-    }
-    @Override
-    public List<CoordinateSprite> getAllBullets() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
-    //public List<CoordinateSprite> getAllBullets(){
-     //   return this.bullets;
-
-   // }
-    
 }

@@ -14,10 +14,7 @@ public class WallBorder implements Border{
         this.width = width;
         this.height = height;
     }
-
-
-  
-
+    
     @Override
 	public Insets getBorderInsets(Component c) {
 		return new Insets(20, 20, 20, 20);
