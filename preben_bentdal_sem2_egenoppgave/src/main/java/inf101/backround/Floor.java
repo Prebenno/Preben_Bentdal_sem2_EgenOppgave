@@ -9,6 +9,7 @@ public class Floor {
 
     public Room room;
 
+ 
     public Floor() throws OutOfBoundsException{
         Pixel floortile =new Pixel(new Color(51,51,51),false);
         Pixel stone1 = new Pixel(new Color(102,102,102),false);
