@@ -7,8 +7,10 @@ import inf101.model.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
 
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,12 +26,21 @@ public class GameController implements KeyListener,ActionListener {
     public boolean foot;
     public int x_velocity;
     public int y_velocity;
+    public List<Integer> mylist = new ArrayList<Integer>();
+
+    public int BULLETDIRX = 1;
+    public int BULLETDIRY = 0;
+
+    public int BULLETSPEED = 1;
 
     public boolean friction = false;
     ScheduledExecutorService movement = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService bullet = Executors.newScheduledThreadPool(2);
     
     private final Set<Integer> pressedKeys = new HashSet<>();
     public boolean once = true;
+
+    public boolean shot = false;
    
     Runnable gametick = new Runnable(){
         public void run(){
@@ -45,7 +56,7 @@ public class GameController implements KeyListener,ActionListener {
                 //System.out.println("x_Velocity = " + x_velocity);
                 //System.out.println("y_Velocity = " + y_velocity);
             } 
-            if (!controller.moveObject(y_velocity, x_velocity, controller.getPlayer())){
+            if (controller.moveObject(y_velocity, x_velocity, controller.getPlayer())){
                 x_velocity = 0;
                 y_velocity = 0;
             }
@@ -53,18 +64,37 @@ public class GameController implements KeyListener,ActionListener {
         }
     };
 
+
+    
     Runnable bullets = new Runnable(){
-        public void run(){
-            if (controller.bulletInChaimber()){
-                for (Bullet bullet : controller.getAllBullets()) {
-                    if (!controller.moveBullet(bullet.getYspped(), bullet.getXspeed() ,bullet)){
-                        controller.bulletHit(bullet);
-                         
-                }
-                view.repaint();
+        public void run() throws RuntimeException{
+            List<Bullet> newBullets = new ArrayList<Bullet>();
+            try {
+                if (shot ==  true){
+                    controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX);
+                    shot = false;
+                } 
+
+                if (controller.bulletInChaimber()){
+                    for (Bullet bullet : controller.getAllBullets()) {  
+                        Bullet shotBullet = controller.moveBullet(bullet.getXspeed(), bullet.getYspeed(), bullet);
+                        if (shotBullet != null){
+                            newBullets.add(shotBullet);
+                        
+                            }
+                        if(controller.checkAndDamage(bullet)){
+                            newBullets.remove(bullet);
+                            }
+                        }
+                    }
+                controller.changeBullets(newBullets); // changing bullets
+
+            } catch (Exception e){
+                Thread t = Thread.currentThread();
+                t.getUncaughtExceptionHandler().uncaughtException(t, e);
             }
-          }
         }
+
     };
 
 
@@ -87,16 +117,19 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         friction = true;
+        
         if (once){
+            
             movement.scheduleAtFixedRate(gametick, 0, 30, TimeUnit.MILLISECONDS);
-            movement.scheduleAtFixedRate(bullets, 0, 30, TimeUnit.MILLISECONDS);
+            bullet.scheduleAtFixedRate(bullets, 0, 6, TimeUnit.MILLISECONDS);
+        
             once = false;
         }
 
         pressedKeys.add(event.getKeyCode());
         int movementx = 0;
         int movementy = 0;
-        boolean shot = false;
+        
         if (!pressedKeys.isEmpty()) {
             for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
                 switch (it.next()) {
@@ -118,6 +151,9 @@ public class GameController implements KeyListener,ActionListener {
                     case KeyEvent.VK_SPACE:
                         shot = true;
                         break;
+                    case KeyEvent.VK_K:
+                        controller.resetBullet();
+                        break;
                 }
             }
         }
@@ -125,17 +161,17 @@ public class GameController implements KeyListener,ActionListener {
             if (x_velocity > 0){
                 friction = false;
             }
-            System.out.println("left");
             controller.changeWalkingDirection(PlayerDirection.LEFT);
-          
-           
+            BULLETDIRX = -1; 
+            BULLETDIRY = 0;
         }
         
         else if (movementx == 1) {
             if (x_velocity < 0){
                 friction = false;
             }
-            System.out.println("right");
+            BULLETDIRX = 1; 
+            BULLETDIRY = 0;
             controller.changeWalkingDirection(PlayerDirection.RIGHT);         
             
         }
@@ -143,28 +179,22 @@ public class GameController implements KeyListener,ActionListener {
             if (y_velocity < 0){
                 friction = false;
             }
-            System.out.println("down");
-            
+            BULLETDIRY = 1;
+            BULLETDIRX = 0; 
             controller.changeWalkingDirection(PlayerDirection.DOWN);
-            
             
         }
         else if (movementy == -1)  {
             if (y_velocity > 0){
                 friction = false;
             }
-            System.out.println("up");
-            controller.changeWalkingDirection(PlayerDirection.UP);
-            
-            
+            BULLETDIRY = -1;
+            BULLETDIRX = 0; 
+            controller.changeWalkingDirection(PlayerDirection.UP);      
         }
         x_velocity += movementx;
         y_velocity += movementy;
        
-        if (shot ==  true){
-            controller.loadBullet(true,5,5);
-        } 
-        
         FootType x = controller.getWalkingType();
         controller.changeFootType(x.next());
 

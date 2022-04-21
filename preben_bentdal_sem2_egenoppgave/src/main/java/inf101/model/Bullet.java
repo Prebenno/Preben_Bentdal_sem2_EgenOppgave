@@ -23,7 +23,7 @@ public class Bullet {
     public int getXspeed() {
         return this.Xspeed;
     }
-    public int getYspped() {
+    public int getYspeed() {
         return this.Yspped;
     }
 
@@ -51,7 +51,7 @@ public class Bullet {
     public String toString() {
         return "{" +
             " Xspeed='" + getXspeed() + "'" +
-            ", Yspped='" + getYspped() + "'" +
+            ", Yspped='" + getYspeed() + "'" +
             "}";
     }
 

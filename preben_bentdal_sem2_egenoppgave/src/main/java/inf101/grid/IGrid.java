@@ -25,9 +25,12 @@ public interface IGrid<E> extends Iterable<itemWithCoordinate<E>> {
      */
     int getRows();
 
+    
     /**
-     * @return number of columns in grid
-     */
+     * Returns the number of columns in the table
+    * 
+    * @return The number of columns in the grid.
+    */
     int getColumns();
 
     /**
@@ -43,6 +46,8 @@ public interface IGrid<E> extends Iterable<itemWithCoordinate<E>> {
      * @return true/false
      */
     boolean coordinateOnFloor(Coordinate cord);
+
+    boolean bulletNotInWall(Coordinate cord);
 
     
 }

@@ -26,7 +26,7 @@ public class PlayerValues {
     static final PlayerValues PLAYER_STANDING_LEFT = 
     new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
 
-    static final PlayerValues BULLET = new PlayerValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,1);
+    public static final PlayerValues BULLET = new PlayerValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,1);
         
     
 

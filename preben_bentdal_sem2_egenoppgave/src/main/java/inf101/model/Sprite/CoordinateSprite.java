@@ -11,11 +11,13 @@ import inf101.model.Pixel;
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private PlayerValues entity;
     private Coordinate coordinate;
+    private int HEALTH;
 
 
-    public CoordinateSprite(PlayerValues entity, Coordinate coordinate) {
+    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health) {  
         this.entity = entity;
         this.coordinate = coordinate;
+        this.HEALTH = health;
 
     }
     public PlayerValues getEntity(){
@@ -69,8 +71,22 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public CoordinateSprite move(int deltaRow, int deltaCol){
         int oldRow = getCoordinate().getRow();
         int oldCol = getCoordinate().getColumn();
-        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol));
+        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH);
         return copy;
 
+    }
+    public int getHealth(){
+        return this.HEALTH;
+    }
+    /**
+     * This function takes in an integer, adds it to the health of the player, and returns whether or
+     * not the player is still alive.
+     * 
+     * @param damage The amount of damage to be dealt to the player.
+     * @return The boolean value of the health being greater than 0.
+     */
+    public boolean damage(int damage){
+        this.HEALTH-=damage;
+        return this.HEALTH>0;
     }
 }

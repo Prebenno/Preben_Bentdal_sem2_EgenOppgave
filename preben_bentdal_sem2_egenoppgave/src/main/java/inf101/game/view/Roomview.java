@@ -55,12 +55,23 @@ public class Roomview extends JComponent {
         return new Dimension(width, height);
     }
 
+    /**
+     * This function draws the board, which includes the room, the walls, the hitboxes, and the player
+     * 
+     * @param canvas the canvas to draw on
+     * @param x the x coordinate of the top left corner of the board
+     * @param y the y coordinate of the top left corner of the board
+     * @param width the width of the window
+     * @param height the height of the window
+     */
     public void drawBoard(Graphics canvas,int x, int y,int width, int height){
         
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
         this.drawHitBox(canvas,width,height);
-        if (view.getBulletSprite()){
+        if (view.enemyExsists()){
+        this.drawHitBox2(canvas, width, height);}
+        if (view.isBulletGonnaShoot()){
             this.drawBulletHitBox(canvas,width,height);}
         //this.drawPlayer(canvas,width,height);
 
@@ -87,6 +98,15 @@ public class Roomview extends JComponent {
 
 
     
+    /**
+     * This function draws the room by drawing the background and then drawing each pixel in the room
+     * 
+     * @param canvas the Graphics object that you use to draw on the JPanel
+     * @param x the x coordinate of the upper left corner of the rectangle to draw the room in
+     * @param y the y coordinate of the top left corner of the rectangle to draw
+     * @param width the width of the room
+     * @param height the height of the room
+     */
     public void drawRoom(Graphics canvas,int x,int y,int width, int height){
         canvas.setColor(Color.RED); // check if whole backround is drawn
         canvas.fillRect(x, y, height, width);
@@ -108,6 +128,13 @@ public class Roomview extends JComponent {
     }
     
     
+    /**
+     * This function draws the hitbox of the player
+     * 
+     * @param canvas the canvas to draw on
+     * @param width the width of the screen
+     * @param height the height of the screen
+     */
     public void drawHitBox(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
@@ -132,12 +159,40 @@ public class Roomview extends JComponent {
         }
         
     }
+
+    public void drawHitBox2(Graphics canvas,int width,int height){
+        int x_Position = view.getCenter().getRow();
+        int y_Position = view.getCenter().getColumn();
+        boolean once = true;
+        for (itemWithCoordinate<Pixel> pixel : this.view.getEnemyTestPixels()) {
+            int row = pixel.getCoordinate().getRow();
+            int col = pixel.getCoordinate().getColumn();
+            
+            Color PixelColor = pixel.getItem().getColor();
+            int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+            int tileY = y_Position + row * height / this.view.getRows() ;
+            int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+            int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
+            int tileWidth = nextTileX - tileX;
+            int tileHeight = nextTileY - tileY;
+            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+        }
+        
+    }
     //private void drawBullet(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight) {
 
     
+    /**
+     * This function draws the bullet hitbox by iterating through the bullet's shape and drawing each
+     * pixel in the shape
+     * 
+     * @param canvas the canvas to draw on
+     * @param width the width of the canvas
+     * @param height the height of the canvas
+     */
     public void drawBulletHitBox(Graphics canvas, int width,int height){
-            int x_Position = view.getCenter().getRow();
-            int y_Position = view.getCenter().getColumn();
+            int x_Position = view.getCenter().getRow()+5;
+            int y_Position = view.getCenter().getColumn()+5;
             for (Bullet bullet : this.view.getAllBullets()) {
                 
             
@@ -158,11 +213,30 @@ public class Roomview extends JComponent {
 
     }
    
+    /**
+     * Draw a pixel on the canvas
+     * 
+     * @param canvas The canvas to draw on
+     * @param tileX The x coordinate of the tile
+     * @param tileY The y coordinate of the tile
+     * @param tileHeight The height of the tile
+     * @param tileWidth The width of the tile
+     * @param PixelColor The color of the pixel
+     */
     private void drawPixel(Graphics canvas, int tileX, int tileY, int tileHeight, int tileWidth, Color PixelColor) {
         canvas.setColor(PixelColor);
         canvas.fillRect(tileX, tileY, tileWidth, tileHeight);
     }
 
+    /**
+     * This function draws the player on the screen
+     * 
+     * @param canvas the canvas to draw on
+     * @param x_position the x position of the player
+     * @param y_position The y position of the tile
+     * @param tileWidth the width of the tile
+     * @param tileHeight The height of the tile in pixels
+     */
     private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight) {
         PlayerDirection direction = this.view.getPlayerDirection();
         int height = tileHeight/16;  
@@ -245,6 +319,18 @@ public class Roomview extends JComponent {
 
     }
     */
+    /**
+     * It takes a graphics object, an x and y position, a width and height, and a filename, and draws
+     * the image with the given filename to the graphics object at the given x and y position, with the
+     * given width and height
+     * 
+     * @param g The graphics object
+     * @param x_position The x-coordinate of the upper left corner of the picture.
+     * @param y_position The y-coordinate of the top left corner of the picture.
+     * @param width The width of the picture
+     * @param height The height of the picture
+     * @param filename The name of the file you want to draw.
+     */
     protected void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
         Graphics2D canvas = (Graphics2D)g;
         BufferedImage floor1;

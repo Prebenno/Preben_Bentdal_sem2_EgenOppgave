@@ -93,15 +93,22 @@ public class Grid<E> implements IGrid<E> {
     }
     @Override
     public boolean coordinateOnGrid(Coordinate cord) {
-        if ((cord.getColumn() >= 0) && (cord.getRow() >= 0)){//+ to remove walls from this
+        if ((cord.getColumn() >= 0) && (cord.getRow() >= 0)){
             return  (cord.getColumn() < this.getColumns()) && (cord.getRow() < this.getRows());
         }
         return false;
     }
     @Override
     public boolean coordinateOnFloor(Coordinate cord){
-        if ((cord.getColumn() >= 25) && (cord.getRow() >= 40)){//+ to remove walls from this
+        if ((cord.getColumn() >= 25) && (cord.getRow() >= 40)){
             return  (cord.getColumn() < this.getColumns()-25) && (cord.getRow() < this.getRows()-70);
+        }
+        return false;
+    }
+    @Override
+    public boolean bulletNotInWall(Coordinate cord){
+        if ((cord.getColumn() >= 25) && (cord.getRow() >= 40)){
+            return  (cord.getColumn() < this.getColumns()-25) && (cord.getRow() < this.getRows()-35);
         }
         return false;
     }

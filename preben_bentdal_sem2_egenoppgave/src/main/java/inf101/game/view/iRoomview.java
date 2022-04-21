@@ -18,30 +18,85 @@ public interface iRoomview {
     /** @return number of columns in grid */
     int getColumns();
 
+    /**
+     * "Get all the pixels in the image, along with their coordinates."
+     * 
+     * The coordinate is a pair of integers, one of which is the x-coordinate and the other of which is
+     * the y-coordinate
+     * 
+     * @return An iterable of itemWithCoordinate<Pixel>
+     */
     Iterable<itemWithCoordinate<Pixel>> getPixels();
 
+    /**
+     * "Get all the pixels in the sprite, along with their coordinates."
+     * 
+     * @return An iterable of itemWithCoordinate<Pixel>
+     */
     Iterable<itemWithCoordinate<Pixel>> getSpritePixels();
 
-    Iterable<itemWithCoordinate<Pixel>> getBulletPixels();
-
+    /**
+     * Get all the bullets in the game.
+     * 
+     * @return An ArrayList of all the bullets in the game.
+     */
     List<Bullet> getAllBullets();
 
+    /**
+     * Returns the center of the grid
+     * 
+     * @return A Coordinate object.
+     */
     Coordinate getCenter();
 
+    /**
+     * This function returns the height of the player.
+     * 
+     * @return The height of the player.
+     */
     int getPlayerHeight();
 
+    /**
+     * This function returns the width of the player.
+     * 
+     * @return The width of the player.
+     */
     int getPlayerWidth();
 
+    /**
+     * This function returns a CoordinateSprite object that represents the player's sprite.
+     * 
+     * @return The player sprite.
+     */
     CoordinateSprite getPlayerSprite();
 
-    boolean getBulletSprite();
-
+    
+    /**
+     * This function returns the direction the player is facing.
+     * 
+     * @return The direction the player is facing.
+     */
     PlayerDirection getPlayerDirection();
 
+    /**
+     * Returns the type of foot that the player is using to walk.
+     * 
+     * @return The walking type of the person.
+     */
     FootType getWalkingType();
 
+    /**
+     * If the bullet is going to shoot, return true, otherwise return false.
+     * 
+     * @return A boolean value.
+     */
     boolean isBulletGonnaShoot();
 
+
+    Iterable<itemWithCoordinate<Pixel>> getEnemyTestPixels();
+
+
+    boolean enemyExsists();
 
 
    
