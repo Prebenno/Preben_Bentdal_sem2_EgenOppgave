@@ -70,20 +70,15 @@ public interface iRoomview {
      */
     CoordinateSprite getPlayerSprite();
 
-    
     /**
-     * This function returns the direction the player is facing.
+     * Get the sprite of the enemy.
      * 
-     * @return The direction the player is facing.
+     * @return The enemy sprite.
      */
-    PlayerDirection getPlayerDirection();
+    CoordinateSprite getEnemySprite();
 
-    /**
-     * Returns the type of foot that the player is using to walk.
-     * 
-     * @return The walking type of the person.
-     */
-    FootType getWalkingType();
+    
+    
 
     /**
      * If the bullet is going to shoot, return true, otherwise return false.
@@ -93,9 +88,19 @@ public interface iRoomview {
     boolean isBulletGonnaShoot();
 
 
+    /**
+     * Get the pixels that are part of the enemy's
+     * 
+     * @return An iterable of itemWithCoordinate<Pixel>
+     */
     Iterable<itemWithCoordinate<Pixel>> getEnemyTestPixels();
 
 
+    /**
+     * Returns true if an enemy exists, false otherwise.
+     * 
+     * @return A boolean value.
+     */
     boolean enemyExsists();
 
 

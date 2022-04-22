@@ -18,7 +18,7 @@ public interface IGameController {
     * @param object The object you want to move.
     * @return A boolean value.
     */
-    boolean moveObject(int deltaRow,int  deltaColumn, CoordinateSprite object);
+    //boolean moveObject(int deltaRow,int  deltaColumn, CoordinateSprite object); old functions
 
     /**
      * boolean moveBullet(int deltaRow,int  deltaColumn, Bullet object);
@@ -28,7 +28,7 @@ public interface IGameController {
      * @param object The object that you want to move.
      * @return A boolean value.
      */
-    Bullet moveBullet(int deltaRow,int  deltaColumn, Bullet object);
+    //Bullet moveBullet(int deltaRow,int  deltaColumn, Bullet object); old functions
 
     /**
      * Get the player's sprite.
@@ -37,38 +37,29 @@ public interface IGameController {
      */
     CoordinateSprite getPlayer();
 
-    /**
-     * This function changes the direction the player is walking in.
-     * 
-     * @param direction The direction the player is walking in.
-     */
-    void changeWalkingDirection(PlayerDirection direction);
+    
+    void changeWalkingDirection(PlayerDirection direction, CoordinateSprite sprite);
 
     /**
      * Change the foot type to the given foot type.
      * 
      * @param walking The type of walking you want to use.
      */
-    void changeFootType(FootType walking);
-
-    /**
-     * Resets the acceleration to zero
-     */
-    void resetAcceleration();
+    void changeFootType(FootType walking, CoordinateSprite object);
 
     /**
      * Returns the type of foot that the player is using to walk.
      * 
      * @return The walking type of the person.
      */
-    FootType getWalkingType();
+    FootType getWalkingType(CoordinateSprite object);
 
     /**
      * This function returns the direction the player is facing.
      * 
      * @return The direction the player is facing.
      */
-    PlayerDirection getPlayerDirection();
+    PlayerDirection getDirection();
 
    
     /**
@@ -102,6 +93,9 @@ public interface IGameController {
      */
     void loadBullet(boolean b, int movementx, int movementy);
 
+    /**
+     * Resets the bullet's position to the player's position
+     */
     void resetBullet();
 
     /**
@@ -118,8 +112,26 @@ public interface IGameController {
      * @param bullet The bullet that is being checked for collision.
      * @return 
      */
-    boolean checkAndDamage(Bullet bullet);
+    boolean checkAndDamage(CoordinateSprite damageObject, CoordinateSprite reciever);
 
-    public <T> T MOVESOMETHING(int deltaRow, int deltaColumn, T object);
+    /**
+     * Moves the object in the direction of the deltaRow and deltaColumn by one space
+     * 
+     * @param deltaRow The number of rows to move the object.
+     * @param deltaColumn The number of columns to move the object.
+     * @param object The object you want to move.
+     * @return The object that is being moved.
+     */
+    public <T> T moveObject(int deltaRow, int deltaColumn, T object);
     
+
+    /**
+     * This function is called every time the monster should do anything, and the function 
+     * exequtes every thing the monster should do
+     */
+    public void monsterStep();
+
+    public CoordinateSprite getEnemy();
+
+   
 }

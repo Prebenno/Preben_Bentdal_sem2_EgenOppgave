@@ -68,9 +68,10 @@ public class Roomview extends JComponent {
         
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
-        this.drawHitBox(canvas,width,height);
+        if (view.getPlayerSprite() != null){
+            this.drawHitBox(canvas,width,height);}
         if (view.enemyExsists()){
-        this.drawHitBox2(canvas, width, height);}
+            this.drawEnemyHitBox(canvas, width, height);}
         if (view.isBulletGonnaShoot()){
             this.drawBulletHitBox(canvas,width,height);}
         //this.drawPlayer(canvas,width,height);
@@ -95,8 +96,6 @@ public class Roomview extends JComponent {
 
     }
     
-
-
     
     /**
      * This function draws the room by drawing the background and then drawing each pixel in the room
@@ -138,6 +137,7 @@ public class Roomview extends JComponent {
     public void drawHitBox(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
+        PlayerDirection direction = this.view.getPlayerSprite().getDirection();
         boolean once = true;
         for (itemWithCoordinate<Pixel> pixel : this.view.getSpritePixels()) {
             int row = pixel.getCoordinate().getRow();
@@ -151,7 +151,12 @@ public class Roomview extends JComponent {
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
             if (once){
-                this.drawPlayer(canvas, tileX, tileY, width, height);
+                this.drawPlayer(canvas, tileX, tileY, width, height,
+                "Skeleton_looking_right-removebg-preview.png",
+                "Skeleton_looking_left-removebg-preview.png",
+                "Skeleton_looking_down.png",
+                "Skeleton_looking_up-removebg-preview.png",
+                direction);
                 once = false;
                 
             }
@@ -160,9 +165,18 @@ public class Roomview extends JComponent {
         
     }
 
-    public void drawHitBox2(Graphics canvas,int width,int height){
+    /**
+     * This function draws the enemy's hitbox, which is a collection of pixels that are used to
+     * determine if the enemy has been hit by the player's attack
+     * 
+     * @param canvas the canvas to draw on
+     * @param width the width of the canvas
+     * @param height the height of the canvas
+     */
+    public void drawEnemyHitBox(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
+        PlayerDirection direction = this.view.getEnemySprite().getDirection();
         boolean once = true;
         for (itemWithCoordinate<Pixel> pixel : this.view.getEnemyTestPixels()) {
             int row = pixel.getCoordinate().getRow();
@@ -175,6 +189,15 @@ public class Roomview extends JComponent {
             int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
             int tileWidth = nextTileX - tileX;
             int tileHeight = nextTileY - tileY;
+            if (once){
+                this.drawPlayer(canvas, tileX, tileY, width, height,
+                "Skeleton_looking_right-removebg-preview.png",
+                "Skeleton_looking_left-removebg-preview.png",
+                "Skeleton_looking_down.png",
+                "Skeleton_looking_up-removebg-preview.png",
+                direction);
+                once = false;
+            }
             this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
         }
         
@@ -237,34 +260,33 @@ public class Roomview extends JComponent {
      * @param tileWidth the width of the tile
      * @param tileHeight The height of the tile in pixels
      */
-    private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight) {
-        PlayerDirection direction = this.view.getPlayerDirection();
+    private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight,String right_png,String left_png, String down_png, String up_png,PlayerDirection direction) {
+        
         int height = tileHeight/16;  
         int width  = tileWidth /16;
         x_position -=13;
-        
         String png = "";
         switch (direction) {
             case RIGHT:
-                png ="Skeleton_looking_right-removebg-preview.png";
+                png = right_png;
                 width = tileWidth / 22;
                 x_position+=10;
                 break;
             case UP:
-                png ="Skeleton_looking_up-removebg-preview.png";
+                png =up_png;
                 width = tileWidth / 22;
                 x_position+=10;
                 break;
                 
            
             case DOWN:
-                png ="Skeleton_looking_down.png";
+                png =down_png;
                 width = tileWidth / 22;
                 x_position+=10;
                 break;
         
             default:
-                png = "Skeleton_looking_left-removebg-preview.png";
+                png = left_png;
                 break;
 
         }
@@ -273,52 +295,7 @@ public class Roomview extends JComponent {
         
 
     }
-    /*
-    protected void paintplayer(Graphics g, int width, int height) {
-    int y_cord = view.getPlayerSprite().getCoordinate().getRow();
-    int x_cord = view.getPlayerSprite().getCoordinate().getColumn();
-    int y_position = (int) (y_cord*3.75); //x position, board is 3.5 times smaller than width
-    int x_position = (int) (x_cord*3.5); //y position, board is 3,75 times smaller than height
-    Graphics2D canvas = (Graphics2D)g;
-    x_position+=50; // +10 To move sprite over hitbox
-    canvas.setStroke(new BasicStroke(5));
-    //draw the head
-    canvas.drawOval(x_position,y_position, width/35, height/35);
-    // draw the body
-    canvas.setStroke(new BasicStroke(5));
-    canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+20);
-    //draws legs
-    FootType walking = view.getWalkingType();
-    switch(walking){
-        case STAND:
-            canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+65);
-            break;
-        default:
-            canvas.drawLine(x_position+10, y_position+45, x_position+20, y_position+65);
-            canvas.drawLine(x_position+10, y_position+45, x_position, y_position+65);
-            break;         
-    }
-    PlayerDirection direction = view.getPlayerDirection();
-    switch (direction){
-        case RIGHT:
-        // draw the hand
-        canvas.drawLine(x_position+10, y_position+30, x_position+20, y_position+30);
-        //draw gun
-        canvas.drawLine(x_position+20, y_position+30, x_position+20, y_position+25);
-        canvas.drawLine(x_position+20, y_position+25, x_position+25, y_position+25);
-        //draw eye
-        break;
-        default:
-            canvas.drawLine(x_position+10, y_position+30, x_position, y_position+30);
-            //draw gun
-            canvas.drawLine(x_position+0, y_position+30, x_position+0, y_position+25);
-            canvas.drawLine(x_position+0, y_position+25, x_position-5, y_position+25);
-            break;
-    }
     
-
-    }
-    */
     /**
      * It takes a graphics object, an x and y position, a width and height, and a filename, and draws
      * the image with the given filename to the graphics object at the given x and y position, with the
@@ -344,10 +321,55 @@ public class Roomview extends JComponent {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        
+    }
+    /*
+    protected void paintplayer(Graphics g, int width, int height) {
+    int y_cord = view.getPlayerSprite().getCoordinate().getRow();
+    int x_cord = view.getPlayerSprite().getCoordinate().getColumn();
+    int y_position = (int) (y_cord*3.75); //x position, board is 3.5 times smaller than width
+    int x_position = (int) (x_cord*3.5); //y position, board is 3,75 times smaller than height
+    Graphics2D canvas = (Graphics2D)g;
+    x_position+=50; // +10 To move sprite over hitbox
+    canvas.setStroke(new BasicStroke(5));
+    //draw the head
+    canvas.drawOval(x_position,y_position, width/35, height/35);
+    // draw the body
+    canvas.setStroke(new BasicStroke(5));
+    canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+20);
+    //draws legs
+    FootType walking = FootType.STAND;
+    switch(walking){
+        case STAND:
+            canvas.drawLine(x_position+10, y_position+45, x_position+10, y_position+65);
+            break;
+        default:
+            canvas.drawLine(x_position+10, y_position+45, x_position+20, y_position+65);
+            canvas.drawLine(x_position+10, y_position+45, x_position, y_position+65);
+            break;         
+    }
+    PlayerDirection direction = PlayerDirection.UP;
+    switch (direction){
+        case RIGHT:
+        // draw the hand
+        canvas.drawLine(x_position+10, y_position+30, x_position+20, y_position+30);
+        //draw gun
+        canvas.drawLine(x_position+20, y_position+30, x_position+20, y_position+25);
+        canvas.drawLine(x_position+20, y_position+25, x_position+25, y_position+25);
+        //draw eye
+        break;
+        default:
+            canvas.drawLine(x_position+10, y_position+30, x_position, y_position+30);
+            //draw gun
+            canvas.drawLine(x_position+0, y_position+30, x_position+0, y_position+25);
+            canvas.drawLine(x_position+0, y_position+25, x_position-5, y_position+25);
+            break;
+    }
+    
 
     }
+    */
+    
+
    
 
 }

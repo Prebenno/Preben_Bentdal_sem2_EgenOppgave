@@ -13,18 +13,9 @@ public class PlayerValues {
     private final int speed;
     private int acceleration;
 
-    static final PlayerValues PLAYER_RIGHT = 
+    static final PlayerValues PLAYER = 
     new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX ,1,1);
 
-    static final PlayerValues PLAYER_LEFT = 
-    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
-
-
-    static final PlayerValues PLAYER_STANDING_RIGHT = 
-    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
-    
-    static final PlayerValues PLAYER_STANDING_LEFT = 
-    new PlayerValues(new Pixel(Color.RED, true), hitBox.PLAYER_HITBOX,1,1);
 
     public static final PlayerValues BULLET = new PlayerValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,1);
         
@@ -58,23 +49,7 @@ public class PlayerValues {
         return playerHitBox.getValues().length;
     }
 
-    // TODO old system under here
-    public int getSpeed(){
-        return this.speed;
-    }
-    public int getAcceleration(){
-        return this.acceleration;
-    }
-    public void setAcceleration(){
-        System.out.println("acceleration = " + this.acceleration);
-        if (this.acceleration < 10){
-            this.acceleration++;
-        }
-    }
-
-    public void reset(){
-        this.acceleration = 1;
-    }
+    
 
 
     @Override

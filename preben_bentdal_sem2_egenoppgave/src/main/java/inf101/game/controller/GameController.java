@@ -31,7 +31,7 @@ public class GameController implements KeyListener,ActionListener {
     public int BULLETDIRX = 1;
     public int BULLETDIRY = 0;
 
-    public int BULLETSPEED = 1;
+    public int BULLETSPEED = 2;
 
     public boolean friction = false;
     ScheduledExecutorService movement = Executors.newScheduledThreadPool(1);
@@ -53,10 +53,11 @@ public class GameController implements KeyListener,ActionListener {
             if (friction == false){
                 x_velocity = (int) (x_velocity /1.2);
                 y_velocity = (int) (y_velocity /1.2);
-                //System.out.println("x_Velocity = " + x_velocity);
-                //System.out.println("y_Velocity = " + y_velocity);
-            } 
-            if (controller.moveObject(y_velocity, x_velocity, controller.getPlayer())){
+                
+            }
+            if (controller.getEnemy() != null){ 
+                controller.monsterStep();}
+            if (controller.moveObject(y_velocity, x_velocity, controller.getPlayer()) == null){
                 x_velocity = 0;
                 y_velocity = 0;
             }
@@ -77,12 +78,12 @@ public class GameController implements KeyListener,ActionListener {
 
                 if (controller.bulletInChaimber()){
                     for (Bullet bullet : controller.getAllBullets()) {  
-                        Bullet shotBullet = controller.moveBullet(bullet.getXspeed(), bullet.getYspeed(), bullet);
+                        Bullet shotBullet = controller.moveObject(bullet.getXspeed(), bullet.getYspeed(), bullet);
                         if (shotBullet != null){
                             newBullets.add(shotBullet);
                         
                             }
-                        if(controller.checkAndDamage(bullet)){
+                        if(controller.checkAndDamage(bullet.getShape(),controller.getEnemy())){
                             newBullets.remove(bullet);
                             }
                         }
@@ -117,14 +118,13 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         friction = true;
-        
+        CoordinateSprite player = controller.getPlayer();
         if (once){
-            
             movement.scheduleAtFixedRate(gametick, 0, 30, TimeUnit.MILLISECONDS);
             bullet.scheduleAtFixedRate(bullets, 0, 6, TimeUnit.MILLISECONDS);
-        
             once = false;
         }
+        
 
         pressedKeys.add(event.getKeyCode());
         int movementx = 0;
@@ -136,15 +136,12 @@ public class GameController implements KeyListener,ActionListener {
                     case KeyEvent.VK_UP:
                         movementy = -1;
                         break;
-            
                     case KeyEvent.VK_LEFT:
                         movementx = -1;
                         break;
-          
                     case KeyEvent.VK_DOWN:
                         movementy = 1;
                         break;
-
                     case KeyEvent.VK_RIGHT:
                         movementx = 1;
                         break;
@@ -157,11 +154,13 @@ public class GameController implements KeyListener,ActionListener {
                 }
             }
         }
+        if (controller.getPlayer() != null){;}
+
         if (movementx == -1) {
             if (x_velocity > 0){
                 friction = false;
             }
-            controller.changeWalkingDirection(PlayerDirection.LEFT);
+            controller.changeWalkingDirection(PlayerDirection.LEFT,player);
             BULLETDIRX = -1; 
             BULLETDIRY = 0;
         }
@@ -172,7 +171,7 @@ public class GameController implements KeyListener,ActionListener {
             }
             BULLETDIRX = 1; 
             BULLETDIRY = 0;
-            controller.changeWalkingDirection(PlayerDirection.RIGHT);         
+            controller.changeWalkingDirection(PlayerDirection.RIGHT,player);         
             
         }
         if (movementy == 1) {
@@ -181,7 +180,7 @@ public class GameController implements KeyListener,ActionListener {
             }
             BULLETDIRY = 1;
             BULLETDIRX = 0; 
-            controller.changeWalkingDirection(PlayerDirection.DOWN);
+            controller.changeWalkingDirection(PlayerDirection.DOWN,player);
             
         }
         else if (movementy == -1)  {
@@ -190,13 +189,15 @@ public class GameController implements KeyListener,ActionListener {
             }
             BULLETDIRY = -1;
             BULLETDIRX = 0; 
-            controller.changeWalkingDirection(PlayerDirection.UP);      
+            controller.changeWalkingDirection(PlayerDirection.UP,player);      
         }
-        x_velocity += movementx;
-        y_velocity += movementy;
-       
-        FootType x = controller.getWalkingType();
-        controller.changeFootType(x.next());
+        if (controller.getPlayer() != null){
+            x_velocity += movementx;
+            y_velocity += movementy;
+        
+            FootType x = controller.getWalkingType(player);
+            controller.changeFootType(x.next(),player);
+        }
 
          
     }
@@ -206,12 +207,10 @@ public class GameController implements KeyListener,ActionListener {
     
     @Override
     public void keyReleased(KeyEvent event) {
+        CoordinateSprite player = controller.getPlayer();
         pressedKeys.remove(event.getKeyCode());
         friction = false;
-        controller.changeFootType(FootType.WALK);
-        controller.resetAcceleration();
-        controller.changeFootType(FootType.STAND);
-        controller.resetAcceleration();
+        
         view.repaint();
 
 

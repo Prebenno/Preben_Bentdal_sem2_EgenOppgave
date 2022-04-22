@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
+import inf101.game.States.FootType;
+import inf101.game.States.PlayerDirection;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
@@ -12,14 +14,30 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private PlayerValues entity;
     private Coordinate coordinate;
     private int HEALTH;
+    private PlayerDirection direction;; 
+    public FootType footType;
+    private boolean damage = false;
 
 
     public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health) {  
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
+        this.direction = PlayerDirection.RIGHT;
+        this.footType = FootType.STAND;
 
     }
+    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health, PlayerDirection direction, FootType footType) {  
+        this.entity = entity;
+        this.coordinate = coordinate;
+        this.HEALTH = health;
+        this.direction = direction;
+        this.footType = footType;
+
+    }
+    
+
+   
     public PlayerValues getEntity(){
         return this.entity;
     }
@@ -33,7 +51,24 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public int getHeight(){
         return entity.getHeight();
     }
+    public void changeFootType(FootType type){
+        this.footType = type;
+    }
+    public FootType getFootType(){
+        return this.footType;
+    }
 
+    public void changeDirection(PlayerDirection newDirection){
+        this.direction = newDirection;
+
+    }
+    public PlayerDirection getDirection(){
+        return this.direction;
+    }
+    
+    public void switchdamage(){
+        this.damage = !this.damage;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -71,7 +106,7 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public CoordinateSprite move(int deltaRow, int deltaCol){
         int oldRow = getCoordinate().getRow();
         int oldCol = getCoordinate().getColumn();
-        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH);
+        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH,this.direction,this.footType);
         return copy;
 
     }

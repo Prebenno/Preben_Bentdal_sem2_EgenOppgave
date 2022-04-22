@@ -11,29 +11,17 @@ public class SpriteSpawner {
 
     }
     public CoordinateSprite getStarterSprite(){
-        return getRightWalkingPlayerPos(new Coordinate(50,50),100);
+        return getPlayer(new Coordinate(50,50),100);
+    }
+    public CoordinateSprite getStarterSprite2(){
+        return getPlayer(new Coordinate(150,150),100);
     }
 
-    public CoordinateSprite getRightWalkingPlayerPos(Coordinate position, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_RIGHT, position ,health);
+    public CoordinateSprite getPlayer(Coordinate position, int health){
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER, position ,health);
         return myCordSprite;
 
     }
-    public CoordinateSprite getLeftWalkingPlayerPos(Coordinate position ,int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_LEFT, position,health);
-        return myCordSprite;
-    }
-
-    public CoordinateSprite getRightStandingPlayerPos(Coordinate position ,int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_STANDING_RIGHT, position ,health);
-        return myCordSprite;
-
-    }
-    public CoordinateSprite getLeftStandingPlayerPos(Coordinate position ,int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER_STANDING_LEFT, position ,health);
-        return myCordSprite;
-    }
-
     public CoordinateSprite getBulletSprite(Coordinate position){
         CoordinateSprite myBullet = new CoordinateSprite (PlayerValues.BULLET, position,0);
         return myBullet;
