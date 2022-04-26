@@ -3,11 +3,11 @@ package inf101.game.view;
 import java.util.List;
 
 import inf101.game.States.FootType;
-import inf101.game.States.PlayerDirection;
+import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
-import inf101.model.Bullet;
 import inf101.model.Pixel;
+import inf101.model.Sprite.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
 
 public interface iRoomview {
@@ -75,7 +75,9 @@ public interface iRoomview {
      * 
      * @return The enemy sprite.
      */
-    CoordinateSprite getEnemySprite();
+    List<CoordinateSprite> getEnemySprite();
+
+    CoordinateSprite getTrapDoor();
 
     
     
@@ -88,20 +90,14 @@ public interface iRoomview {
     boolean isBulletGonnaShoot();
 
 
-    /**
-     * Get the pixels that are part of the enemy's
-     * 
-     * @return An iterable of itemWithCoordinate<Pixel>
-     */
-    Iterable<itemWithCoordinate<Pixel>> getEnemyTestPixels();
-
+    
 
     /**
      * Returns true if an enemy exists, false otherwise.
      * 
      * @return A boolean value.
      */
-    boolean enemyExsists();
+    boolean enemyExists();
 
 
    

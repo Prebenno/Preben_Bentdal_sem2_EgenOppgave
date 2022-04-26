@@ -1,9 +1,7 @@
-package inf101.model;
+package inf101.model.Sprite;
 
 import java.util.List;
 import java.util.Objects;
-
-import inf101.model.Sprite.CoordinateSprite;
 
 public class Bullet {
 

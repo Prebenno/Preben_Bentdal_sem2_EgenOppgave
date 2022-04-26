@@ -16,10 +16,11 @@ import java.io.IOException;
 
 import inf101.backround.Floor;
 import inf101.game.States.FootType;
-import inf101.game.States.PlayerDirection;
+import inf101.game.States.Direction;
 import inf101.grid.itemWithCoordinate;
-import inf101.model.Bullet;
 import inf101.model.Pixel;
+import inf101.model.Sprite.Bullet;
+import inf101.model.Sprite.CoordinateSprite;
 
 public class Roomview extends JComponent {
     public iRoomview view;
@@ -68,16 +69,47 @@ public class Roomview extends JComponent {
         
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
+        this.drawTrapBoard(canvas,width,height);
         if (view.getPlayerSprite() != null){
             this.drawHitBox(canvas,width,height);}
-        if (view.enemyExsists()){
-            this.drawEnemyHitBox(canvas, width, height);}
+        if (view.enemyExists()){
+            this.drawEnemies(canvas, width, height);}
+        
         if (view.isBulletGonnaShoot()){
             this.drawBulletHitBox(canvas,width,height);}
         //this.drawPlayer(canvas,width,height);
 
     }
 
+    public void drawEnemies(Graphics canvas, int width, int height){
+        for (CoordinateSprite enemy : this.view.getEnemySprite()) {
+            this.drawEnemyHitBox(canvas, width, height,enemy);
+            
+            }    
+        }
+    public void drawTrapBoard(Graphics canvas, int width, int height){
+        boolean once = true;
+        int x_Position = view.getCenter().getRow()+20;
+        int y_Position = view.getCenter().getColumn()+10;
+        for (itemWithCoordinate<Pixel> pixel : view.getTrapDoor()) {
+            int row = pixel.getCoordinate().getRow();
+            int col = pixel.getCoordinate().getColumn();
+            
+            Color PixelColor = pixel.getItem().getColor();
+            int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+            int tileY = y_Position + row * height / this.view.getRows() ;
+            int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+            int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
+            int tileWidth = nextTileX - tileX;
+            int tileHeight = nextTileY - tileY;
+            if (once){
+                this.drawPicture(canvas, width/2, height/2, width/11, height/11, "floor_ladder.png");
+                once = false;
+            }
+            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+        }
+
+    }
     /**
      * draws the walls, ive used a merged photo of 10 walls for the walls 
      * since drawing them one by one caused to mutch strain on my computer due
@@ -137,7 +169,7 @@ public class Roomview extends JComponent {
     public void drawHitBox(Graphics canvas,int width,int height){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
-        PlayerDirection direction = this.view.getPlayerSprite().getDirection();
+        Direction direction = this.view.getPlayerSprite().getDirection();
         boolean once = true;
         for (itemWithCoordinate<Pixel> pixel : this.view.getSpritePixels()) {
             int row = pixel.getCoordinate().getRow();
@@ -173,12 +205,12 @@ public class Roomview extends JComponent {
      * @param width the width of the canvas
      * @param height the height of the canvas
      */
-    public void drawEnemyHitBox(Graphics canvas,int width,int height){
+    public void drawEnemyHitBox(Graphics canvas,int width,int height,CoordinateSprite enemy){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
-        PlayerDirection direction = this.view.getEnemySprite().getDirection();
+        Direction direction = enemy.getDirection();
         boolean once = true;
-        for (itemWithCoordinate<Pixel> pixel : this.view.getEnemyTestPixels()) {
+        for (itemWithCoordinate<Pixel> pixel : enemy) {
             int row = pixel.getCoordinate().getRow();
             int col = pixel.getCoordinate().getColumn();
             
@@ -260,7 +292,7 @@ public class Roomview extends JComponent {
      * @param tileWidth the width of the tile
      * @param tileHeight The height of the tile in pixels
      */
-    private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight,String right_png,String left_png, String down_png, String up_png,PlayerDirection direction) {
+    private void drawPlayer(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight,String right_png,String left_png, String down_png, String up_png,Direction direction) {
         
         int height = tileHeight/16;  
         int width  = tileWidth /16;

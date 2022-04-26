@@ -19,6 +19,7 @@ public class PlayerValues {
 
     public static final PlayerValues BULLET = new PlayerValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,1);
         
+    public static final PlayerValues TRAPDOOR = new PlayerValues(new Pixel(Color.BLUE, false), hitBox.TRAPDOOR,0,0);
     
 
     private PlayerValues(Pixel pixels, hitBox playerHitBox,int speed,int acceleration ){

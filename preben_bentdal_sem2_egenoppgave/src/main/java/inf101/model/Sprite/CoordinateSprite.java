@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Objects;
 
 import inf101.game.States.FootType;
-import inf101.game.States.PlayerDirection;
+import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
@@ -14,7 +14,8 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private PlayerValues entity;
     private Coordinate coordinate;
     private int HEALTH;
-    private PlayerDirection direction;; 
+    private int DAMAGE = 10;
+    private Direction direction;; 
     public FootType footType;
     private boolean damage = false;
 
@@ -23,11 +24,11 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
-        this.direction = PlayerDirection.RIGHT;
+        this.direction = Direction.RIGHT;
         this.footType = FootType.STAND;
 
     }
-    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health, PlayerDirection direction, FootType footType) {  
+    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health, Direction direction, FootType footType) {  
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
@@ -38,6 +39,10 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     
 
    
+    public CoordinateSprite changeCoordinate(Coordinate newCord){
+        this.coordinate = newCord;
+        return this;
+    }
     public PlayerValues getEntity(){
         return this.entity;
     }
@@ -58,17 +63,18 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         return this.footType;
     }
 
-    public void changeDirection(PlayerDirection newDirection){
+    public void changeDirection(Direction newDirection){
         this.direction = newDirection;
 
     }
-    public PlayerDirection getDirection(){
+    public Direction getDirection(){
         return this.direction;
     }
     
     public void switchdamage(){
         this.damage = !this.damage;
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -77,8 +83,9 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
             return false;
         }
         CoordinateSprite coordinateSprite = (CoordinateSprite) o;
-        return Objects.equals(entity, coordinateSprite.entity) && Objects.equals(coordinate, coordinateSprite.coordinate);
+        return Objects.equals(entity, coordinateSprite.entity) && Objects.equals(coordinate, coordinateSprite.coordinate) && HEALTH == coordinateSprite.HEALTH && DAMAGE == coordinateSprite.DAMAGE && Objects.equals(direction, coordinateSprite.direction) && Objects.equals(footType, coordinateSprite.footType) && damage == coordinateSprite.damage;
     }
+    
 
     @Override
     public int hashCode() {
@@ -124,4 +131,9 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         this.HEALTH-=damage;
         return this.HEALTH>0;
     }
+    public CoordinateSprite copy(){   
+        return new CoordinateSprite(this.entity, this.coordinate, this.HEALTH,this.direction,this.footType);}
+       
 }
+   
+

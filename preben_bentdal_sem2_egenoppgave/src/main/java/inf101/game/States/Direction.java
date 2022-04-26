@@ -1,6 +1,6 @@
 package inf101.game.States;
 
-public enum PlayerDirection {
+public enum Direction {
     UP,
     DOWN,
     LEFT,

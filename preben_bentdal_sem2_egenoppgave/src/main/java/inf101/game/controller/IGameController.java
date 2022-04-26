@@ -3,9 +3,9 @@ package inf101.game.controller;
 import java.util.List;
 
 import inf101.game.States.FootType;
-import inf101.game.States.PlayerDirection;
+import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
-import inf101.model.Bullet;
+import inf101.model.Sprite.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
 
 public interface IGameController {
@@ -38,7 +38,7 @@ public interface IGameController {
     CoordinateSprite getPlayer();
 
     
-    void changeWalkingDirection(PlayerDirection direction, CoordinateSprite sprite);
+    void changeWalkingDirection(Direction direction, CoordinateSprite sprite);
 
     /**
      * Change the foot type to the given foot type.
@@ -59,7 +59,7 @@ public interface IGameController {
      * 
      * @return The direction the player is facing.
      */
-    PlayerDirection getDirection();
+    Direction getDirection();
 
    
     /**
@@ -82,6 +82,8 @@ public interface IGameController {
      * @return An ArrayList of all the bullets in the game.
      */
     List<Bullet> getAllBullets();
+
+    List<Bullet> getBulletCopy();
 
     /**
      * Loads a bullet into the bullet array, and sets the bullet's movement to the specified movementx
@@ -112,7 +114,7 @@ public interface IGameController {
      * @param bullet The bullet that is being checked for collision.
      * @return 
      */
-    boolean checkAndDamage(CoordinateSprite damageObject, CoordinateSprite reciever);
+    CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever);
 
     /**
      * Moves the object in the direction of the deltaRow and deltaColumn by one space
@@ -128,10 +130,35 @@ public interface IGameController {
     /**
      * This function is called every time the monster should do anything, and the function 
      * exequtes every thing the monster should do
+     * @return 
      */
-    public void monsterStep();
+    public List<CoordinateSprite> monsterStep();
 
-    public CoordinateSprite getEnemy();
+    public List<CoordinateSprite> getEnemies();
+
+
+    boolean didDamage(CoordinateSprite spriteOne, CoordinateSprite spriteTwo);
+
+   
+
+    
+    public <E> boolean simpleCollision (E attacker,CoordinateSprite victim);
+
+    void changeEnemies(List<CoordinateSprite> newEnemies);
+
+    boolean newCollision(CoordinateSprite attacker, CoordinateSprite victim);
+
+    /**
+     * Returns true if an enemy exists, false otherwise.
+     * 
+     * @return A boolean value.
+     */
+    boolean enemyExists();
+
+    public CoordinateSprite getTrapDoor();
+        
+    
+
 
    
 }
