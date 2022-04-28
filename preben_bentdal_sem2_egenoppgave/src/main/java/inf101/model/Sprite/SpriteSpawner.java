@@ -11,19 +11,22 @@ public class SpriteSpawner {
 
     }
     public CoordinateSprite getStarterSprite(){
-        return getPlayer(new Coordinate(50,50),99999999);
+        return getPlayer(new Coordinate(50,50),10000000);
     }
     public CoordinateSprite getStarterSprite2(){
-        return getPlayer(new Coordinate(150,150),100);
+        return getRunner(new Coordinate(150,150),100);
     }
     public CoordinateSprite getStarterSprite3(){
-        return getPlayer(new Coordinate(300,300),100);
+        return getRunner(new Coordinate(300,300),100);
     }
     public CoordinateSprite getStarterSprite4(){
-        return getPlayer(new Coordinate(300,450),100);
+        return getRunner(new Coordinate(300,450),100);
     }
     public CoordinateSprite getTrapDoor(){
-        return getPlayer(new Coordinate(250,250),999999999);
+        return getTrapDoor(new Coordinate(250,250),999999999);
+    }
+    public CoordinateSprite getShooter(){
+        return getShooter(new Coordinate(300,450),50);
     }
 
     
@@ -41,5 +44,13 @@ public class SpriteSpawner {
         CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.TRAPDOOR, position ,health);
         return myCordSprite;
 
+    }
+    public CoordinateSprite getShooter(Coordinate posision, int health){
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.SHOOTER, posision ,health);
+        return myCordSprite;
+    }
+    public CoordinateSprite getRunner(Coordinate posision, int health){
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.SHOOTER, posision ,health);
+        return myCordSprite;
     }
 }

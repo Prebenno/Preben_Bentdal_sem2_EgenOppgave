@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,13 +41,11 @@ public class GameController implements KeyListener,ActionListener {
     private final Set<Integer> pressedKeys = new HashSet<>();
     private boolean once = true;
     private boolean shot = false;
-   
+    Random rand = new Random(); //instance of random class
+    
     Runnable gametick = new Runnable(){
         public void run(){
             try {
-                
-            
-            
             if (x_velocity > 7){
                 x_velocity = 7;
             }
@@ -56,26 +55,24 @@ public class GameController implements KeyListener,ActionListener {
             if (friction == false){
                 x_velocity = (int) (x_velocity /1.2);
                 y_velocity = (int) (y_velocity /1.2);
-                
             }
-            if (controller.getEnemies() != null){ 
+            if (controller.getEnemySprites() != null){ 
                 controller.changeEnemies(controller.monsterStep());
+                int randomnum = rand.nextInt(50); 
+                if (randomnum == 25){
+                    controller.changeEnemyBullets(controller.monsterShoot());}
             }
-            
-            if (controller.moveObject(y_velocity, x_velocity, controller.getPlayer()) == null){
+            if (controller.moveObject(y_velocity, x_velocity, controller.getPlayerSprite()) == null){
                 x_velocity = 0;
                 y_velocity = 0;
             }
-            if(controller.simpleCollision(controller.getPlayer(), controller.getTrapDoor())){
-                System.out.println("Yey");
-                
-                
+            if(controller.simpleCollision(controller.getPlayerSprite(), controller.getTrapDoor())){
+                controller.nextFloor();
             }
-            view.repaint();
+                view.repaint();
         
             } catch (Exception e) {
             Thread t = Thread.currentThread();
-            System.out.println("expetion");
             t.getUncaughtExceptionHandler().uncaughtException(t, e);
                 }   
             }
@@ -86,11 +83,12 @@ public class GameController implements KeyListener,ActionListener {
     Runnable bullets = new Runnable(){
         public void run() throws RuntimeException{
                 if (!controller.enemyExists()){
-                    bullet.shutdown();
-                
-
+                    controller.activateTrapDoor();
                 }
-                
+                if (controller.getPlayerSprite() == null){
+                    bullet.shutdown();
+                    movement.shutdown();
+                }
                 List<Bullet> newBullets = new ArrayList<Bullet>();
                 List<CoordinateSprite> newEnemies = new ArrayList<CoordinateSprite>();
                 try {
@@ -98,15 +96,13 @@ public class GameController implements KeyListener,ActionListener {
                         controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX);
                         shot = false;
                     }
-                    if (controller.bulletInChaimber()){
+                    if (controller.isBulletGonnaShoot()){
                         for (Bullet bullet : controller.getAllBullets()) {// first mmoving bullets
                             Bullet movedBullet = controller.moveObject(bullet.getXspeed(), bullet.getYspeed(), bullet);
                             if (movedBullet != null){
                                 newBullets.add(movedBullet);}
-                            
                         }
-
-                        for (CoordinateSprite enemy : controller.getEnemies()){
+                        for (CoordinateSprite enemy : controller.getEnemySprites()){
                             CoordinateSprite enemyCopy = enemy;
                             for (Bullet bullet : controller.getAllBullets()) {                   
                                 if(controller.simpleCollision(bullet, enemyCopy)){ 
@@ -118,7 +114,6 @@ public class GameController implements KeyListener,ActionListener {
                     if (enemyCopy != null){
                         newEnemies.add(enemyCopy);}
                     }
-                    
                     controller.changeBullets(newBullets); // changing bullets
                     controller.changeEnemies(newEnemies);}
                 } catch (Exception e){
@@ -151,16 +146,12 @@ public class GameController implements KeyListener,ActionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         friction = true;
-        CoordinateSprite player = controller.getPlayer();
+        CoordinateSprite player = controller.getPlayerSprite();
         if (once){
-            
             movement.scheduleAtFixedRate(gametick, 0, 30, TimeUnit.MILLISECONDS);
             bullet.scheduleAtFixedRate(bullets, 0, 6, TimeUnit.MILLISECONDS);
             once = false;
-
         }
-        
-
         pressedKeys.add(event.getKeyCode());
         int movementx = 0;
         int movementy = 0;
@@ -189,7 +180,7 @@ public class GameController implements KeyListener,ActionListener {
                 }
             }
         }
-        if (controller.getPlayer() != null){;}
+        if (controller.getPlayerSprite() != null){;}
 
         if (movementx == -1) {
             if (x_velocity > 0){
@@ -226,7 +217,7 @@ public class GameController implements KeyListener,ActionListener {
             BULLETDIRX = 0; 
             controller.changeWalkingDirection(Direction.UP,player);      
         }
-        if (controller.getPlayer() != null){
+        if (controller.getPlayerSprite() != null){
             x_velocity += movementx;
             y_velocity += movementy;
         

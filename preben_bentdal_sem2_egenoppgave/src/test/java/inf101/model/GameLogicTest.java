@@ -34,15 +34,15 @@ public class GameLogicTest {
     }
     @Test
     void movementTest(){
-        int column = board.getPlayer().getCoordinate().getColumn();
-        int row = board.getPlayer().getCoordinate().getRow();
-        board.moveObject(10, 10, board.getPlayer());
+        int column = board.getPlayerSprite().getCoordinate().getColumn();
+        int row = board.getPlayerSprite().getCoordinate().getRow();
+        board.moveObject(10, 10, board.getPlayerSprite());
         Coordinate newCoord = new Coordinate(row+10,column+10);
-        assertEquals(board.getPlayer().getCoordinate(),newCoord);
+        assertEquals(board.getPlayerSprite().getCoordinate(),newCoord);
 
-        board.moveObject(-20, -20, board.getPlayer());
+        board.moveObject(-20, -20, board.getPlayerSprite());
         newCoord = new Coordinate(row-10,column-10);
-        assertEquals(board.getPlayer().getCoordinate(),newCoord);
+        assertEquals(board.getPlayerSprite().getCoordinate(),newCoord);
     }
 
     @Test
@@ -51,18 +51,18 @@ public class GameLogicTest {
         board.loadBullet(true, 1, 1);
         assertTrue(board.isBulletGonnaShoot());
 
-        board.bulletHit(board.getBulletCopy().get(0));
+        board.bulletHit(board.getCopyOfBullets().get(0));
         assertFalse(board.isBulletGonnaShoot());
         
         for (int bulletC = 1; bulletC < 10; bulletC++) {
             board.loadBullet(true,1,1);
-            assertEquals(bulletC, board.getBulletCopy().size());   
+            assertEquals(bulletC, board.getCopyOfBullets().size());   
         }   
     }
     @Test
     void collisionTest(){
         board.loadBullet(true,1,1);
-        CoordinateSprite enemy =board.getEnemies().get(0);
+        CoordinateSprite enemy =board.getEnemySprites().get(0);
         Bullet bullet = board.getAllBullets().get(0);
         Coordinate pathToEnemy = new Coordinate(enemy.getCoordinate().getRow()-bullet.getShape().getCoordinate().getRow(),
                                                 enemy.getCoordinate().getColumn()-bullet.getShape().getCoordinate().getColumn());

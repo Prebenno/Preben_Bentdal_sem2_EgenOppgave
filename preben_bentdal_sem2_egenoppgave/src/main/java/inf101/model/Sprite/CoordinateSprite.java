@@ -10,6 +10,8 @@ import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
 
+import java.awt.Color;
+
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private PlayerValues entity;
     private Coordinate coordinate;
@@ -19,6 +21,15 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public FootType footType;
     private boolean damage = false;
 
+
+    public CoordinateSprite(){ //used for testing
+        this.entity = new PlayerValues(new Pixel(Color.BLUE,true), hitBox.PLAYER_HITBOX, 10,10,null,null,null,null,false);
+        this.coordinate = new Coordinate(0,0);
+        this.HEALTH = 100;
+        this.direction = Direction.RIGHT;
+        this.footType = FootType.STAND;
+    }
+    
 
     public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health) {  
         this.entity = entity;

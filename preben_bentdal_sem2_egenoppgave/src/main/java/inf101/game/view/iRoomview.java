@@ -75,7 +75,7 @@ public interface iRoomview {
      * 
      * @return The enemy sprite.
      */
-    List<CoordinateSprite> getEnemySprite();
+    List<CoordinateSprite> getEnemySprites();
 
     CoordinateSprite getTrapDoor();
 
@@ -98,6 +98,11 @@ public interface iRoomview {
      * @return A boolean value.
      */
     boolean enemyExists();
+
+
+    int getScore();
+
+    int getFloorNum();
 
 
    

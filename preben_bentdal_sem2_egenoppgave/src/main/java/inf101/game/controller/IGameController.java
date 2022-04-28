@@ -35,7 +35,7 @@ public interface IGameController {
      * 
      * @return The player sprite.
      */
-    CoordinateSprite getPlayer();
+    CoordinateSprite getPlayerSprite();
 
     
     void changeWalkingDirection(Direction direction, CoordinateSprite sprite);
@@ -67,7 +67,7 @@ public interface IGameController {
      * 
      * @return A boolean value.
      */
-    boolean bulletInChaimber();
+    boolean isBulletGonnaShoot();
 
     /**
      * When a bullet hits something, do this.
@@ -83,7 +83,9 @@ public interface IGameController {
      */
     List<Bullet> getAllBullets();
 
-    List<Bullet> getBulletCopy();
+    List<Bullet> getCopyOfBullets();
+
+    List<Bullet> moveAllBullets();
 
     /**
      * Loads a bullet into the bullet array, and sets the bullet's movement to the specified movementx
@@ -108,12 +110,7 @@ public interface IGameController {
      */
     void changeBullets(List<Bullet> newBullets);
 
-    /**
-     * Check if the bullet is colliding with the player, and if so, damage the player.
-     * 
-     * @param bullet The bullet that is being checked for collision.
-     * @return 
-     */
+
     CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever);
 
     /**
@@ -134,11 +131,14 @@ public interface IGameController {
      */
     public List<CoordinateSprite> monsterStep();
 
-    public List<CoordinateSprite> getEnemies();
+    public List<CoordinateSprite> getEnemySprites();
 
 
     boolean didDamage(CoordinateSprite spriteOne, CoordinateSprite spriteTwo);
 
+
+
+    public void changeEnemyBullets(List<Bullet> bullets);
    
 
     
@@ -156,9 +156,14 @@ public interface IGameController {
     boolean enemyExists();
 
     public CoordinateSprite getTrapDoor();
+
+    void activateTrapDoor();
+
+    void nextFloor();
         
     
 
+    
 
    
 }
