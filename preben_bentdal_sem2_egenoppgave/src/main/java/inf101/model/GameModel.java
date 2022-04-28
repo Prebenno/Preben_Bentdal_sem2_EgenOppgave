@@ -281,7 +281,7 @@ public class GameModel implements iRoomview ,IGameController {
     @Override
     public List<CoordinateSprite> monsterStep() {
         if (this.playerSprite != null){
-            System.out.println(this.playerSprite.getHealth());
+   
             List<CoordinateSprite> enemies = new ArrayList<CoordinateSprite>();
             for (CoordinateSprite enemy : this.enemySprites) {
                 CoordinateSprite newEnemy = enemy.copy(); //to prevent modificationerror
@@ -480,14 +480,45 @@ public class GameModel implements iRoomview ,IGameController {
     }
 
     @Override
-    public List<Bullet> moveAllBullets() {
+    public void moveAllBullets() {
         List<Bullet> newBullets = new ArrayList<Bullet>();
         for (Bullet bullet : this.bullets) {// first mmoving bullets
             Bullet movedBullet = (Bullet) moveObject(bullet.getXspeed(), bullet.getYspeed(), bullet);
             if (movedBullet != null){
                 newBullets.add(movedBullet);}
         }
-        return newBullets;
+        this.bullets = newBullets;
     }
-}
 
+    @Override
+    public void checkAndDamageBullets() {
+        List<Bullet> deadBullets = new ArrayList<Bullet>();
+       
+        List<CoordinateSprite> newEnemies = new ArrayList<CoordinateSprite>();
+        for (CoordinateSprite enemy : this.enemySprites){
+            CoordinateSprite enemyCopy = enemy;
+            for (Bullet bullet : this.bullets) {                   
+                if(simpleCollision(bullet, enemyCopy)){ 
+                    enemyCopy = enemy.copy(); // to prevent ConcurrentModificationException
+                    enemyCopy = damageObject(bullet.getShape(),enemyCopy);
+                    deadBullets.add(bullet);
+                    }
+                }
+            if (enemyCopy != null){
+                newEnemies.add(enemyCopy);}
+        }
+    this.enemySprites = newEnemies;
+    for (Bullet bullet : deadBullets) {
+        if (this.bullets.contains(bullet)){
+            this.bullets.remove(bullet);
+            }
+        }
+    }
+    
+
+    
+    
+       
+    
+
+}

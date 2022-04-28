@@ -45,7 +45,7 @@ public class GameController implements KeyListener,ActionListener {
     
     Runnable gametick = new Runnable(){
         public void run(){
-            try {
+            try {   // to get the error messages from the thread
             if (x_velocity > 7){
                 x_velocity = 7;
             }
@@ -60,7 +60,8 @@ public class GameController implements KeyListener,ActionListener {
                 controller.changeEnemies(controller.monsterStep());
                 int randomnum = rand.nextInt(50); 
                 if (randomnum == 25){
-                    controller.changeEnemyBullets(controller.monsterShoot());}
+                    //controller.monsterShoot();
+                }
             }
             if (controller.moveObject(y_velocity, x_velocity, controller.getPlayerSprite()) == null){
                 x_velocity = 0;
@@ -89,36 +90,16 @@ public class GameController implements KeyListener,ActionListener {
                     bullet.shutdown();
                     movement.shutdown();
                 }
-                List<Bullet> newBullets = new ArrayList<Bullet>();
-                List<CoordinateSprite> newEnemies = new ArrayList<CoordinateSprite>();
-                try {
-                    if (shot ==  true){
-                        controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX);
-                        shot = false;
-                    }
-                    if (controller.isBulletGonnaShoot()){
-                        for (Bullet bullet : controller.getAllBullets()) {// first mmoving bullets
-                            Bullet movedBullet = controller.moveObject(bullet.getXspeed(), bullet.getYspeed(), bullet);
-                            if (movedBullet != null){
-                                newBullets.add(movedBullet);}
-                        }
-                        for (CoordinateSprite enemy : controller.getEnemySprites()){
-                            CoordinateSprite enemyCopy = enemy;
-                            for (Bullet bullet : controller.getAllBullets()) {                   
-                                if(controller.simpleCollision(bullet, enemyCopy)){ 
-                                    enemyCopy = enemy.copy(); // to prevent ConcurrentModificationException
-                                    enemyCopy = controller.damageObject(bullet.getShape(),enemyCopy);
-                                    newBullets.remove(bullet);
-                                    }
-                                }
-                    if (enemyCopy != null){
-                        newEnemies.add(enemyCopy);}
-                    }
-                    controller.changeBullets(newBullets); // changing bullets
-                    controller.changeEnemies(newEnemies);}
-                } catch (Exception e){
+                if (shot ==  true){
+                    controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX);
+                    shot = false;
+                }
+                try {  // to get the error messages from the thread
+                    controller.moveAllBullets();
+                    controller.checkAndDamageBullets();
+                        
+                } catch (Exception e){  
                     Thread t = Thread.currentThread();
-                    System.out.println("expetion");
                     t.getUncaughtExceptionHandler().uncaughtException(t, e);
                 }
             }

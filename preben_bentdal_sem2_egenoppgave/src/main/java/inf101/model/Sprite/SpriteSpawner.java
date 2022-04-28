@@ -50,7 +50,7 @@ public class SpriteSpawner {
         return myCordSprite;
     }
     public CoordinateSprite getRunner(Coordinate posision, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.SHOOTER, posision ,health);
+        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.RUNNER, posision ,health);
         return myCordSprite;
     }
 }

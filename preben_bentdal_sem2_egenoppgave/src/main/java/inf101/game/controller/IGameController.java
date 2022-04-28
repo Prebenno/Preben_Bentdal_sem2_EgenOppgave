@@ -85,7 +85,10 @@ public interface IGameController {
 
     List<Bullet> getCopyOfBullets();
 
-    List<Bullet> moveAllBullets();
+    void moveAllBullets();
+
+    void checkAndDamageBullets();
+    
 
     /**
      * Loads a bullet into the bullet array, and sets the bullet's movement to the specified movementx
