@@ -71,8 +71,8 @@ public class Grid<E> implements IGrid<E> {
     }
     @Override
     public boolean coordinateOnFloor(Coordinate cord){
-        if ((cord.getColumn() >= 25) && (cord.getRow() >= 40)){
-            return  (cord.getColumn() < this.getColumns()-25) && (cord.getRow() < this.getRows()-70);
+        if ((cord.getColumn() >= 20) && (cord.getRow() >= 40)){
+            return  (cord.getColumn() < this.getColumns()-35) && (cord.getRow() < this.getRows()-70);
         }
         return false;
     }

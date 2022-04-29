@@ -63,13 +63,16 @@ public class SpriteValues {
 
 
     public static final SpriteValues BULLET = new SpriteValues(new Pixel(Color.BLUE, true), hitBox.BULLET,1,null,null,null,null,null,null,null,null);
-    // TODO fix etterop
-    public static final SpriteValues TRAPDOOR = new SpriteValues(new Pixel(Color.BLUE, false), hitBox.TRAPDOOR,0,"floor_ladder.png","floor_ladder.png","floor_ladder.png","floor_ladder.png","floor_ladder.png","floor_ladder.png","floor_ladder.png","floor_ladder.png");
+
+    public static final SpriteValues TRAPDOOR = new SpriteValues(new Pixel(Color.BLUE, false), hitBox.TRAPDOOR,"floor_ladder.png");
     
     public static final SpriteValues HEALTH = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"Health_potion.png");
-    public static final SpriteValues ATTACKSPEED = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"f");
-    public static final SpriteValues DAMAGEUP = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"f");
-    public static final SpriteValues SCOREMULTI = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"f");
+
+    public static final SpriteValues ATTACKSPEED = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"Attack_speed_potion.png");
+
+    public static final SpriteValues DAMAGEUP = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"Attack_potion.png");
+
+    public static final SpriteValues SCOREMULTI = new SpriteValues(new Pixel(Color.BLUE,false), hitBox.BULLET,"Score_multiplier_potion.png");
 
     
     SpriteValues(Pixel pixels, hitBox spriteHitBox,int speed,String right_png,String left_png,String down_png,String up_png,String right_png_standing,String left_png_standing,String down_png_standing,String up_png_standing ){
@@ -89,6 +92,13 @@ public class SpriteValues {
         this.pixels = pixels;
         this.spriteHitBox = spriteHitBox;
         this.right_png =  png;
+        this.left_png = png;
+        this.up_png = png;
+        this.down_png = png;
+        this.right_png_standing = png;
+        this.left_png_standing = png;
+        this.up_png_standing = png;
+        this.down_png_standing = png;
         this.speed = 0;
     }
     
@@ -119,6 +129,8 @@ public class SpriteValues {
         return spriteHitBox.getValues().length;
     }
 
+   
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -126,9 +138,10 @@ public class SpriteValues {
         if (!(o instanceof SpriteValues)) {
             return false;
         }
-        SpriteValues playerValues = (SpriteValues) o;
-        return Objects.equals(pixels, playerValues.pixels) && Objects.equals(spriteHitBox, playerValues.spriteHitBox) && speed == playerValues.speed;
+        SpriteValues spriteValues = (SpriteValues) o;
+        return Objects.equals(pixels, spriteValues.pixels) && Objects.equals(spriteHitBox, spriteValues.spriteHitBox) && speed == spriteValues.speed && movementCount == spriteValues.movementCount && Objects.equals(right_png, spriteValues.right_png) && Objects.equals(left_png, spriteValues.left_png) && Objects.equals(down_png, spriteValues.down_png) && Objects.equals(up_png, spriteValues.up_png) && Objects.equals(right_png_standing, spriteValues.right_png_standing) && Objects.equals(left_png_standing, spriteValues.left_png_standing) && Objects.equals(up_png_standing, spriteValues.up_png_standing) && Objects.equals(down_png_standing, spriteValues.down_png_standing);
     }
+    
 
     @Override
     public int hashCode() {

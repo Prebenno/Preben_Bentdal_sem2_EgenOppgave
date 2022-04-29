@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import inf101.backround.Floor;
 import inf101.game.States.FootType;
+import inf101.game.States.GameState;
 import inf101.game.States.Direction;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
@@ -67,22 +68,38 @@ public class Roomview extends JComponent {
      * @param height the height of the window
      */
     public void drawBoard(Graphics canvas,int x, int y,int width, int height){
-        this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
-        this.drawWalls(canvas, width, height);
-        this.drawExtraInfo(canvas,width,height);
-        if (view.enemyExists()){
-            this.drawEnemies(canvas, width, height);
+        if (view.getGameState().equals(GameState.ACTIVE_GAME)){
+            this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
+            this.drawWalls(canvas, width, height);
+            this.drawExtraInfo(canvas,width,height);
+            if (view.enemyExists()){
+                this.drawEnemies(canvas, width, height);
+                }
+            else{
+                this.drawPowerUps(canvas,width,height);
+                this.drawHitBox(canvas,width,height,view.getTrapDoor());}
+            if (view.getPlayerSprite() != null){
+                this.drawHitBox(canvas,width,height,view.getPlayerSprite());}
+            if (view.isBulletGonnaShoot()){
+                this.drawBullets(canvas,width, height);
+                }
             }
-        else{
-            this.drawHitBox(canvas,width,height,view.getTrapDoor());}
-        if (view.getPlayerSprite() != null){
-            this.drawHitBox(canvas,width,height,view.getPlayerSprite());}
-        if (view.isBulletGonnaShoot()){
-            this.drawBullets(canvas,width, height);}
-        //this.drawPlayer(canvas,width,height);
+        else if (view.getGameState().equals(GameState.GAME_OVER)){
+            this.gameOver(canvas,width, height);
+        }
+        else if(view.getGameState().equals(GameState.PAUSED_GAME)){
+            this.pause(canvas,width,height);
+        }
 
     }
 
+    public void drawPowerUps(Graphics canvas,int width,int height){
+        for (CoordinateSprite powerUp : view.getPowerUps()) {
+            if (view.getPowerUps().contains(powerUp)){ // To prevent concurrentModificationError
+                drawHitBox(canvas, width, height, powerUp);}
+            
+        }
+    }
     public void drawExtraInfo(Graphics canvas, int width, int height){
         width = width/width+20;
         height = height/height+80;
@@ -96,8 +113,15 @@ public class Roomview extends JComponent {
             25, -10, width,height);
         GraphicHelperMethods.drawCenteredString(
             canvas, "Health: " +  view.getPlayerSprite().getHealth(),
-            30, 0, width,height);
+            40, 5, width,height);
             
+    }
+    public void pause(Graphics canvas, int x, int y){
+        canvas.setColor(Color.MAGENTA);
+        canvas.setFont(new Font("TimesRoman", Font.PLAIN, 25)); 
+        GraphicHelperMethods.drawCenteredString(canvas, "Game paused ",2, 2, x ,y);  
+        GraphicHelperMethods.drawCenteredString(canvas, "Press P to continue" ,2, 2, x ,y+120);
+        
     }
 
     public void drawEnemies(Graphics canvas, int width, int height){
@@ -130,16 +154,19 @@ public class Roomview extends JComponent {
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
         CoordinateSprite sprite = null;
+        Direction direction = null;
         if (object instanceof Bullet){
             y_Position+=5;
             x_Position+=5;
             Bullet bullet = ((Bullet) object);
             sprite = bullet.getShape();
+            direction = sprite.getDirection();
         }
         else{
             sprite = (CoordinateSprite) object;
+            if (sprite != null){
+                direction = sprite.getDirection();}
         }
-        Direction direction = sprite.getDirection();
         boolean once = true;
         for (itemWithCoordinate<Pixel> pixel : sprite) {
             int row = pixel.getCoordinate().getRow();
@@ -216,8 +243,8 @@ public class Roomview extends JComponent {
         x_position -=3;
         String png = "";
         switch (direction) {
-            case RIGHT:
-                png = right_png;
+            case LEFT:
+                png = left_png;
                 break;
             case UP:
                 png =up_png;
@@ -226,8 +253,7 @@ public class Roomview extends JComponent {
                 png =down_png;
                 break;
             default:
-                width = tileWidth / 23;
-                png = left_png;
+                png = right_png;
                 break;
         }
         if (png !=null){
@@ -268,6 +294,17 @@ public class Roomview extends JComponent {
     }
 
 
+    public void gameOver(Graphics canvas ,int x ,int y){
+        Color over = new Color (0,0,0,128);
+        canvas.setColor(over);
+        canvas.fillRect(x+15, y+15, x+15, y+15);  
+        
+        canvas.setFont(new Font("TimesRoman", Font.PLAIN, 30)); 
+        GraphicHelperMethods.drawCenteredString(
+                canvas, "Game over, total score: " +view.getScore(),
+                2, 2, x ,y); 
+    }
+}
     /**
      * Old function for drawing the hitbox of the object, i dont have the hearth to delete it so
      * ill save it here at the end.
@@ -314,7 +351,7 @@ public class Roomview extends JComponent {
         }   
     }
      */
-}
+
 
 
     

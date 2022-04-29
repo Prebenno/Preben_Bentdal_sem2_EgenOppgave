@@ -1,4 +1,4 @@
-package inf101.model;
+package inf101.model.Sprite;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,17 +18,19 @@ import inf101.model.Sprite.CoordinateSprite;
 public class SpriteTest {
     CoordinateSprite spriteOne;
     CoordinateSprite spriteTwo;
+    SpriteSpawner spawner;
     @BeforeEach
 	void setUp(){
         this.spriteOne = new CoordinateSprite();
         this.spriteTwo = new CoordinateSprite();   
+        this.spawner = new SpriteSpawner();
     }
     @Test
     void movementTest(){
         Coordinate oldCord = this.spriteOne.getCoordinate();
         assertEquals(oldCord.getRow(),0);
         assertEquals(oldCord.getColumn(),0);
-        spriteOne.move(10, 10);
+        spriteOne = spriteOne.move(10, 10);
         assertEquals(this.spriteOne.getCoordinate().getRow(),10);
         assertEquals(this.spriteOne.getCoordinate().getColumn(),10);
 

@@ -3,6 +3,7 @@ package inf101.game.controller;
 import java.util.List;
 
 import inf101.game.States.FootType;
+import inf101.game.States.GameState;
 import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.model.Sprite.Bullet;
@@ -99,7 +100,7 @@ public interface IGameController {
      * @param object The object you want to move.
      * @return The object that is being moved.
      */
-    public <T> T moveObject(int deltaRow, int deltaColumn, T object);
+    public <E> Object moveObject(int deltaRow, int deltaColumn, E object);
     
 
     /**
@@ -116,7 +117,7 @@ public interface IGameController {
 
     void changeEnemies(List<CoordinateSprite> newEnemies);
 
-    boolean newCollision(CoordinateSprite attacker, CoordinateSprite victim);
+    boolean SpriteCollision(CoordinateSprite attacker, CoordinateSprite victim);
 
     /**
      * Returns true if an enemy exists, false otherwise.
@@ -133,11 +134,20 @@ public interface IGameController {
 
     public int getTimeBetweenShots();
       
-
-    public void changeTimeBetweenShots(int newTime);
        
-        
+    public void activatePowerUps();
+
+    public void powerUpChecker();
+
+    public void changeGameState(GameState newState);
+    public GameState getGameState();
+
+    public Coordinate directiontoCoordinate(CoordinateSprite sprite);
+
     
+
+    
+
 
     
 

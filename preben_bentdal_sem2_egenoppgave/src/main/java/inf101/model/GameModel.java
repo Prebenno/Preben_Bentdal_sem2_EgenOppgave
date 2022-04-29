@@ -2,6 +2,7 @@ package inf101.model;
 
 import inf101.backround.Floor;
 import inf101.game.States.FootType;
+import inf101.game.States.GameState;
 import inf101.game.States.Direction;
 import inf101.game.controller.IGameController;
 import inf101.game.view.iRoomview;
@@ -24,40 +25,59 @@ public class GameModel implements iRoomview ,IGameController {
     private Room myroom;
     private CoordinateSprite playerSprite;
     private CoordinateSprite trapdoor;
+    private GameState gameState;
 
-    
-    private int PLAYER_TIME_BETWEEN_SHOTS = 20;
+    private int PLAYER_TIME_BETWEEN_SHOTS = 500;
+    private int SCOREMULTIPLIER = 1;
+    private int PlayerBulletDamage = 10;
     public int score = 0;
     public int floorNum = 1;
     public boolean finished = false;
     int counter = 0;
 
+    private List<CoordinateSprite> powerups = new ArrayList<CoordinateSprite>();
     private List<CoordinateSprite> enemySprites = new ArrayList<CoordinateSprite>();
     private List<Bullet> bullets = new ArrayList<>();
-    private int PlayerBulletDamage = 10;
-    
-    private SpriteSpawner spawner;
-
-    
+    public SpriteSpawner spawner;
 
     public GameModel() throws OutOfBoundsException {
+        this.gameState = GameState.ACTIVE_GAME;
         this.spawner = new SpriteSpawner();
         this.spawner.setSenterColumn();
-        this.playerSprite = spawner.getStarterSprite();
-        //this.enemySprites.add(spawner.getStarterSprite2()); 
-        this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
-        this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
-        //this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
-        //this.enemySprites.add(spawner.getStarterSprite4());
+        this.playerSprite = spawner.getPlayer();
+        this.enemySprites = spawner.getEnemyWave();
         this.myfloor = new Floor();
         this.myroom = myfloor.room;   
     }
-
+    @Override
+    public void activatePowerUps(){
+    this.powerups.add(spawner.getAttackIncrease());
+    this.powerups.add(spawner.getAttackSpeedIncrease());
+    this.powerups.add(spawner.getHealth());
+    this.powerups.add(spawner.getScoreIncrease());
+    }
+    @Override
+    public List<CoordinateSprite> getPowerUps(){
+        return this.powerups;
+    }
+    @Override 
+    public void changeGameState(GameState newState){
+        this.gameState = newState;
+    }
+    @Override 
+    public GameState getGameState(){
+        return this.gameState;
+    }
     @Override 
     public int getTimeBetweenShots(){
         return this.PLAYER_TIME_BETWEEN_SHOTS;
     }
-
+    public int getPlayerBulletDamage(){ //for testing
+        return this.PlayerBulletDamage;
+    }
+    public int getScoreMultiplier(){ //for testing
+        return this.SCOREMULTIPLIER;
+    }
     public void changeTimeBetweenShots(int newTime){
         this.PLAYER_TIME_BETWEEN_SHOTS = newTime;
     }
@@ -127,7 +147,7 @@ public class GameModel implements iRoomview ,IGameController {
     }
     
     @Override
-    public Object moveObject(int deltaRow, int deltaColumn, Object object) {
+    public <E> Object moveObject(int deltaRow, int deltaColumn, E object) {
         CoordinateSprite moved_entity = null;
         Bullet bullet = null;
         if (object instanceof CoordinateSprite){
@@ -200,7 +220,7 @@ public class GameModel implements iRoomview ,IGameController {
     @Override
     public CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever) {
             if(!reciever.damage(damageObject.getDamage())){ //damaging object and checking if reciever is dead
-                this.score+= (2*this.floorNum);
+                this.score+= (SCOREMULTIPLIER*this.floorNum);
                 return null; // of object is dead   
             }
         return reciever; 
@@ -290,10 +310,10 @@ public class GameModel implements iRoomview ,IGameController {
             }
         }
         CoordinateSprite newEnemy = enemy.move(newRow * enemy.getEntity().getSpeed(), newColumn * enemy.getEntity().getSpeed());
-        if (newCollision(this.playerSprite,this.playerSprite)){
+        if (SpriteCollision(this.playerSprite,this.playerSprite)){
             this.playerSprite = damageObject(newEnemy,this.playerSprite);
         }
-        if (!newCollision(newEnemy,enemy)){
+        if (!SpriteCollision(newEnemy,enemy)){
             if (enemy.getEntity().getTotalMovements() % 5 == 0){  //To prevent to quick switches between sprites, causing the walking effect to look wierd
                 FootType oldFootType = this.getWalkingType(enemy);
                 newEnemy.changeFootType(oldFootType.next());
@@ -327,7 +347,7 @@ public class GameModel implements iRoomview ,IGameController {
     }
     
     @Override
-    public boolean newCollision(CoordinateSprite newPositionSprite, CoordinateSprite oldPositionSprite){
+    public boolean SpriteCollision(CoordinateSprite newPositionSprite, CoordinateSprite oldPositionSprite){
         for (itemWithCoordinate<Pixel> itemWithCoordinate : newPositionSprite) {
             Coordinate newPosCoordinate = itemWithCoordinate.getCoordinate();
             for (CoordinateSprite cordSprite : this.enemySprites) {
@@ -436,10 +456,13 @@ public class GameModel implements iRoomview ,IGameController {
     @Override
     public void nextFloor() {
         this.spawner.setSenterColumn();
-        this.enemySprites.add(spawner.getStarterSprite2()); 
-        this.enemySprites.add(spawner.getStarterSprite3()); 
-        this.enemySprites.add(spawner.getStarterSprite4()); 
+        this.enemySprites = spawner.getEnemyWave();
         this.trapdoor = null;
+        this.finished = false;
+        if (this.floorNum % 10 == 0) {
+            this.spawner.addEnemy();
+
+        }
         try {
             this.myfloor = new Floor();
         } catch (OutOfBoundsException e) {
@@ -495,7 +518,7 @@ public class GameModel implements iRoomview ,IGameController {
         }
     }
 
-    
+    @Override
     public Coordinate directiontoCoordinate(CoordinateSprite sprite){
         switch (sprite.getDirection()){
             case DOWN:
@@ -507,5 +530,32 @@ public class GameModel implements iRoomview ,IGameController {
             default:
                 return new Coordinate(-1,0);      
         }
+    }
+
+
+    public void powerUpChecker(){
+        boolean collected = false; // to prevent concurrentmodificationerror
+        for (CoordinateSprite powerUp : this.powerups) {
+            if (simpleCollision(this.playerSprite,powerUp)){
+                collected = true;
+                if(powerUp.getEntity().equals( SpriteValues.HEALTH)){
+                    this.playerSprite.healthPowerup();
+                    this.playerSprite.heal();
+                }
+                else if(powerUp.getEntity().equals(SpriteValues.ATTACKSPEED) ){
+                    this.PLAYER_TIME_BETWEEN_SHOTS = (int) (this.PLAYER_TIME_BETWEEN_SHOTS * 0.8); 
+                }
+                else if(powerUp.getEntity().equals(SpriteValues.DAMAGEUP)){
+                    this.PlayerBulletDamage = this.PlayerBulletDamage * 2;
+                }
+                else{
+                    this.SCOREMULTIPLIER++;
+                }      
+            }
+        }
+        if(collected){
+            this.powerups.clear();
+        }
+
     }
 }

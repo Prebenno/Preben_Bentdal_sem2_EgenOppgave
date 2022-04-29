@@ -67,19 +67,74 @@ public class GameLogicTest {
         Coordinate pathToEnemy = new Coordinate(enemy.getCoordinate().getRow()-bullet.getShape().getCoordinate().getRow(),
                                                 enemy.getCoordinate().getColumn()-bullet.getShape().getCoordinate().getColumn());
 
-        assertFalse(board.newCollision(bullet.getShape(), enemy));
+        assertFalse(board.SpriteCollision(bullet.getShape(), enemy));
         Bullet newBullet = (Bullet) board.moveObject(pathToEnemy.getRow(),pathToEnemy.getRow(), bullet);
         board.resetBullet();
         List<Bullet> newBullets = new ArrayList<Bullet>();
         newBullets.add(newBullet);
         board.changeBullets(newBullets);
 
-        assertTrue(board.newCollision(board.getAllBullets().get(0).getShape(), enemy));
+        assertTrue(board.SpriteCollision(board.getAllBullets().get(0).getShape(), enemy));
     }
+    @Test
+    void spawnerTest() throws OutOfBoundsException{
+        //GameModel board = new GameModel();
+        CoordinateSprite health = board.spawner.getHealth();
+        CoordinateSprite damage = board.spawner.getAttackIncrease();
+        CoordinateSprite attackSpeedUp = board.spawner.getAttackSpeedIncrease();
+        CoordinateSprite scoreIncrease = board.spawner.getScoreIncrease();
+
+        board.activatePowerUps(); //Health checker
+        board.moveObject(51,51,board.getPlayerSprite());
+        assertEquals(board.getPlayerSprite().getCoordinate(),new Coordinate(101,101));
+        assertTrue(board.simpleCollision(board.getPlayerSprite(),health));
+        assertEquals(board.getPlayerSprite().getHealth(),1000);
+        board.powerUpChecker();
+        assertEquals(board.getPlayerSprite().getHealth(),1200);
+
+        board.activatePowerUps(); // Checking if it works multiple times or just sets value
+        board.powerUpChecker();
+        assertEquals(board.getPlayerSprite().getHealth(),(int) 1200*1.2);
+
+
+        board.activatePowerUps(); // i have to reactivate powerups Score Increase checker
+        board.moveObject(0,100,board.getPlayerSprite());
+        assertEquals(board.getPlayerSprite().getCoordinate(),new Coordinate(101,201));
+        assertTrue(board.simpleCollision(board.getPlayerSprite(),scoreIncrease));
+        assertEquals(board.getScoreMultiplier(),1);
+        board.powerUpChecker();
+        assertEquals(board.getScoreMultiplier(),2);
+
+        board.activatePowerUps(); // Bullet Damage Checker
+        board.moveObject(0,100,board.getPlayerSprite());
+        assertEquals(board.getPlayerSprite().getCoordinate(),new Coordinate(101,301));
+        assertTrue(board.simpleCollision(board.getPlayerSprite(),damage));
+        assertEquals(board.getPlayerBulletDamage(),10);
+        board.powerUpChecker();
+        assertEquals(board.getPlayerBulletDamage(),20);
+
+        board.activatePowerUps();  //Attack speed Checker
+        board.moveObject(0,100,board.getPlayerSprite());
+        assertEquals(board.getPlayerSprite().getCoordinate(),new Coordinate(101,401));
+        assertTrue(board.simpleCollision(board.getPlayerSprite(),attackSpeedUp));
+        assertEquals(board.getTimeBetweenShots(),500);
+        board.powerUpChecker();
+        assertEquals(board.getTimeBetweenShots(),(int) 500*0.8);
+             
+        
+    }
+    
     
 
 
     public static void main(String[] args) throws OutOfBoundsException {
+        GameModel board = new GameModel();
+        
+        CoordinateSprite health = board.spawner.getHealth();
+        
+        Coordinate something = board.getPlayerSprite().getCoordinate();
+        System.out.println(something);
+        //board.getPlayerSprite().move(deltaRow, deltaCol);        
         
     }
         

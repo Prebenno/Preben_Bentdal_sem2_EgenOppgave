@@ -3,6 +3,7 @@ package inf101.game.view;
 import java.util.List;
 
 import inf101.game.States.FootType;
+import inf101.game.States.GameState;
 import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
@@ -77,6 +78,12 @@ public interface iRoomview {
 
     int getFloorNum();
 
+    public List<CoordinateSprite> getPowerUps();
+
+    public void changeGameState(GameState newState);
+    public GameState getGameState();
+
+    
     
 
 

@@ -15,6 +15,7 @@ import java.awt.Color;
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private SpriteValues entity;
     private Coordinate coordinate;
+    public int maxHealth =1000;
     private int HEALTH;
     private int DAMAGE = 10;
     private Direction direction;; 
@@ -39,22 +40,36 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         this.footType = FootType.STAND;
 
     }
-    public CoordinateSprite(SpriteValues entity, Coordinate coordinate, int health, Direction direction, FootType footType) {  
+    public CoordinateSprite(SpriteValues entity, Coordinate coordinate, int health,int maxHealth,int damage, Direction direction, FootType footType) {  
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
         this.direction = direction;
         this.footType = footType;
+        this.maxHealth = maxHealth;
+        this.DAMAGE = damage;
+        
 
     }
-    
-   
+    public void healthPowerup(){
+        this.maxHealth = (int) (this.maxHealth *1.2);
+    }
+    public void heal(){
+        this.HEALTH = this.maxHealth;
+    }
+    public int getMaxHealth(){
+        return this.maxHealth;
+    }
     public int getHealth(){
         return this.HEALTH;
     }
     public int getDamage(){
         return this.DAMAGE;
     }
+    public void setDamage(int newDamage){
+        this.DAMAGE = newDamage;
+    }
+    
     public CoordinateSprite changeCoordinate(Coordinate newCord){
         this.coordinate = newCord;
         return this;
@@ -96,9 +111,9 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
             return false;
         }
         CoordinateSprite coordinateSprite = (CoordinateSprite) o;
-        return Objects.equals(entity, coordinateSprite.entity) && Objects.equals(coordinate, coordinateSprite.coordinate) && HEALTH == coordinateSprite.HEALTH && DAMAGE == coordinateSprite.DAMAGE && Objects.equals(direction, coordinateSprite.direction) && Objects.equals(footType, coordinateSprite.footType) && damage == coordinateSprite.damage;
+        return Objects.equals(entity, coordinateSprite.entity) && Objects.equals(coordinate, coordinateSprite.coordinate) && maxHealth == coordinateSprite.maxHealth && HEALTH == coordinateSprite.HEALTH && DAMAGE == coordinateSprite.DAMAGE && Objects.equals(direction, coordinateSprite.direction) && Objects.equals(footType, coordinateSprite.footType) && damage == coordinateSprite.damage;
     }
-    
+
 
     @Override
     public int hashCode() {
@@ -126,7 +141,7 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public CoordinateSprite move(int deltaRow, int deltaCol){
         int oldRow = getCoordinate().getRow();
         int oldCol = getCoordinate().getColumn();
-        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH,this.direction,this.footType);
+        CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH,this.maxHealth,this.DAMAGE,this.direction,this.footType);
         return copy;
 
     }
@@ -142,7 +157,7 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         return this.HEALTH>0;
     }
     public CoordinateSprite copy(){   
-        return new CoordinateSprite(this.entity, this.coordinate, this.HEALTH,this.direction,this.footType);}
+        return new CoordinateSprite(this.entity, this.coordinate, this.HEALTH,this.maxHealth,this.DAMAGE,this.direction,this.footType);}
        
 }
    
