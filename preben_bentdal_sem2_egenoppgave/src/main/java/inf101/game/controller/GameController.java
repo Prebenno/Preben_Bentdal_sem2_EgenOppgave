@@ -1,26 +1,22 @@
 package inf101.game.controller;
 
-import inf101.game.States.FootType;
-import inf101.game.States.GameState;
-import inf101.game.States.Direction;
-import inf101.game.view.Roomview;
-import inf101.grid.Coordinate;
-import inf101.model.Sprite.Bullet;
-import inf101.model.Sprite.CoordinateSprite;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+
+import inf101.game.States.Direction;
+import inf101.game.States.FootType;
+import inf101.game.States.GameState;
+import inf101.game.view.Roomview;
+import inf101.grid.Coordinate;
+import inf101.model.Sprite.CoordinateSprite;
 
 public class GameController implements KeyListener,ActionListener {
 
@@ -28,10 +24,7 @@ public class GameController implements KeyListener,ActionListener {
     public Roomview view;
     private int x_velocity;
     private int y_velocity;
-    private int BULLETDIRX = 1;
-    private int BULLETDIRY = 0;
     private final int BULLETSPEED = 2;
-    private final int MAX_SPEED = 7;
     
     private boolean activatedPowerups = false;
     private boolean friction = false;
@@ -47,31 +40,33 @@ public class GameController implements KeyListener,ActionListener {
     
     Runnable gametick = new Runnable(){
         public void run(){
-        if (x_velocity > MAX_SPEED){
-            x_velocity = MAX_SPEED;
+            try {  
+                if (x_velocity > 7){
+                    x_velocity = 7;
+                }
+                if (y_velocity > 7){
+                    y_velocity = 7;
+                }
+                if (friction == false){
+                    x_velocity = (int) (x_velocity /1.2);
+                    y_velocity = (int) (y_velocity /1.2);
+                }
+                if (controller.enemyExists()){ 
+                    controller.monsterStep();
+                }
+                if (controller.moveObject(y_velocity, x_velocity, controller.getPlayerSprite()) == null){
+                    x_velocity = 0;
+                    y_velocity = 0;
+                }
+                if(controller.simpleCollision(controller.getPlayerSprite(), controller.getTrapDoor())){
+                    controller.nextFloor();
+                }
+                view.repaint();
+                controller.powerUpChecker();
+                
+            } catch (Exception e) {}  // since threads can be kind of buggy
         }
-        if (y_velocity > MAX_SPEED){
-            y_velocity = MAX_SPEED;
-        }
-        if (friction == false){
-            x_velocity = (int) (x_velocity /1.2);
-            y_velocity = (int) (y_velocity /1.2);
-        }
-        if (controller.getEnemySprites() != null){ 
-            controller.changeEnemies(controller.monsterStep());
-        
-        }
-        if (controller.moveObject(y_velocity, x_velocity, controller.getPlayerSprite()) == null){
-            x_velocity = 0;
-            y_velocity = 0;
-        }
-        if(controller.simpleCollision(controller.getPlayerSprite(), controller.getTrapDoor())){
-            controller.nextFloor();
-        }
-        view.repaint();
-        controller.powerUpChecker();
-            }
-        };
+    };
 
 
     
@@ -85,19 +80,16 @@ public class GameController implements KeyListener,ActionListener {
                     }
                 }
                 if (controller.getPlayerSprite() == null){
-                    bullet.shutdown();
-                    movement.shutdown();
+                    bullet.shutdown();  // shuts down bullet collision and movement
+                    movement.shutdown(); // shuts down movement
                     controller.changeGameState(GameState.GAME_OVER);
                 }
                 
-                try {  // to get the error messages from the thread
+                try {  
                     controller.moveAllBullets();
                     controller.checkAndDamageBullets();
                         
-                } catch (Exception e){  
-                    Thread t = Thread.currentThread();
-                    t.getUncaughtExceptionHandler().uncaughtException(t, e);
-                }
+                } catch (Exception e){}
             }
         
 
@@ -154,12 +146,12 @@ public class GameController implements KeyListener,ActionListener {
                         break;
                     case KeyEvent.VK_P:
                         if (controller.getGameState().equals(GameState.ACTIVE_GAME)){
-                            bullet.shutdown();
-                            movement.shutdown();
+                            bullet.shutdown();   // temporarly shuts down bullet movement
+                            movement.shutdown();  // temporarly shuts down player and monster movement
                             controller.changeGameState(GameState.PAUSED_GAME);
                         }else {
-                            this.movement = Executors.newScheduledThreadPool(1);
-                            this.bullet = Executors.newScheduledThreadPool(2);
+                            this.movement = Executors.newScheduledThreadPool(1);  // turns on player and monster movementx
+                            this.bullet = Executors.newScheduledThreadPool(2); // turns on bullet movement
                             movement.scheduleAtFixedRate(gametick, 0, 30, TimeUnit.MILLISECONDS);
                             bullet.scheduleAtFixedRate(bullets, 0, 6, TimeUnit.MILLISECONDS);
                             controller.changeGameState(GameState.ACTIVE_GAME);
@@ -173,38 +165,37 @@ public class GameController implements KeyListener,ActionListener {
             if (x_velocity > 0){
                 friction = false;
             }
-            controller.changeWalkingDirection(Direction.LEFT,player);
+            player.changeDirection(Direction.LEFT);
         }
         else if (movementx == 1) {
             if (x_velocity < 0){
                 friction = false;
             }
-            controller.changeWalkingDirection(Direction.RIGHT,player);          
+            player.changeDirection(Direction.RIGHT);          
         }
         if (movementy == 1) {
             if (y_velocity < 0){
                 friction = false;
             }
-            controller.changeWalkingDirection(Direction.DOWN,player); 
+            player.changeDirection(Direction.DOWN);
         }
         else if (movementy == -1)  {
             if (y_velocity > 0){
                 friction = false;
             }
-            controller.changeWalkingDirection(Direction.UP,player);      
+            player.changeDirection(Direction.UP);   
         }
         if (controller.getPlayerSprite() != null){
             x_velocity += movementx;
             y_velocity += movementy;
-        
             if (shot == false){
-                FootType x = controller.getWalkingType(player);
-                controller.changeFootType(x.next(),player);
+                FootType x = player.getFootType();
+                player.changeFootType(x.next());
             }
             else{
                 long timeNow = System.currentTimeMillis();
                 long time = timeNow - timeOfLastProjectile;
-                if (time > (controller.getTimeBetweenShots()) || time <0){
+                if (time > (controller.getTimeBetweenShots()) || time <0){ // checks if time between shots are over 0 and over required time before next bullet can get shot.
                     Coordinate newCord = controller.directiontoCoordinate(controller.getPlayerSprite());
                     controller.loadBullet(true,BULLETSPEED * newCord.getRow(),BULLETSPEED * newCord.getColumn(),controller.getPlayerSprite().getCoordinate());
                     timeOfLastProjectile = timeNow;

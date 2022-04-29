@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Objects;
 
 import inf101.model.Pixel;
-import inf101.model.Sprite.hitBox;
 
 public class SpriteValues {
     private Pixel pixels;

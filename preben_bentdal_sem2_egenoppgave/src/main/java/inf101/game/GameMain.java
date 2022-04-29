@@ -1,9 +1,8 @@
 package inf101.game;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
 
-import java.awt.*;
-import inf101.backround.Floor;
+import javax.swing.JFrame;
+
 import inf101.game.controller.GameController;
 import inf101.game.view.Roomview;
 import inf101.grid.OutOfBoundsException;

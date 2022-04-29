@@ -2,9 +2,7 @@ package inf101.game.view;
 
 import java.util.List;
 
-import inf101.game.States.FootType;
 import inf101.game.States.GameState;
-import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Pixel;
@@ -19,15 +17,6 @@ public interface iRoomview {
     /** @return number of columns in grid */
     int getColumns();
 
-    /**
-     * "Get all the pixels in the image, along with their coordinates."
-     * 
-     * The coordinate is a pair of integers, one of which is the x-coordinate and the other of which is
-     * the y-coordinate
-     * 
-     * @return An iterable of itemWithCoordinate<Pixel>
-     */
-    Iterable<itemWithCoordinate<Pixel>> getPixels();
 
     /**
      * Get all the bullets in the game.
@@ -50,13 +39,19 @@ public interface iRoomview {
      */
     CoordinateSprite getPlayerSprite();
 
+    
     /**
-     * Get the sprite of the enemy.
+     * Get the list of enemy sprites.
      * 
-     * @return The enemy sprite.
+     * @return A list of CoordinateSprite objects.
      */
     List<CoordinateSprite> getEnemySprites();
 
+    /**
+     * Returns the trap door's CoordinateSprite
+     * 
+     * @return The trap door represented as a CoordinateSprite.
+     */
     CoordinateSprite getTrapDoor();
 
     /**
@@ -74,16 +69,36 @@ public interface iRoomview {
     boolean enemyExists();
 
 
+    /**
+     * GetScore returns the score represented as a int
+     * 
+     * @return The score of the player.
+     */
     int getScore();
 
+    /**
+     * This function returns the floor number that the player is on
+     * 
+     * @return The floor number of the player.
+     */
     int getFloorNum();
 
+    /**
+     * > Returns a list of all power ups
+     * 
+     * @return A list of CoordinateSprite objects.
+     */
     public List<CoordinateSprite> getPowerUps();
 
-    public void changeGameState(GameState newState);
+
+    /**
+     * > Returns the current state of the game
+     * 
+     * @return The current game state.
+     */
     public GameState getGameState();
 
-    
+
     
 
 

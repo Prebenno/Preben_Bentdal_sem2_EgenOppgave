@@ -51,18 +51,18 @@ public class GameLogicTest {
         board.loadBullet(true, 1, 1,board.getPlayerSprite().getCoordinate());
         assertTrue(board.isBulletGonnaShoot());
 
-        board.bulletHit(board.getCopyOfBullets().get(0));
+        board.getAllBullets().remove((board.getAllBullets().get(0)));
         assertFalse(board.isBulletGonnaShoot());
         
         for (int bulletC = 1; bulletC < 10; bulletC++) {
             board.loadBullet(true,1,1,board.getPlayerSprite().getCoordinate());
-            assertEquals(bulletC, board.getCopyOfBullets().size());   
+            assertEquals(bulletC, board.getAllBullets().size());   
         }   
     }
     @Test
     void collisionTest(){
-        board.loadBullet(true,1,1,board.getPlayerSprite().getCoordinate());
-        CoordinateSprite enemy =board.getEnemySprites().get(0);
+        board.loadBullet(true,1,0,new Coordinate(50,50));
+        CoordinateSprite enemy =board.spawner.getRunner(new Coordinate (450,450));
         Bullet bullet = board.getAllBullets().get(0);
         Coordinate pathToEnemy = new Coordinate(enemy.getCoordinate().getRow()-bullet.getShape().getCoordinate().getRow(),
                                                 enemy.getCoordinate().getColumn()-bullet.getShape().getCoordinate().getColumn());
@@ -73,7 +73,6 @@ public class GameLogicTest {
         List<Bullet> newBullets = new ArrayList<Bullet>();
         newBullets.add(newBullet);
         board.changeBullets(newBullets);
-
         assertTrue(board.SpriteCollision(board.getAllBullets().get(0).getShape(), enemy));
     }
     @Test
@@ -128,14 +127,7 @@ public class GameLogicTest {
 
 
     public static void main(String[] args) throws OutOfBoundsException {
-        GameModel board = new GameModel();
-        
-        CoordinateSprite health = board.spawner.getHealth();
-        
-        Coordinate something = board.getPlayerSprite().getCoordinate();
-        System.out.println(something);
-        //board.getPlayerSprite().move(deltaRow, deltaCol);        
-        
+       
     }
         
     

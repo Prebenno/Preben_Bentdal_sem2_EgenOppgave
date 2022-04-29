@@ -17,7 +17,7 @@ import inf101.model.Sprite.SpriteSpawner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 import java.util.stream.StreamSupport;
 
 public class GameModel implements iRoomview ,IGameController {
@@ -28,12 +28,14 @@ public class GameModel implements iRoomview ,IGameController {
     private GameState gameState;
 
     private int PLAYER_TIME_BETWEEN_SHOTS = 500;
+    
     private int SCOREMULTIPLIER = 1;
     private int PlayerBulletDamage = 10;
-    public int score = 0;
+    private int MonsterBulletDamage = 50;
     public int floorNum = 1;
     public boolean finished = false;
     int counter = 0;
+    private int score;
 
     private List<CoordinateSprite> powerups = new ArrayList<CoordinateSprite>();
     private List<CoordinateSprite> enemySprites = new ArrayList<CoordinateSprite>();
@@ -106,10 +108,6 @@ public class GameModel implements iRoomview ,IGameController {
         return this.playerSprite;
     }
 
-    @Override
-    public FootType getWalkingType(CoordinateSprite object) {
-        return object.getFootType();
-    }
     
 
     @Override
@@ -125,22 +123,17 @@ public class GameModel implements iRoomview ,IGameController {
     public boolean enemyExists() {
         return ((this.enemySprites.size() > 0)) && (!(isAllNulls(this.enemySprites)));   
     }
-    @Override
-    public void changeEnemies(List<CoordinateSprite> newEnemies) {
-        this.enemySprites = newEnemies;
-        
-    }
-    @Override
-    public Iterable<itemWithCoordinate<Pixel>> getPixels() {
-        return myroom;
-    }
-
+    
    
     public Coordinate getCenter(){
         return spawner.startPos;
     }
 
-    @Override
+    /**
+     * This function takes a list of bullets and sets the list of bullets in the game to that list.
+     * Used for testing
+     * @param newBullets The new list of bullets to replace the old one.
+     */
     public void changeBullets(List<Bullet> newBullets) {
         this.bullets = newBullets;
         
@@ -176,30 +169,14 @@ public class GameModel implements iRoomview ,IGameController {
         return null;
     }  
     @Override
-    public void changeWalkingDirection(Direction direction, CoordinateSprite object){
-        if (object != null){
-            if (object.equals(this.playerSprite)){
-                this.playerSprite.changeDirection(direction);
-                }
-            for (CoordinateSprite enemy : this.enemySprites) {
-                if (object.equals(enemy)){
-                    enemy.changeDirection(direction);
-                }
-            }
-        }
-    }
-    @Override
-    public void changeFootType(FootType walking,CoordinateSprite sprite){
-        sprite.changeFootType(walking);
-    }
-    @Override
     public void loadBullet(boolean shot,int Xspeed, int Yspeed, Coordinate startCoordinate) {
-        this.bullets.add(new Bullet(Xspeed,Yspeed,spawner.getBulletSprite(startCoordinate),shot,PlayerBulletDamage));    
+        int damage = PlayerBulletDamage;
+        if (!shot){
+            damage = MonsterBulletDamage;
+        }
+        this.bullets.add(new Bullet(Xspeed,Yspeed,spawner.getBulletSprite(startCoordinate),shot,damage));    
     }
-    @Override
-    public void bulletHit(Bullet bullet) {
-        this.bullets.remove(bullet);
-    }
+    
     @Override
     public List<Bullet> getAllBullets() {
         
@@ -210,7 +187,10 @@ public class GameModel implements iRoomview ,IGameController {
         return (bullets.size() > 0);
     }
 
-    @Override
+    
+    /**
+     * This function resets the bullets array to an empty array, used for testing
+     */
     public void resetBullet() {
         List<Bullet> test = new ArrayList<Bullet>();
         this.bullets = test;
@@ -260,7 +240,7 @@ public class GameModel implements iRoomview ,IGameController {
     }
 
     @Override
-    public List<CoordinateSprite> monsterStep() {
+    public void monsterStep() {
         if (this.playerSprite != null){
             List<CoordinateSprite> enemies = new ArrayList<CoordinateSprite>();
             for (CoordinateSprite enemy : this.enemySprites) {
@@ -270,16 +250,16 @@ public class GameModel implements iRoomview ,IGameController {
                 newEnemy = movementHelper(newEnemy);
                 enemies.add(newEnemy);       
             }
-            return enemies;   
+            this.enemySprites =  enemies;   
         }
-        return enemySprites;
+        
     }   
 
     public void monsterShoot(CoordinateSprite sprite) {
-        Random rand = new Random(); //instance of random class
         if(sprite.getEntity().equals(SpriteValues.SHOOTER)){
-            int randomnum = rand.nextInt(50); 
-            if (randomnum == 25){
+            int movementCount = sprite.getEntity().getTotalMovements();
+            sprite.getEntity().addOneStep();  
+            if (movementCount % 100 == 0){
                 Coordinate bulletDir = directiontoCoordinate(sprite);
                 loadBullet(false, bulletDir.getRow(), bulletDir.getColumn(),sprite.getCoordinate());
             }
@@ -315,7 +295,7 @@ public class GameModel implements iRoomview ,IGameController {
         }
         if (!SpriteCollision(newEnemy,enemy)){
             if (enemy.getEntity().getTotalMovements() % 5 == 0){  //To prevent to quick switches between sprites, causing the walking effect to look wierd
-                FootType oldFootType = this.getWalkingType(enemy);
+                FootType oldFootType = enemy.getFootType();
                 newEnemy.changeFootType(oldFootType.next());
                     }
             enemy.getEntity().addOneStep();
@@ -439,15 +419,6 @@ public class GameModel implements iRoomview ,IGameController {
         return enemy;
     }
 
-    @Override 
-        public List<Bullet> getCopyOfBullets(){
-        List<Bullet> mybullets = new ArrayList<Bullet>();
-        for (Bullet bullet : getAllBullets()) {
-            mybullets.add(bullet);
-        }
-        return mybullets;
-    }
-
     @Override
     public void activateTrapDoor() {
         this.trapdoor = spawner.getTrapDoor();
@@ -459,6 +430,7 @@ public class GameModel implements iRoomview ,IGameController {
         this.enemySprites = spawner.getEnemyWave();
         this.trapdoor = null;
         this.finished = false;
+        this.MonsterBulletDamage =   (int) (this.MonsterBulletDamage *1.1);
         if (this.floorNum % 10 == 0) {
             this.spawner.addEnemy();
 
@@ -471,8 +443,6 @@ public class GameModel implements iRoomview ,IGameController {
         }
         this.myroom = myfloor.room;   
         floorNum++;
-        
-        
     }
     @Override
     public void moveAllBullets() {
