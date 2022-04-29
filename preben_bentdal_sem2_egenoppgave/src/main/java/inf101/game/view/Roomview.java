@@ -340,8 +340,8 @@ public class Roomview extends JComponent {
     }
 
     private void drawbullet(Graphics canvas, int width, int height, Bullet bullet){
-    int x_Position = view.getCenter().getRow();
-    int y_Position = view.getCenter().getColumn();
+    int x_Position = view.getCenter().getRow()+9;
+    int y_Position = view.getCenter().getColumn()+9;
     for (itemWithCoordinate<Pixel> pixel : bullet.getShape()) {
         int row = pixel.getCoordinate().getRow();
         int col = pixel.getCoordinate().getColumn();
