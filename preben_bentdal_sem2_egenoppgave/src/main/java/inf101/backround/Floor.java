@@ -15,9 +15,4 @@ public class Floor {
         this.room = new Room(500,500, floortile);
 
     }
-    public Floor(boolean wall) throws OutOfBoundsException{
-        Pixel floortile =new Pixel(new Color(51,51,51),false);
-       
-        this.room = new Room(20,300, floortile);  
-}
 }

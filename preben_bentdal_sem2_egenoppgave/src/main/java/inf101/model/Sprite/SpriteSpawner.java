@@ -25,32 +25,50 @@ public class SpriteSpawner {
     public CoordinateSprite getTrapDoor(){
         return getTrapDoor(new Coordinate(250,250),999999999);
     }
-    public CoordinateSprite getShooter(){
-        return getShooter(new Coordinate(300,450),50);
+    public CoordinateSprite getShooter(Coordinate pos){
+        return getShooter(pos,50);
     }
 
     
     
     public CoordinateSprite getPlayer(Coordinate position, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.PLAYER, position ,health);
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.PLAYER, position ,health);
         return myCordSprite;
 
     }
     public CoordinateSprite getBulletSprite(Coordinate position){
-        CoordinateSprite myBullet = new CoordinateSprite (PlayerValues.BULLET, position,0);
+        CoordinateSprite myBullet = new CoordinateSprite (SpriteValues.BULLET, position,0);
         return myBullet;
     }
     public CoordinateSprite getTrapDoor(Coordinate position, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.TRAPDOOR, position ,health);
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.TRAPDOOR, position ,health);
         return myCordSprite;
 
     }
     public CoordinateSprite getShooter(Coordinate posision, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.SHOOTER, posision ,health);
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.SHOOTER, posision ,health);
         return myCordSprite;
     }
     public CoordinateSprite getRunner(Coordinate posision, int health){
-        CoordinateSprite myCordSprite = new CoordinateSprite (PlayerValues.RUNNER, posision ,health);
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.RUNNER, posision ,health);
         return myCordSprite;
     }
+    
+    public CoordinateSprite getHealth(Coordinate position){
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.HEALTH,position,99999);
+        return myCordSprite;
+    }
+    public CoordinateSprite getScoreIncrease(Coordinate position){
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.HEALTH,position,99999);
+        return myCordSprite;
+    }
+    public CoordinateSprite getAttackIncrease(Coordinate position){
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.HEALTH,position,99999);
+        return myCordSprite;
+    }
+    public CoordinateSprite getAttackSpeedIncrease(Coordinate position){
+        CoordinateSprite myCordSprite = new CoordinateSprite (SpriteValues.HEALTH,position,99999);
+        return myCordSprite;
+    }
+    
 }

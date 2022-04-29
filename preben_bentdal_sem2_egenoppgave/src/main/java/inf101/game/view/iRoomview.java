@@ -29,13 +29,6 @@ public interface iRoomview {
     Iterable<itemWithCoordinate<Pixel>> getPixels();
 
     /**
-     * "Get all the pixels in the sprite, along with their coordinates."
-     * 
-     * @return An iterable of itemWithCoordinate<Pixel>
-     */
-    Iterable<itemWithCoordinate<Pixel>> getSpritePixels();
-
-    /**
      * Get all the bullets in the game.
      * 
      * @return An ArrayList of all the bullets in the game.
@@ -48,20 +41,6 @@ public interface iRoomview {
      * @return A Coordinate object.
      */
     Coordinate getCenter();
-
-    /**
-     * This function returns the height of the player.
-     * 
-     * @return The height of the player.
-     */
-    int getPlayerHeight();
-
-    /**
-     * This function returns the width of the player.
-     * 
-     * @return The width of the player.
-     */
-    int getPlayerWidth();
 
     /**
      * This function returns a CoordinateSprite object that represents the player's sprite.
@@ -79,18 +58,12 @@ public interface iRoomview {
 
     CoordinateSprite getTrapDoor();
 
-    
-    
-
     /**
      * If the bullet is going to shoot, return true, otherwise return false.
      * 
      * @return A boolean value.
      */
     boolean isBulletGonnaShoot();
-
-
-    
 
     /**
      * Returns true if an enemy exists, false otherwise.
@@ -103,6 +76,8 @@ public interface iRoomview {
     int getScore();
 
     int getFloorNum();
+
+    
 
 
    

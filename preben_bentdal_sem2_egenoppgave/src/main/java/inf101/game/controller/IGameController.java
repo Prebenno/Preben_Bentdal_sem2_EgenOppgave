@@ -10,26 +10,7 @@ import inf101.model.Sprite.CoordinateSprite;
 
 public interface IGameController {
 
-   /**
-    * This function moves the object to the new location if the new location is valid
-    * 
-    * @param deltaRow The number of rows to move the object.
-    * @param deltaColumn The number of columns to move the object.
-    * @param object The object you want to move.
-    * @return A boolean value.
-    */
-    //boolean moveObject(int deltaRow,int  deltaColumn, CoordinateSprite object); old functions
-
-    /**
-     * boolean moveBullet(int deltaRow,int  deltaColumn, Bullet object);
-     * 
-     * @param deltaRow The number of rows to move the object.
-     * @param deltaColumn The number of columns to move the object.
-     * @param object The object that you want to move.
-     * @return A boolean value.
-     */
-    //Bullet moveBullet(int deltaRow,int  deltaColumn, Bullet object); old functions
-
+  
     /**
      * Get the player's sprite.
      * 
@@ -54,13 +35,7 @@ public interface IGameController {
      */
     FootType getWalkingType(CoordinateSprite object);
 
-    /**
-     * This function returns the direction the player is facing.
-     * 
-     * @return The direction the player is facing.
-     */
-    Direction getDirection();
-
+   
    
     /**
      * Returns true if there is a bullet in the chamber, false otherwise.
@@ -98,7 +73,7 @@ public interface IGameController {
      * @param movementx The x-axis movement of the bullet.
      * @param movementy The y-axis movement of the bullet.
      */
-    void loadBullet(boolean b, int movementx, int movementy);
+    void loadBullet(boolean b, int movementx, int movementy,Coordinate startCoordinate);
 
     /**
      * Resets the bullet's position to the player's position
@@ -114,7 +89,7 @@ public interface IGameController {
     void changeBullets(List<Bullet> newBullets);
 
 
-    CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever);
+    public CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever);
 
     /**
      * Moves the object in the direction of the deltaRow and deltaColumn by one space
@@ -137,14 +112,6 @@ public interface IGameController {
     public List<CoordinateSprite> getEnemySprites();
 
 
-    boolean didDamage(CoordinateSprite spriteOne, CoordinateSprite spriteTwo);
-
-
-
-    public void changeEnemyBullets(List<Bullet> bullets);
-   
-
-    
     public <E> boolean simpleCollision (E attacker,CoordinateSprite victim);
 
     void changeEnemies(List<CoordinateSprite> newEnemies);
@@ -163,6 +130,12 @@ public interface IGameController {
     void activateTrapDoor();
 
     void nextFloor();
+
+    public int getTimeBetweenShots();
+      
+
+    public void changeTimeBetweenShots(int newTime);
+       
         
     
 

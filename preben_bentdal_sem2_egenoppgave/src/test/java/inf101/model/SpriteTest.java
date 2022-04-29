@@ -18,14 +18,11 @@ import inf101.model.Sprite.CoordinateSprite;
 public class SpriteTest {
     CoordinateSprite spriteOne;
     CoordinateSprite spriteTwo;
-
     @BeforeEach
 	void setUp(){
         this.spriteOne = new CoordinateSprite();
-        this.spriteTwo = new CoordinateSprite();
-        
+        this.spriteTwo = new CoordinateSprite();   
     }
-
     @Test
     void movementTest(){
         Coordinate oldCord = this.spriteOne.getCoordinate();
@@ -37,9 +34,7 @@ public class SpriteTest {
 
         assertEquals(this.spriteTwo.getCoordinate().getRow(),0);
         assertEquals(this.spriteTwo.getCoordinate().getColumn(),0);
-
     }
-
     @Test 
     void rotateTest(){
         assertEquals(this.spriteOne.getDirection(), Direction.RIGHT);

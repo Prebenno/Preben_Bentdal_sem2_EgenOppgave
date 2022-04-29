@@ -13,12 +13,9 @@ import inf101.model.GameModel;
 public class GameMain {
     
     public static void main(String[] args) throws OutOfBoundsException{
-
         JFrame frame = new JFrame("INF101 Pyramid game");
-       
         GameModel myfloor = new GameModel();
         Roomview view = new Roomview(myfloor);
-
         GameController gameController = new GameController(myfloor, view);        
         frame.setSize(800,700);
         frame.setLayout(new BorderLayout());

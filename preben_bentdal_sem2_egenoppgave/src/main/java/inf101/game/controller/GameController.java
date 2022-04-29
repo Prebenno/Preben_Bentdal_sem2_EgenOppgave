@@ -25,27 +25,27 @@ public class GameController implements KeyListener,ActionListener {
 
     private IGameController controller;
     public Roomview view;
-    private boolean foot;
     private int x_velocity;
     private int y_velocity;
-    
-
     private int BULLETDIRX = 1;
     private int BULLETDIRY = 0;
     private final int BULLETSPEED = 2;
+    
     private boolean friction = false;
 
     ScheduledExecutorService movement = Executors.newScheduledThreadPool(1);
     ScheduledExecutorService bullet = Executors.newScheduledThreadPool(2);
     
+    private long timeOfLastProjectile;
     private final Set<Integer> pressedKeys = new HashSet<>();
     private boolean once = true;
     private boolean shot = false;
-    Random rand = new Random(); //instance of random class
+    
     
     Runnable gametick = new Runnable(){
         public void run(){
             try {   // to get the error messages from the thread
+                
             if (x_velocity > 7){
                 x_velocity = 7;
             }
@@ -58,10 +58,7 @@ public class GameController implements KeyListener,ActionListener {
             }
             if (controller.getEnemySprites() != null){ 
                 controller.changeEnemies(controller.monsterStep());
-                int randomnum = rand.nextInt(50); 
-                if (randomnum == 25){
-                    //controller.monsterShoot();
-                }
+              
             }
             if (controller.moveObject(y_velocity, x_velocity, controller.getPlayerSprite()) == null){
                 x_velocity = 0;
@@ -90,10 +87,7 @@ public class GameController implements KeyListener,ActionListener {
                     bullet.shutdown();
                     movement.shutdown();
                 }
-                if (shot ==  true){
-                    controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX);
-                    shot = false;
-                }
+                
                 try {  // to get the error messages from the thread
                     controller.moveAllBullets();
                     controller.checkAndDamageBullets();
@@ -106,8 +100,6 @@ public class GameController implements KeyListener,ActionListener {
         
 
     };
-
-
 
     public GameController(IGameController controller, Roomview view){
         this.controller = controller;
@@ -202,8 +194,20 @@ public class GameController implements KeyListener,ActionListener {
             x_velocity += movementx;
             y_velocity += movementy;
         
-            FootType x = controller.getWalkingType(player);
-            controller.changeFootType(x.next(),player);
+            if (shot == false){
+                FootType x = controller.getWalkingType(player);
+                controller.changeFootType(x.next(),player);
+            }
+            else{
+                long timeNow = System.currentTimeMillis();
+                long time = timeNow - timeOfLastProjectile;
+                if (time > (controller.getTimeBetweenShots()) || time <0){
+                    controller.loadBullet(true,BULLETSPEED * BULLETDIRY,BULLETSPEED * BULLETDIRX,controller.getPlayerSprite().getCoordinate());
+                    timeOfLastProjectile = timeNow;
+                    }
+                shot = false;
+            }
+            
         }
         
 

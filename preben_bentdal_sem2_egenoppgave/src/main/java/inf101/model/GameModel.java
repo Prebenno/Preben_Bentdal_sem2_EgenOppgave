@@ -10,12 +10,13 @@ import inf101.grid.OutOfBoundsException;
 import inf101.grid.itemWithCoordinate;
 import inf101.model.Sprite.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
-import inf101.model.Sprite.PlayerValues;
+import inf101.model.Sprite.SpriteValues;
 import inf101.model.Sprite.SpriteSpawner;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.StreamSupport;
 
 public class GameModel implements iRoomview ,IGameController {
@@ -24,34 +25,42 @@ public class GameModel implements iRoomview ,IGameController {
     private CoordinateSprite playerSprite;
     private CoordinateSprite trapdoor;
 
-
+    
+    private int PLAYER_TIME_BETWEEN_SHOTS = 20;
     public int score = 0;
     public int floorNum = 1;
     public boolean finished = false;
+    int counter = 0;
 
-    private List<CoordinateSprite> enemySprites = new ArrayList();
+    private List<CoordinateSprite> enemySprites = new ArrayList<CoordinateSprite>();
     private List<Bullet> bullets = new ArrayList<>();
-    private List<Bullet> enemyBullets = new ArrayList<>();
-
-    private int BULLETDAMAGE = 10;
+    private int PlayerBulletDamage = 10;
     
     private SpriteSpawner spawner;
 
     
 
     public GameModel() throws OutOfBoundsException {
-        
         this.spawner = new SpriteSpawner();
         this.spawner.setSenterColumn();
         this.playerSprite = spawner.getStarterSprite();
         //this.enemySprites.add(spawner.getStarterSprite2()); 
-        //this.enemySprites.add(spawner.getStarterSprite3()); 
-        this.enemySprites.add(spawner.getStarterSprite4()); 
-
+        this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
+        this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
+        //this.enemySprites.add(spawner.getShooter(new Coordinate (250,260))); 
+        //this.enemySprites.add(spawner.getStarterSprite4());
         this.myfloor = new Floor();
         this.myroom = myfloor.room;   
     }
 
+    @Override 
+    public int getTimeBetweenShots(){
+        return this.PLAYER_TIME_BETWEEN_SHOTS;
+    }
+
+    public void changeTimeBetweenShots(int newTime){
+        this.PLAYER_TIME_BETWEEN_SHOTS = newTime;
+    }
     @Override 
     public int getScore(){
         return this.score;
@@ -75,12 +84,6 @@ public class GameModel implements iRoomview ,IGameController {
     public CoordinateSprite getPlayerSprite() {
         
         return this.playerSprite;
-    }
-
-    @Override
-    public Direction getDirection() {
-        
-        return this.playerSprite.getDirection();
     }
 
     @Override
@@ -112,24 +115,11 @@ public class GameModel implements iRoomview ,IGameController {
         return myroom;
     }
 
-    @Override
-    public Iterable<itemWithCoordinate<Pixel>> getSpritePixels() {
-        
-        return playerSprite;
-    }
    
     public Coordinate getCenter(){
         return spawner.startPos;
     }
 
-    public int getPlayerWidth(){
-        return playerSprite.getWidth();
-
-    }
-    public int getPlayerHeight(){
-        return playerSprite.getHeight();
-
-    }
     @Override
     public void changeBullets(List<Bullet> newBullets) {
         this.bullets = newBullets;
@@ -159,7 +149,7 @@ public class GameModel implements iRoomview ,IGameController {
                     }
                 else if (object instanceof Bullet){
                     if ((myroom.bulletNotInWall(testcord))) {
-                        Bullet myNewBullet = new Bullet(bullet.getXspeed(), bullet.getYspeed(), bullet.getShape().move(deltaRow, deltaColumn));
+                        Bullet myNewBullet = new Bullet(bullet.getXspeed(), bullet.getYspeed(), bullet.getShape().move(deltaRow, deltaColumn),bullet.isPlayerBullet(),bullet.getDamage());
                         return  myNewBullet;}
                     } 
             }   
@@ -170,49 +160,31 @@ public class GameModel implements iRoomview ,IGameController {
         if (object != null){
             if (object.equals(this.playerSprite)){
                 this.playerSprite.changeDirection(direction);
-                
                 }
             for (CoordinateSprite enemy : this.enemySprites) {
                 if (object.equals(enemy)){
                     enemy.changeDirection(direction);
-                    
-                    }
-                }
-            }
-       
-
-        }
-    @Override
-    public void changeFootType(FootType walking, CoordinateSprite object){
-        if (object != null){
-            FootType newFootType = object.getFootType();
-            if (object.equals(this.playerSprite)){
-                this.playerSprite.changeFootType(newFootType);
-
-            } 
-            for (CoordinateSprite enemy : this.enemySprites) {
-                if (object.equals(enemy)){
-                    enemy.changeFootType(newFootType);
                 }
             }
         }
     }
     @Override
-    public void loadBullet(boolean shot,int Xspeed, int Yspeed) {
-        this.bullets.add(new Bullet(Xspeed,Yspeed,spawner.getBulletSprite(this.playerSprite.getCoordinate())));
-        
+    public void changeFootType(FootType walking,CoordinateSprite sprite){
+        sprite.changeFootType(walking);
+    }
+    @Override
+    public void loadBullet(boolean shot,int Xspeed, int Yspeed, Coordinate startCoordinate) {
+        this.bullets.add(new Bullet(Xspeed,Yspeed,spawner.getBulletSprite(startCoordinate),shot,PlayerBulletDamage));    
     }
     @Override
     public void bulletHit(Bullet bullet) {
         this.bullets.remove(bullet);
-        
     }
     @Override
     public List<Bullet> getAllBullets() {
         
         return this.bullets;
     }
-    
     @Override
     public boolean isBulletGonnaShoot() {
         return (bullets.size() > 0);
@@ -227,20 +199,11 @@ public class GameModel implements iRoomview ,IGameController {
     
     @Override
     public CoordinateSprite damageObject(CoordinateSprite damageObject, CoordinateSprite reciever) {
-            if(!reciever.damage(BULLETDAMAGE)){
+            if(!reciever.damage(damageObject.getDamage())){ //damaging object and checking if reciever is dead
                 this.score+= (2*this.floorNum);
                 return null; // of object is dead   
             }
         return reciever; 
-    }
-
-    @Override
-    public boolean didDamage(CoordinateSprite spriteOne, CoordinateSprite spriteTwo){
-        if (spriteOne.getHealth() != spriteTwo.getHealth()){
-            return true;
-        }
-        return false;
-
     }
 
     /**
@@ -265,8 +228,6 @@ public class GameModel implements iRoomview ,IGameController {
 
        return false;
     }
-    
-    
     /**
      * https://stackoverflow.com/questions/6243414/ways-to-check-if-an-arraylist-contains-only-null-values
      * If all the elements in the array are null, return true, otherwise return false.
@@ -281,31 +242,29 @@ public class GameModel implements iRoomview ,IGameController {
     @Override
     public List<CoordinateSprite> monsterStep() {
         if (this.playerSprite != null){
-   
             List<CoordinateSprite> enemies = new ArrayList<CoordinateSprite>();
             for (CoordinateSprite enemy : this.enemySprites) {
                 CoordinateSprite newEnemy = enemy.copy(); //to prevent modificationerror
-                Coordinate playerCoordinate = this.playerSprite.getCoordinate();
-                Coordinate enemyCoordinate = newEnemy.getCoordinate();
-                int playerColumn = playerCoordinate.getColumn();
-                int playerRow = playerCoordinate.getRow();
-                int enemyColumn = enemyCoordinate.getColumn();
-                int enemyRow = enemyCoordinate.getRow();
-                newEnemy = walkingDirectionHelper(playerRow, enemyRow, playerColumn,enemyColumn,enemy);
-                newEnemy = movementHelper(playerRow, enemyRow, playerColumn,enemyColumn,enemy);
+                monsterShoot(newEnemy);
+                newEnemy = walkingDirectionHelper(enemy);
+                newEnemy = movementHelper(newEnemy);
                 enemies.add(newEnemy);       
             }
             return enemies;   
         }
         return enemySprites;
-}
+    }   
 
-    @Override
-    public void changeEnemyBullets(List<Bullet> bullets){
-        this.enemyBullets = bullets;
-
+    public void monsterShoot(CoordinateSprite sprite) {
+        Random rand = new Random(); //instance of random class
+        if(sprite.getEntity().equals(SpriteValues.SHOOTER)){
+            int randomnum = rand.nextInt(50); 
+            if (randomnum == 25){
+                Coordinate bulletDir = directiontoCoordinate(sprite);
+                loadBullet(false, bulletDir.getRow(), bulletDir.getColumn(),sprite.getCoordinate());
+            }
+        }
     }
-    
     /**
      * If the player is to the right of the enemy, move the enemy to the right. If the player is to the
      * left of the enemy, move the enemy to the left. If the player is above the enemy, move the enemy
@@ -316,7 +275,39 @@ public class GameModel implements iRoomview ,IGameController {
      * @param playerColumn the column of the player
      * @param enemyColumn the column of the enemy
      */
-    public CoordinateSprite movementHelper(int playerRow, int enemyRow, int playerColumn, int enemyColumn,CoordinateSprite enemy){
+    public CoordinateSprite movementHelper(CoordinateSprite enemy){
+        Coordinate newCord = pathToEnemy(enemy);
+        int newRow = newCord.getRow();
+        int newColumn = newCord.getColumn();
+        if (enemy.getEntity().equals(SpriteValues.SHOOTER)){ // to prevent shooter from running into player
+            int row_diff = Math.abs(this.playerSprite.getCoordinate().getRow()-enemy.getCoordinate().getRow());
+            int column_diff = Math.abs(this.playerSprite.getCoordinate().getColumn()-enemy.getCoordinate().getColumn());
+            if (row_diff < 180 && (column_diff < 5)){ //i want the shooter to stay a little bit away from the player
+                newRow = 0;
+            }
+            if (column_diff < 180 && (row_diff < 5)){
+                newColumn = 0;
+            }
+        }
+        CoordinateSprite newEnemy = enemy.move(newRow * enemy.getEntity().getSpeed(), newColumn * enemy.getEntity().getSpeed());
+        if (newCollision(this.playerSprite,this.playerSprite)){
+            this.playerSprite = damageObject(newEnemy,this.playerSprite);
+        }
+        if (!newCollision(newEnemy,enemy)){
+            if (enemy.getEntity().getTotalMovements() % 5 == 0){  //To prevent to quick switches between sprites, causing the walking effect to look wierd
+                FootType oldFootType = this.getWalkingType(enemy);
+                newEnemy.changeFootType(oldFootType.next());
+                    }
+            enemy.getEntity().addOneStep();
+            return newEnemy;}
+        return enemy;
+    }
+           
+    public Coordinate pathToEnemy(CoordinateSprite enemy){
+        int playerRow = this.playerSprite.getCoordinate().getRow();
+        int playerColumn = this.playerSprite.getCoordinate().getColumn();
+        int enemyRow = enemy.getCoordinate().getRow();
+        int enemyColumn = enemy.getCoordinate().getColumn();
         int newRow = 0;
         int newColumn = 0;
         if (playerRow > enemyRow +1){
@@ -331,27 +322,9 @@ public class GameModel implements iRoomview ,IGameController {
         else if (playerColumn < enemyColumn){
             newColumn = -1;
         }
-        if (enemy.getEntity().equals(PlayerValues.SHOOTER)){ // to prevent shooter from running into player
-            int row_diff = Math.abs(playerRow-newRow);
-            int column_diff = Math.abs(playerColumn-enemyColumn);
-            if (row_diff > 50){
-                newRow = 0;
-            }
-            if (column_diff > 50){
-                newColumn = 0;
-            }
-        }
-        CoordinateSprite newEnemy = enemy.move(newRow, newColumn);
-        if (newCollision(this.playerSprite,this.playerSprite)){
-            this.playerSprite = damageObject(newEnemy,this.playerSprite);
-        }
-        if (!newCollision(newEnemy,enemy)){
-            return newEnemy; }
-        return enemy;
+        return new Coordinate(newRow,newColumn);
+
     }
-   
-     
-    
     
     @Override
     public boolean newCollision(CoordinateSprite newPositionSprite, CoordinateSprite oldPositionSprite){
@@ -373,8 +346,6 @@ public class GameModel implements iRoomview ,IGameController {
         return false;
     }
      
-    
-
     @Override
     public <E> boolean simpleCollision (E Object,CoordinateSprite victim){
         Coordinate attackerCords = null;
@@ -411,8 +382,6 @@ public class GameModel implements iRoomview ,IGameController {
         }
         return false; 
     }
-    
-   
      /**
      * //this idea was gotten from
      * //https://stackoverflow.com/questions/30168294/how-to-make-an-enemy-shoot-in-the-players-direction
@@ -425,7 +394,12 @@ public class GameModel implements iRoomview ,IGameController {
      * @param playerColumn the column of the player
      * @param enemyColumn the column of the enemy
      */
-    public CoordinateSprite walkingDirectionHelper(int playerRow, int enemyRow, int playerColumn, int enemyColumn,CoordinateSprite enemy){
+    public CoordinateSprite walkingDirectionHelper(CoordinateSprite enemy){
+        int playerRow = this.playerSprite.getCoordinate().getRow();
+        int playerColumn = this.playerSprite.getCoordinate().getColumn();
+        int enemyRow = enemy.getCoordinate().getRow();
+        int enemyColumn = enemy.getCoordinate().getColumn();
+
         double vecX = playerRow-enemyRow;
         double vecY = playerColumn-enemyColumn;
         double angle = Math.toDegrees(Math.atan(vecY /vecX));
@@ -450,7 +424,6 @@ public class GameModel implements iRoomview ,IGameController {
         List<Bullet> mybullets = new ArrayList<Bullet>();
         for (Bullet bullet : getAllBullets()) {
             mybullets.add(bullet);
-            
         }
         return mybullets;
     }
@@ -478,11 +451,10 @@ public class GameModel implements iRoomview ,IGameController {
         
         
     }
-
     @Override
     public void moveAllBullets() {
         List<Bullet> newBullets = new ArrayList<Bullet>();
-        for (Bullet bullet : this.bullets) {// first mmoving bullets
+        for (Bullet bullet : this.bullets) {// first moving bullets
             Bullet movedBullet = (Bullet) moveObject(bullet.getXspeed(), bullet.getYspeed(), bullet);
             if (movedBullet != null){
                 newBullets.add(movedBullet);}
@@ -493,32 +465,47 @@ public class GameModel implements iRoomview ,IGameController {
     @Override
     public void checkAndDamageBullets() {
         List<Bullet> deadBullets = new ArrayList<Bullet>();
-       
         List<CoordinateSprite> newEnemies = new ArrayList<CoordinateSprite>();
         for (CoordinateSprite enemy : this.enemySprites){
             CoordinateSprite enemyCopy = enemy;
-            for (Bullet bullet : this.bullets) {                   
-                if(simpleCollision(bullet, enemyCopy)){ 
-                    enemyCopy = enemy.copy(); // to prevent ConcurrentModificationException
-                    enemyCopy = damageObject(bullet.getShape(),enemyCopy);
-                    deadBullets.add(bullet);
+            for (Bullet bullet : this.bullets) {     
+                if (bullet.isPlayerBullet()){              
+                    if(simpleCollision(bullet, enemyCopy)){ 
+                        enemyCopy = enemy.copy(); // to prevent ConcurrentModificationException
+                        enemyCopy = damageObject(bullet.getShape(),enemyCopy);
+                        deadBullets.add(bullet);
+                        }
+                    }
+                if (!bullet.isPlayerBullet()){
+                    if(simpleCollision(bullet,this.playerSprite)){
+                        this.playerSprite = damageObject(bullet.getShape(),this.playerSprite);
+                        deadBullets.add(bullet);
+                        }
                     }
                 }
             if (enemyCopy != null){
                 newEnemies.add(enemyCopy);}
         }
     this.enemySprites = newEnemies;
+    //Here enemy bullets are caclulated, bullets have a true function in them witch desides what object they will damage when
     for (Bullet bullet : deadBullets) {
         if (this.bullets.contains(bullet)){
             this.bullets.remove(bullet);
             }
         }
     }
-    
 
     
-    
-       
-    
-
+    public Coordinate directiontoCoordinate(CoordinateSprite sprite){
+        switch (sprite.getDirection()){
+            case DOWN:
+                return new Coordinate(1,0);
+            case LEFT:
+                return new Coordinate(0,-1);
+            case RIGHT:
+                return new Coordinate(0,1);
+            default:
+                return new Coordinate(-1,0);      
+        }
+    }
 }

@@ -4,7 +4,7 @@ package inf101.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+
 
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import inf101.game.States.Direction;
+
 import inf101.grid.Coordinate;
 import inf101.grid.OutOfBoundsException;
 import inf101.model.Sprite.Bullet;
@@ -48,20 +48,20 @@ public class GameLogicTest {
     @Test
     void bulletTest(){
         assertFalse(board.isBulletGonnaShoot());
-        board.loadBullet(true, 1, 1);
+        board.loadBullet(true, 1, 1,board.getPlayerSprite().getCoordinate());
         assertTrue(board.isBulletGonnaShoot());
 
         board.bulletHit(board.getCopyOfBullets().get(0));
         assertFalse(board.isBulletGonnaShoot());
         
         for (int bulletC = 1; bulletC < 10; bulletC++) {
-            board.loadBullet(true,1,1);
+            board.loadBullet(true,1,1,board.getPlayerSprite().getCoordinate());
             assertEquals(bulletC, board.getCopyOfBullets().size());   
         }   
     }
     @Test
     void collisionTest(){
-        board.loadBullet(true,1,1);
+        board.loadBullet(true,1,1,board.getPlayerSprite().getCoordinate());
         CoordinateSprite enemy =board.getEnemySprites().get(0);
         Bullet bullet = board.getAllBullets().get(0);
         Coordinate pathToEnemy = new Coordinate(enemy.getCoordinate().getRow()-bullet.getShape().getCoordinate().getRow(),

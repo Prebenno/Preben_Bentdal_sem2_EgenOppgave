@@ -13,7 +13,7 @@ import inf101.model.Pixel;
 import java.awt.Color;
 
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
-    private PlayerValues entity;
+    private SpriteValues entity;
     private Coordinate coordinate;
     private int HEALTH;
     private int DAMAGE = 10;
@@ -21,9 +21,9 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     public FootType footType;
     private boolean damage = false;
 
-
+    
     public CoordinateSprite(){ //used for testing
-        this.entity = new PlayerValues(new Pixel(Color.BLUE,true), hitBox.PLAYER_HITBOX, 10,10,null,null,null,null,false);
+        this.entity = new SpriteValues(new Pixel(Color.BLUE,true), hitBox.PLAYER_HITBOX, 10,null,null,null,null,null,null,null,null);
         this.coordinate = new Coordinate(0,0);
         this.HEALTH = 100;
         this.direction = Direction.RIGHT;
@@ -31,7 +31,7 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     }
     
 
-    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health) {  
+    public CoordinateSprite(SpriteValues entity, Coordinate coordinate, int health) {  
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
@@ -39,7 +39,7 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         this.footType = FootType.STAND;
 
     }
-    public CoordinateSprite(PlayerValues entity, Coordinate coordinate, int health, Direction direction, FootType footType) {  
+    public CoordinateSprite(SpriteValues entity, Coordinate coordinate, int health, Direction direction, FootType footType) {  
         this.entity = entity;
         this.coordinate = coordinate;
         this.HEALTH = health;
@@ -48,13 +48,18 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
 
     }
     
-
    
+    public int getHealth(){
+        return this.HEALTH;
+    }
+    public int getDamage(){
+        return this.DAMAGE;
+    }
     public CoordinateSprite changeCoordinate(Coordinate newCord){
         this.coordinate = newCord;
         return this;
     }
-    public PlayerValues getEntity(){
+    public SpriteValues getEntity(){
         return this.entity;
     }
     public Coordinate getCoordinate(){
@@ -82,9 +87,6 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         return this.direction;
     }
     
-    public void switchdamage(){
-        this.damage = !this.damage;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,9 +129,6 @@ public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
         CoordinateSprite copy = new CoordinateSprite(this.entity, new Coordinate(oldRow+deltaRow, oldCol+deltaCol),this.HEALTH,this.direction,this.footType);
         return copy;
 
-    }
-    public int getHealth(){
-        return this.HEALTH;
     }
     /**
      * This function takes in an integer, adds it to the health of the player, and returns whether or

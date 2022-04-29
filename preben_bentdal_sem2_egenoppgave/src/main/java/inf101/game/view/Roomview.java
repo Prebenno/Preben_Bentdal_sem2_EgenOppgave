@@ -44,6 +44,7 @@ public class Roomview extends JComponent {
         int componentWidth = this.getWidth();
         int componentHeight = this.getHeight();
         this.drawBoard(canvas, 0, 0, componentWidth, componentHeight);
+        //this.drawPicture(canvas1, componentHeight, componentHeight, componentHeight, componentHeight, "Player_standing_right.png");
         
 
        
@@ -68,7 +69,7 @@ public class Roomview extends JComponent {
     public void drawBoard(Graphics canvas,int x, int y,int width, int height){
         this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
         this.drawWalls(canvas, width, height);
-        this.drawScore(canvas,width,height);
+        this.drawExtraInfo(canvas,width,height);
         if (view.enemyExists()){
             this.drawEnemies(canvas, width, height);
             }
@@ -82,17 +83,21 @@ public class Roomview extends JComponent {
 
     }
 
-    public void drawScore(Graphics canvas, int width, int height){
+    public void drawExtraInfo(Graphics canvas, int width, int height){
         width = width/width+20;
         height = height/height+80;
         canvas.setFont(new Font("TimesRoman", Font.PLAIN, 16)); 
         canvas.setColor(Color.WHITE);
         GraphicHelperMethods.drawCenteredString(
-                canvas, "Floor: " +  view.getFloorNum(),
-                25, -25, width,height);
+            canvas, "Floor: " +  view.getFloorNum(),
+            25, -25, width,height);
         GraphicHelperMethods.drawCenteredString(
             canvas, "Score: " +  view.getScore(),
             25, -10, width,height);
+        GraphicHelperMethods.drawCenteredString(
+            canvas, "Health: " +  view.getPlayerSprite().getHealth(),
+            30, 0, width,height);
+            
     }
 
     public void drawEnemies(Graphics canvas, int width, int height){
@@ -120,31 +125,7 @@ public class Roomview extends JComponent {
         this.drawPicture(canvas,width-30,0,35,height,"10_walls2.png"); // left wall
         this.drawPicture(canvas, 0, height-50, width, 60, "10_walls_top.png");// Lower wall
     }
-    /**
-     * This function draws the room by drawing the background and then drawing each pixel in the room
-     * 
-     * @param canvas the Graphics object that you use to draw on the JPanel
-     * @param x the x coordinate of the upper left corner of the rectangle to draw the room in
-     * @param y the y coordinate of the top left corner of the rectangle to draw
-     * @param width the width of the room
-     * @param height the height of the room
-     */
-    public void drawRoom(Graphics canvas,int x,int y,int width, int height){
-        canvas.setColor(Color.RED); // check if whole backround is drawn
-        canvas.fillRect(x, y, height, width);
-        for (itemWithCoordinate<Pixel> pixel : view.getPixels()) {
-            int row = pixel.getCoordinate().getRow();
-            int col = pixel.getCoordinate().getColumn();
-            Color PixelColor = pixel.getItem().getColor();
-            int tileX = x + col * width / this.view.getColumns() ; //inspired by sampleview
-            int tileY = y + row * height / this.view.getRows();
-            int nextTileX = x + (col + 1) * width /this.view.getColumns();
-            int nextTileY = y + (row + 1) * height / this.view.getRows();
-            int tileWidth = nextTileX - tileX;
-            int tileHeight = nextTileY - tileY;
-            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor);   
-        }
-    }
+    
     public <E> void drawHitBox(Graphics canvas,int width,int height,E object){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
@@ -175,11 +156,29 @@ public class Roomview extends JComponent {
                     this.drawPicture(canvas, width/2, height/2, width/11, height/11, "floor_ladder.png");
                 }
                 else{
+                    String right_png;
+                    String left_png;
+                    String down_png;
+                    String up_png;
+                    switch (sprite.getFootType()){
+                        case STAND:
+                            right_png = sprite.getEntity().right_png_standing;
+                            left_png = sprite.getEntity().left_png_standing;
+                            down_png = sprite.getEntity().down_png_standing;
+                            up_png = sprite.getEntity().up_png_standing;
+                            break;
+                        default:
+                            right_png = sprite.getEntity().right_png;
+                            left_png = sprite.getEntity().left_png;
+                            down_png = sprite.getEntity().down_png;
+                            up_png  =sprite.getEntity().up_png;
+                            break;
+                        }
                     this.drawDirectionObject(canvas, tileX, tileY, width, height,
-                    sprite.getEntity().right_png,
-                    sprite.getEntity().left_png,
-                    sprite.getEntity().down_png,
-                    sprite.getEntity().up_png,
+                    right_png,
+                    left_png,
+                    down_png,
+                    up_png,
                     direction);
                 }
                 once = false;
@@ -213,26 +212,21 @@ public class Roomview extends JComponent {
      */
     private void drawDirectionObject(Graphics canvas, int x_position, int y_position, int tileWidth, int tileHeight,String right_png,String left_png, String down_png, String up_png,Direction direction) {  
         int height = tileHeight/16;  
-        int width  = tileWidth /16;
-        x_position -=13;
+        int width = tileWidth / 23;
+        x_position -=3;
         String png = "";
         switch (direction) {
             case RIGHT:
                 png = right_png;
-                width = tileWidth / 22;
-                x_position+=10;
                 break;
             case UP:
                 png =up_png;
-                width = tileWidth / 22;
-                x_position+=10;
                 break;
             case DOWN:
                 png =down_png;
-                width = tileWidth / 22;
-                x_position+=10;
                 break;
             default:
+                width = tileWidth / 23;
                 png = left_png;
                 break;
         }
@@ -256,12 +250,16 @@ public class Roomview extends JComponent {
      */
     protected void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
         Graphics2D canvas = (Graphics2D)g;
-        BufferedImage floor1;
+        BufferedImage image;
         try {
             File file = new File("preben_bentdal_sem2_egenoppgave/src/main/java/inf101/game/view/Sprites/" + filename);
             FileInputStream fis = new FileInputStream(file);
-            floor1 = ImageIO.read(fis);
-            canvas.drawImage(floor1, x_position, y_position ,width ,height, this);
+            image = ImageIO.read(fis);
+            //System.out.println(filename);
+            //System.out.println("height" + height + " width: " + width );
+            canvas.drawImage(image, x_position, y_position ,width ,height, this);
+            //canvas.drawImage(image,50, 50, this);
+            
             
         } catch (IOException e) {
             // TODO Auto-generated catch block
