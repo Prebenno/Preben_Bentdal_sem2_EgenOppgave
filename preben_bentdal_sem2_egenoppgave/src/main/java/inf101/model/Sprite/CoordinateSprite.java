@@ -15,11 +15,11 @@ import java.awt.Color;
 public class CoordinateSprite implements Iterable<itemWithCoordinate<Pixel>>{
     private SpriteValues entity;
     private Coordinate coordinate;
-    public int maxHealth =1000;
+    private int maxHealth =1000;
     private int HEALTH;
     private int DAMAGE = 10;
     private Direction direction;; 
-    public FootType footType;
+    private FootType footType;
     private boolean damage = false;
 
     

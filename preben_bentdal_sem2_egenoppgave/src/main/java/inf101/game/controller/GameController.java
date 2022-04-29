@@ -74,7 +74,8 @@ public class GameController implements KeyListener,ActionListener {
         public void run() throws RuntimeException{
                 if (!controller.enemyExists()){ // if enemies dont exsist
                     controller.activateTrapDoor();
-                    if (!activatedPowerups){
+                    if (!activatedPowerups && (controller.getFloorNum() % 3 == 0)){
+
                         controller.activatePowerUps();
                         activatedPowerups = true;
                     }
@@ -201,12 +202,8 @@ public class GameController implements KeyListener,ActionListener {
                     timeOfLastProjectile = timeNow;
                     }
                 shot = false;
-            }
-            
+            }   
         }
-        
-
-         
     }
 
 

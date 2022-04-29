@@ -2,9 +2,7 @@ package inf101.game.controller;
 
 import java.util.List;
 
-import inf101.game.States.FootType;
 import inf101.game.States.GameState;
-import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.model.Sprite.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
@@ -165,6 +163,14 @@ public interface IGameController {
      * @return A coordinate.
      */
     public Coordinate directiontoCoordinate(CoordinateSprite sprite);
+
+     /**
+     * This function returns the floor number that the player is on
+     * 
+     * @return The floor number of the player.
+     */
+    int getFloorNum();
+
 
     
 

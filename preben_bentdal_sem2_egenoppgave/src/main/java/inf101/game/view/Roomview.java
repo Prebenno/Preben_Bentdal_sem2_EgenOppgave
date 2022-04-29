@@ -66,7 +66,7 @@ public class Roomview extends JComponent {
      * @param width the width of the screen
      * @param height the height of the screen
      */
-    public void drawBoard(Graphics canvas,int x, int y,int width, int height){
+    private void drawBoard(Graphics canvas,int x, int y,int width, int height){
         if (view.getGameState().equals(GameState.ACTIVE_GAME)){
             this.drawPicture(canvas,29,60,width-59,height-110,"Floor1.png"); //drawroom
             this.drawWalls(canvas, width, height);
@@ -99,7 +99,7 @@ public class Roomview extends JComponent {
      * @param width The width of the screen
      * @param height The height of the screen
      */
-    public void drawPowerUps(Graphics canvas,int width,int height){
+    private void drawPowerUps(Graphics canvas,int width,int height){
         for (CoordinateSprite powerUp : view.getPowerUps()) {
             try {
                 drawHitBox(canvas, width, height, powerUp);
@@ -115,7 +115,7 @@ public class Roomview extends JComponent {
      * @param width the width of the screen
      * @param height the height of the screen
      */
-    public void drawExtraInfo(Graphics canvas, int width, int height){
+    private void drawExtraInfo(Graphics canvas, int width, int height){
         width = width/width+20;
         height = height/height+80;
         canvas.setFont(new Font("TimesRoman", Font.PLAIN, 16)); 
@@ -138,7 +138,7 @@ public class Roomview extends JComponent {
      * @param height height of board
      * @param widht width of board
      */
-    public void pause(Graphics canvas, int height, int widht){
+    private void pause(Graphics canvas, int height, int widht){
         canvas.setColor(Color.MAGENTA);
         canvas.setFont(new Font("TimesRoman", Font.PLAIN, 25)); 
         GraphicHelperMethods.drawCenteredString(canvas, "Game paused ",2, 2, height ,widht);  
@@ -147,13 +147,13 @@ public class Roomview extends JComponent {
     }
 
     /**
-     * > Draws the hitboxes of all the enemies in the game
+     * Draws the hitboxes of all the enemies in the game
      * 
      * @param canvas the canvas to draw on
      * @param width the width of the screen
      * @param height the height of the screen
      */
-    public void drawEnemies(Graphics canvas, int width, int height){
+    private void drawEnemies(Graphics canvas, int width, int height){
         for (CoordinateSprite enemy : this.view.getEnemySprites()) {
             this.drawHitBox(canvas, width, height, enemy);
             
@@ -166,7 +166,7 @@ public class Roomview extends JComponent {
      * @param width the width of the screen
      * @param height the height of the screen
      */
-    public void drawBullets(Graphics canvas,int width, int height){
+    private void drawBullets(Graphics canvas,int width, int height){
         for (Bullet bullet : this.view.getAllBullets()){
             this.drawbullet(canvas, width, height, bullet);
         }
@@ -179,7 +179,7 @@ public class Roomview extends JComponent {
      * @param width width of canvas
      * @param height height of canvas
      */
-    public void drawWalls(Graphics canvas,int width, int height){ 
+    private void drawWalls(Graphics canvas,int width, int height){ 
         this.drawPicture(canvas, 0, 0, width, 60, "10_walls_top.png");// Upper wall
         this.drawPicture(canvas,0,0,30, height,"10_walls_left.png"); // right wall
         this.drawPicture(canvas,width-30,0,35,height,"10_walls2.png"); // left wall
@@ -194,7 +194,7 @@ public class Roomview extends JComponent {
      * @param height the height of the canvas
      * @param object the object that you want to draw the hitbox for
      */
-    public <E> void drawHitBox(Graphics canvas,int width,int height,E object){
+    private <E> void drawHitBox(Graphics canvas,int width,int height,E object){
         int x_Position = view.getCenter().getRow();
         int y_Position = view.getCenter().getColumn();
         CoordinateSprite sprite = null;
@@ -207,7 +207,8 @@ public class Roomview extends JComponent {
             direction = sprite.getDirection();
         }
         else{
-            sprite = (CoordinateSprite) object;}
+            sprite = (CoordinateSprite) object;
+        }
         if (sprite != null){
             direction = sprite.getDirection();}
             int row = sprite.getCoordinate().getRow();
@@ -313,7 +314,7 @@ public class Roomview extends JComponent {
      * @param height The height of the picture
      * @param filename The name of the file you want to draw.
      */
-    protected void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
+    private void drawPicture(Graphics g,int x_position,int y_position,int width,int height, String filename){
         Graphics2D canvas = (Graphics2D)g;
         BufferedImage image;
         try {
@@ -327,7 +328,7 @@ public class Roomview extends JComponent {
     }
 
 
-    public void gameOver(Graphics canvas ,int x ,int y){
+    private void gameOver(Graphics canvas ,int x ,int y){
         Color over = new Color (0,0,0,128);
         canvas.setColor(over);
         canvas.fillRect(x+15, y+15, x+15, y+15);  
@@ -338,20 +339,20 @@ public class Roomview extends JComponent {
                 2, 2, x ,y); 
     }
 
-    public void drawbullet(Graphics canvas, int width, int height, Bullet bullet){
-        int x_Position = view.getCenter().getRow();
-        int y_Position = view.getCenter().getColumn();
-        for (itemWithCoordinate<Pixel> pixel : bullet.getShape()) {
-            int row = pixel.getCoordinate().getRow();
-            int col = pixel.getCoordinate().getColumn();
-            Color PixelColor = pixel.getItem().getColor();
-            int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
-            int tileY = y_Position + row * height / this.view.getRows() ;
-            int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
-            int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
-            int tileWidth = nextTileX - tileX;
-            int tileHeight = nextTileY - tileY;
-            this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
+    private void drawbullet(Graphics canvas, int width, int height, Bullet bullet){
+    int x_Position = view.getCenter().getRow();
+    int y_Position = view.getCenter().getColumn();
+    for (itemWithCoordinate<Pixel> pixel : bullet.getShape()) {
+        int row = pixel.getCoordinate().getRow();
+        int col = pixel.getCoordinate().getColumn();
+        Color PixelColor = pixel.getItem().getColor();
+        int tileX = x_Position + col * width / this.view.getColumns() ; //inspired by sampleview
+        int tileY = y_Position + row * height / this.view.getRows() ;
+        int nextTileX = x_Position + (col + 1) * width /this.view.getColumns();
+        int nextTileY = y_Position + (row + 1) * height / this.view.getRows();
+        int tileWidth = nextTileX - tileX;
+        int tileHeight = nextTileY - tileY;
+        this.drawPixel(canvas, tileX, tileY, tileHeight, tileWidth,PixelColor); 
 
         }
     }

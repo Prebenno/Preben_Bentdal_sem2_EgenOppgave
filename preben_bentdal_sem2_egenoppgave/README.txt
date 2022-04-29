@@ -1,0 +1,39 @@
+
+
+README pbe027
+Hi and welcome to my  open assigment project, first off, to start a game you go into the 
+GameMain file and press run, there you will be placed into a room where a random assortment 
+of enemies will spawn, the floors will get tougher and tougher the lower you go but so will you.
+
+
+Press the arrows to move your player, you will accelarate faster if you hold the button down, 
+wich youl need to prevent the monsters from toutching you, be carefull to stay away from the mages 
+spels and the skelletons cold hands as theyl damage you, but dont worry, you can fight back using your own
+spells with the spacebar, the spell is shot in the direction you are facing.
+
+You can press P at any time to pause the game, just press P to return to the current floor with your current progress.
+
+If you look in the right-upper corner you will se your health,score and floor number, every 10 floors increases 
+the amount of enemies that can spawn to a maximum of 4, your health goes up to 15 
+
+
+Potions:
+There are 4 potions you can drink to increase your players chances of surviving
+The Blue Potion will incease your attack speed by 20%, 
+The Green potion will double your attack damage:
+The Red potion will heal you and increase your maximum health by 20%, 
+
+For the experienced player who wants a challenge, you can pick the yellow potion witch will,
+increase the score multiplier, 1 by default and make you earn more points per enemy kill.
+
+You will be alowed to chose a potion every third floor and the effects will stack, chose your playstyle by 
+regularly picking the same potion.
+
+Every floor your enemies will get a little bit stronger, be carefull.
+
+
+
+
+
+
+

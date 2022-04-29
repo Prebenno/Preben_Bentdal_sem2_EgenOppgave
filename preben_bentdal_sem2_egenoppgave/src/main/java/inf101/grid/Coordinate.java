@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Coordinate {
     
-    public final int row;
-    public final int column;
+    private final int row;
+    private final int column;
 
     public Coordinate(int row, int column){
         this.row = row;

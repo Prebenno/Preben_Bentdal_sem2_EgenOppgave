@@ -9,10 +9,6 @@ public class Bullet {
     private CoordinateSprite shape;
     private boolean enemyshot;
     private int damage;
-    
-    
-
-
 
     public Bullet(int Xspeed, int Yspped, CoordinateSprite shape,boolean shot,int damage) {
         this.Xspeed = Xspeed;

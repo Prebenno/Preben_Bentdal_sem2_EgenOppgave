@@ -221,6 +221,14 @@ public class GameModel implements iRoomview ,IGameController {
 
         return false;
     }
+    /**
+     * If the bullet is within the rectangle, return true
+     * 
+     * @param top_right The top right coordinate of the rectangle
+     * @param bottom_left The bottom left coordinate of the rectangle
+     * @param point The coordinate of the bullet
+     * @return The method is returning a boolean value.
+     */
     private boolean bulletInRectangle(Coordinate top_right, Coordinate bottom_left,Coordinate point){
         if (point.getRow() > top_right.getRow()-10 && point.getRow() < bottom_left.getRow()-5 &&
        point.getColumn() > top_right.getColumn()-10 && point.getColumn() < bottom_left.getColumn()-5)
@@ -229,6 +237,7 @@ public class GameModel implements iRoomview ,IGameController {
        return false;
     }
     /**
+     * source:
      * https://stackoverflow.com/questions/6243414/ways-to-check-if-an-arraylist-contains-only-null-values
      * If all the elements in the array are null, return true, otherwise return false.
      * 
@@ -421,7 +430,10 @@ public class GameModel implements iRoomview ,IGameController {
 
     @Override
     public void activateTrapDoor() {
-        this.trapdoor = spawner.getTrapDoor();
+        if (this.enemySprites.size()== 0){
+            this.trapdoor = spawner.getTrapDoor();
+
+        }
     }
 
     @Override
@@ -504,6 +516,7 @@ public class GameModel implements iRoomview ,IGameController {
 
 
     public void powerUpChecker(){
+        
         boolean collected = false; // to prevent concurrentmodificationerror
         for (CoordinateSprite powerUp : this.powerups) {
             if (simpleCollision(this.playerSprite,powerUp)){
@@ -525,7 +538,8 @@ public class GameModel implements iRoomview ,IGameController {
         }
         if(collected){
             this.powerups.clear();
-        }
+            }
 
+        
     }
 }

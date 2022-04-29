@@ -4,8 +4,6 @@ import java.util.List;
 
 import inf101.game.States.GameState;
 import inf101.grid.Coordinate;
-import inf101.grid.itemWithCoordinate;
-import inf101.model.Pixel;
 import inf101.model.Sprite.Bullet;
 import inf101.model.Sprite.CoordinateSprite;
 

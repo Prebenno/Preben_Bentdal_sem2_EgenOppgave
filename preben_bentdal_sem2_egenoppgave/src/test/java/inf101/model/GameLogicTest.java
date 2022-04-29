@@ -5,15 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
+import inf101.game.States.Direction;
 import inf101.grid.Coordinate;
 import inf101.grid.OutOfBoundsException;
 import inf101.model.Sprite.Bullet;
@@ -25,8 +20,7 @@ public class GameLogicTest {
 	void setUp() throws OutOfBoundsException{
         this.board = new GameModel();
         
-    }
-    
+    }    
     @Test
     void rowsAndColumnsTest(){
         assertEquals(board.getRows(),500);
@@ -60,20 +54,14 @@ public class GameLogicTest {
         }   
     }
     @Test
-    void collisionTest(){
-        board.loadBullet(true,1,0,new Coordinate(50,50));
+    void SimpleCollisionTest(){
+        board.loadBullet(false,1,0,new Coordinate(50,50));
         CoordinateSprite enemy =board.spawner.getRunner(new Coordinate (450,450));
         Bullet bullet = board.getAllBullets().get(0);
-        Coordinate pathToEnemy = new Coordinate(enemy.getCoordinate().getRow()-bullet.getShape().getCoordinate().getRow(),
-                                                enemy.getCoordinate().getColumn()-bullet.getShape().getCoordinate().getColumn());
-
-        assertFalse(board.SpriteCollision(bullet.getShape(), enemy));
-        Bullet newBullet = (Bullet) board.moveObject(pathToEnemy.getRow(),pathToEnemy.getRow(), bullet);
-        board.resetBullet();
-        List<Bullet> newBullets = new ArrayList<Bullet>();
-        newBullets.add(newBullet);
-        board.changeBullets(newBullets);
-        assertTrue(board.SpriteCollision(board.getAllBullets().get(0).getShape(), enemy));
+        assertFalse(board.simpleCollision(bullet, enemy));
+        board.loadBullet(false,1,0,new Coordinate(451,451));
+        Bullet bulletC = board.getAllBullets().get(1);
+        assertTrue(board.simpleCollision(bulletC,enemy));
     }
     @Test
     void spawnerTest() throws OutOfBoundsException{
@@ -84,7 +72,7 @@ public class GameLogicTest {
         CoordinateSprite scoreIncrease = board.spawner.getScoreIncrease();
 
         board.activatePowerUps(); //Health checker
-        board.moveObject(51,51,board.getPlayerSprite());
+        board.moveObject(-149,-149,board.getPlayerSprite());
         assertEquals(board.getPlayerSprite().getCoordinate(),new Coordinate(101,101));
         assertTrue(board.simpleCollision(board.getPlayerSprite(),health));
         assertEquals(board.getPlayerSprite().getHealth(),1000);
@@ -122,13 +110,76 @@ public class GameLogicTest {
              
         
     }
-    
-    
 
+    @Test
+    void directiontoCoordinate_test(){
+        CoordinateSprite sprite = board.spawner.getPlayer();
+        assertTrue(sprite.getDirection().equals(Direction.RIGHT));
+        Coordinate right = board.directiontoCoordinate(sprite);
+        assertTrue(right.equals(new Coordinate(0,1)));
 
-    public static void main(String[] args) throws OutOfBoundsException {
-       
+        sprite.changeDirection(Direction.LEFT);
+        Coordinate left = board.directiontoCoordinate(sprite);
+        assertTrue(sprite.getDirection().equals(Direction.LEFT));
+        assertTrue(left.equals(new Coordinate(0,-1)));
+
+        sprite.changeDirection(Direction.DOWN);
+        Coordinate down = board.directiontoCoordinate(sprite);
+        assertTrue(sprite.getDirection().equals(Direction.DOWN));
+        assertTrue(down.equals(new Coordinate(1,0)));
+
+        sprite.changeDirection(Direction.UP);
+        Coordinate up = board.directiontoCoordinate(sprite);
+        assertTrue(sprite.getDirection().equals(Direction.UP));
+        assertTrue(up.equals(new Coordinate(-1,0)));
+
     }
+    @Test
+    void trapDoorTest(){
+        board.nextFloor();
+        assertTrue(board.getEnemySprites().size()>0);
+        assertTrue(board.getTrapDoor() == null);
+        board.activateTrapDoor(); //checking if its activated when enemies are on screen
+        assertTrue(board.getTrapDoor() == null);
+
+        board.getEnemySprites().clear();
+        assertTrue(board.getEnemySprites().size() == 0);
+        board.activateTrapDoor(); 
+        assertFalse(board.getTrapDoor() == null);
+        }
+
+    @Test
+    public void advancedColisionTest(){
+        board.nextFloor();
+        CoordinateSprite enemy = board.getEnemySprites().get(0);
+        assertTrue(board.getPlayerSprite().getCoordinate().equals(new Coordinate(250,250)));
+        assertTrue(enemy.getCoordinate().equals(new Coordinate (50,50)));
+        board.loadBullet(false, 0, 0, new Coordinate(51,51)); // enemy bullet
+        assertFalse(board.SpriteCollision(enemy, enemy));
+
+        board.loadBullet(true, 0, 0, new Coordinate(251,251));// player bullet
+        assertFalse(board.SpriteCollision(board.getPlayerSprite(), board.getPlayerSprite()));
+
+        board.loadBullet(true, 0, 0, new Coordinate(51,51));// player bullet
+        assertTrue(board.SpriteCollision(enemy, enemy.move(-1, -1)));
+
+        board.loadBullet(false, 0, 0, new Coordinate(251,251)); // enemy bullet
+        assertTrue(board.SpriteCollision(board.getPlayerSprite(), board.getPlayerSprite().move(-1, -1)));
+    }
+    
+    @Test
+    public void monsterStepTest(){
+        assertTrue(board.getPlayerSprite().getCoordinate().equals(new Coordinate(250,250)));
+        board.getEnemySprites().set(0,board.spawner.getRunner(new Coordinate(50,50)));
+        assertTrue(board.getEnemySprites().get(0).getCoordinate().equals(new Coordinate(50,50)));
+        board.monsterStep();
+        assertTrue(board.getEnemySprites().get(0).getCoordinate().equals(new Coordinate(51,51)));
+        board.monsterStep();
+        assertTrue(board.getEnemySprites().get(0).getCoordinate().equals(new Coordinate(52,52)));}
+       
+
+
+    
         
     
 }

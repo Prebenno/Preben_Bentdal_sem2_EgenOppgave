@@ -23,16 +23,21 @@ public class GridTest {
         void gridTrowsOutOfBoundsException() {
             try {
                 IGrid<Integer> grid = new Grid<Integer>(3,0);
+                grid.getRows();
                 fail();
             } catch (OutOfBoundsException e) {
                 //Test passed
             }try {
                 IGrid<Integer> grid = new Grid<Integer>(0,3);
+                grid.getRows();
                 fail();
             } catch (OutOfBoundsException e) {
                 //Test passed
             }
         }
+
+
+
         @Test
         void coordinateOnBoardTest() throws OutOfBoundsException{
             IGrid<Integer> grid = new Grid<Integer>(2,3);
