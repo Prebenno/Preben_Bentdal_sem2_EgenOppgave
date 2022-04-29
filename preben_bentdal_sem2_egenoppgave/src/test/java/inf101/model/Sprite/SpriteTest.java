@@ -49,7 +49,7 @@ public class SpriteTest {
     }
     @Test
     void equalstest(){
-        assertFalse(this.spriteOne.equals(this.spriteTwo));
+        assertTrue(this.spriteOne.equals(this.spriteTwo));
         CoordinateSprite runner = this.spawner.getRunner(new Coordinate(50,50));
         CoordinateSprite runnerTwo = this.spawner.getRunner(new Coordinate(50,50));
         assertTrue(runner.equals(runnerTwo));
